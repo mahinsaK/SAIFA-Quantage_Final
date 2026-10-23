@@ -6,7 +6,7 @@ A new project for the Serendib University Endowment Fund competition mandate: co
 
 The data foundation, 40% SPY / 60% AGG baseline and constrained Markowitz candidates are implemented. The baseline accounting was manually validated by Mahinsa Kuruppu on 23 October 2026; all three hand-calculated examples matched and the focused test suite passed. The optimiser produces minimum-volatility and maximum-Sharpe candidates, an efficient frontier, CAPM diagnostics and the required performance ratios with a chronological out-of-sample comparison.
 
-Historical, Parametric Normal and correlated Gaussian Monte Carlo VaR/ES are implemented at 95% and 99% confidence, with an equal-USD-10m target-allocation comparison. EVT, formal VaR backtesting and the Streamlit app remain outstanding. Policy numbers remain proposed research assumptions, not client-supplied limits or validated investment recommendations. Human review records are maintained separately in the linked worksheets.
+Historical, Parametric Normal, correlated Gaussian Monte Carlo and EVT POT/GPD VaR/ES are implemented at 95% and 99% confidence, with an equal-USD-10m target-allocation comparison. EVT includes development/as-of diagnostics, threshold sensitivity and block-bootstrap uncertainty; threshold approval and human review remain pending. Formal VaR backtesting and the Streamlit app remain outstanding. Policy numbers remain proposed research assumptions, not client-supplied limits or validated investment recommendations. Human review records are maintained separately in the linked worksheets.
 
 - [Requirements checklist](docs/final/requirements-checklist.md): 40 tracked requirements with brief page references and acceptance evidence, open decisions and the delivery schedule.
 - [Client investment policy draft](docs/final/client-investment-policy.md): mandate, proposed horizon/objective, allocation constraints, risk review levels and decision rules.
@@ -23,6 +23,9 @@ Historical, Parametric Normal and correlated Gaussian Monte Carlo VaR/ES are imp
 - [Risk methodology](docs/final/risk-methodology.md): one-day loss definitions, shared inputs, timing and model limitations.
 - [Risk milestone](docs/final/risk-milestone.md): observed VaR/ES comparisons and verification evidence.
 - [Manual risk check](docs/final/manual-risk-check.md): hand examples and reviewer worksheet.
+- [EVT methodology](docs/final/evt-methodology.md): threshold rationale, GPD formulas and uncertainty.
+- [EVT milestone](docs/final/evt-milestone.md): frozen-data results and diagnostic interpretation.
+- [Manual EVT check](docs/final/manual-evt-check.md): independent calculations and threshold-review record.
 
 ## Run the data pipeline
 
@@ -81,6 +84,17 @@ uv run --locked pytest tests/test_risk.py -q
 
 Different settings create separate risk folders; repeating identical settings reproduces that folder. Always require `status.json` to say `complete` before using its results.
 
+## Run the EVT study
+
+```bash
+uv run --locked python run_evt.py
+uv run --locked pytest tests/test_evt.py -q
+```
+
+Open `evt_report.md` in the printed `output/evt/<snapshot>/<settings-hash>/` folder. It includes six diagnostic charts, threshold sensitivity, six EVT estimates and 95% bootstrap intervals. `risk_comparison.csv` contains all four methods on identical inputs. The default 90% loss threshold is a prespecified research rule; development diagnostics support its review, and current-window results never automatically change it. Unsupported confidence/threshold combinations and unreliable fits are marked unavailable, not zero. Complete the manual EVT worksheet before recording human approval.
+
+Optional research settings: `--as-of YYYY-MM-DD`, `--lookback 1000`, `--threshold 0.90`, `--confidence 0.95 0.99`, `--bootstrap 200`, `--block-length 10`, `--seed 314159`. A 90% forecast confidence is at the default threshold boundary and is explicitly unsupported. Changing a setting creates a separate run folder. Always check `status.json` and row-level warnings.
+
 Final submission deadline: **31 October 2026**, as supplied by the team. Exact cutoff time, timezone and submission route still need confirmation. Internal completion target: **30 October 2026**.
 
 ## Relationship to the screening project
@@ -99,7 +113,7 @@ These paths are provenance notes for the team's machine, not portable dependenci
 
 ## Next implementation milestone
 
-Complete the risk worksheet and any outstanding named human reviews. Next implement EVT diagnostics and threshold sensitivity, then walk-forward VaR coverage/independence tests and stress analysis. The current VaR/ES comparison is an as-of estimate, not coverage-validation evidence.
+Complete the risk/EVT worksheets and threshold interpretation. Next implement walk-forward VaR coverage/independence tests, risk contributions and stress analysis. The current four-method comparison is an as-of estimate, not coverage-validation evidence.
 
 ## Team review
 

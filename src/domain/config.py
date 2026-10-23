@@ -8,6 +8,39 @@ UNIVERSE = ("SPY", "EFA", "EEM", "AGG", "GLD", "XLE", "XLK")
 
 
 @dataclass(frozen=True)
+class EVTConfig:
+    """Prespecified POT research settings; diagnostics never silently select a threshold."""
+
+    threshold_quantile: float = 0.90
+    sensitivity_quantiles: tuple[float, ...] = (0.80, 0.85, 0.90, 0.925, 0.95, 0.975)
+    minimum_exceedances: int = 50
+    bootstrap_replicates: int = 200
+    block_length: int = 10
+    seed: int = 314159
+
+    def __post_init__(self) -> None:
+        qs = self.sensitivity_quantiles
+        if (
+            not qs
+            or tuple(sorted(set(qs))) != qs
+            or any(not isfinite(q) or not 0 < q < 1 for q in qs)
+            or self.threshold_quantile not in qs
+        ):
+            raise ValueError(
+                "Ordered unique threshold quantiles in (0, 1), including selected, required"
+            )
+        for name, minimum in (
+            ("minimum_exceedances", 20),
+            ("bootstrap_replicates", 20),
+            ("block_length", 1),
+            ("seed", 0),
+        ):
+            value = getattr(self, name)
+            if type(value) is not int or value < minimum:
+                raise ValueError(f"{name} must be an integer >= {minimum}")
+
+
+@dataclass(frozen=True)
 class RiskConfig:
     """One-day market risk of funded, fixed portfolio exposures."""
 

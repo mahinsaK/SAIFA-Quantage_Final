@@ -49,6 +49,8 @@ Record a repository file/output and actual reviewer when marking an item complet
 
 ### Risk models and validation
 
+**EVT implementation update (24 Oct):** R04 now has POT/GPD VaR/ES, a prespecified 90% threshold rationale, development/as-of diagnostics, six-threshold sensitivity, Q-Q and parameter plots, and circular block-bootstrap uncertainty. Undefined ES, insufficient tails and unsupported confidence levels are explicitly unavailable. See [methodology](evt-methodology.md), [milestone](evt-milestone.md) and [manual check](manual-evt-check.md). R04 remains unchecked pending named threshold review; parameter stability is imperfect and no optimal-threshold or coverage claim is made. V01-V04 and stress validation remain open.
+
 **VaR/ES implementation update:** R01-R03 now have automated evidence from Historical, Parametric Normal and correlated Gaussian Monte Carlo estimates at 95%/99%. The methods use identical one-session target exposures, USD 10m NAV, 1,000-observation window and signed-loss convention. See [methodology](risk-methodology.md), [milestone](risk-milestone.md) and [manual worksheet](manual-risk-check.md). These requirements remain unchecked until named human review and final interpretation. The output is an as-of risk comparison; V01-V04 remain outstanding. The estimator also supports 90% for the future interface, but U02 is not implemented.
 
 | Done | ID | Brief requirement and source | Acceptance evidence |
