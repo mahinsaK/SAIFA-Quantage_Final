@@ -1,6 +1,6 @@
 # Manual portfolio accounting check
 
-Status: **human validation pending**.
+Status: **human accounting validation completed on 23 October 2026**.
 
 This is the small independent check the team must perform. Do not use the portfolio code to calculate the answers. A calculator, paper, or a separate spreadsheet is suitable. The purpose is to confirm that a team member understands the accounting and can explain it to judges.
 
@@ -94,17 +94,17 @@ The hand example is implemented in `test_hand_example_drift_and_exact_costed_reb
 
 ## Human review record
 
-Fill this only after a real team member performs the independent calculation.
+Recorded from the team member's confirmation in the project conversation:
 
-- Reviewer name:
-- Review date:
-- Calculator/spreadsheet/paper used:
-- Part A matched within tolerance: Yes / No
-- Part B matched within tolerance: Yes / No
-- Part C matched within tolerance: Yes / No
-- Automated test command result:
-- Discrepancies and corrections:
-- Reviewer explanation in own words: Why do the SPY sale and AGG purchase differ slightly when costs are charged?
-- Reviewer initials/sign-off:
+- Reviewer name: Mahinsa Kuruppu
+- Review date: 2026-10-23
+- Calculator/spreadsheet/paper used: Calculator & paper
+- Part A matched within tolerance: Yes - team member reported the calculated values were the same
+- Part B matched within tolerance: Yes - team member reported the calculated values were the same
+- Part C matched within tolerance: Yes - team member reported the calculated values were the same
+- Automated test command result: `11 passed in 0.27s`
+- Discrepancies and corrections: None reported
+- Reviewer explanation in own words: Transaction costs are paid from the portfolio itself. Therefore, the sale must finance both the purchase and the trading cost. The amount sold is slightly larger than the amount bought by exactly the transaction cost. Equal buy and sell amounts would require an external cash contribution or a separate cash reserve.
+- Reviewer initials/sign-off: KAD
 
 After completion, copy the factual review outcome into `docs/final/ai-use-log.md`. Do not claim that the whole investment strategy is human-validated; this check validates the portfolio accounting example only.

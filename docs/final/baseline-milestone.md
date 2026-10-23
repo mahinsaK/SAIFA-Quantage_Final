@@ -1,6 +1,6 @@
 # 40/60 baseline milestone
 
-Implemented and automatically verified: 23 October 2026. Human accounting review is pending.
+Implemented and automatically verified: 23 October 2026. Mahinsa Kuruppu subsequently completed the manual accounting check using a calculator and paper. All values matched, and the portfolio test command returned 11 passed in 0.27s.
 
 Source snapshot: `20261023T102523Z-0d40a885`. Period: 18 November 2004 to 22 October 2026, 5,516 price observations. Initial capital: USD 10 million.
 
@@ -28,8 +28,8 @@ Buy-and-hold finished higher in this realised period because the weights were al
 
 Generated evidence is under `output/portfolio/20261023T102523Z-0d40a885/` and is reproducible with `uv run --locked python run_portfolio.py`. The generated directory is intentionally ignored by Git.
 
-## Human action still required
+## Human accounting validation
 
-A named team member must independently complete [manual-accounting-check.md](manual-accounting-check.md), fill its review record and copy the factual result into [ai-use-log.md](ai-use-log.md). Until that happens, `summary.json` and `status.json` correctly say human validation is pending.
+The completed calculation result, reviewer explanation and sign-off are recorded in [manual-accounting-check.md](manual-accounting-check.md) and [ai-use-log.md](ai-use-log.md). Generated `summary.json` and `status.json` remain conservatively marked pending because the script cannot infer or certify a human review.
 
 This review validates the accounting example only. Data-quality flags, assumptions, investment suitability and future Markowitz/CAPM/risk-model work require their own reviews.
