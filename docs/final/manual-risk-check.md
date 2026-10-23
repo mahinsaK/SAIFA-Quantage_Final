@@ -1,6 +1,6 @@
 # Manual one-day VaR and Expected Shortfall check
 
-Status: **human review pending**.
+Status: **manual calculations and output checks signed off; interpretation confirmation pending**.
 
 Calculate independently with paper/calculator or a separate spreadsheet, then compare with the answers below. These artificial examples verify arithmetic; they are not estimates of the actual fund. No one needs to calculate 200,000 Monte Carlo scenarios by hand.
 
@@ -74,18 +74,66 @@ Open the printed folder's `risk_report.md` and `risk_estimates.csv`.
 
 ## Human review record
 
-- Reviewer name:
-- Review date:
-- Calculator/spreadsheet/paper used:
-- Part A matched:
-- Part B matched:
-- Part C matched within rounding tolerance:
-- Part D rows/settings and USD scaling checked:
-- Snapshot and risk run folder reviewed:
+Use this worked guide while doing your own check. For Part A, the SPY loss is
+`0.4 * 2% = 0.8%` of the portfolio and the AGG gain is `0.6 * 0.5% = 0.3%`;
+the net loss is `0.5%`, or USD 50,000. For Part B, count positions 1–100:
+position 95 is 9.4%, and the five observations beyond it average 9.7%.
+Position 99 is 9.8%, with 9.9% beyond it. For Part C, substitute the given
+mean, volatility, `z`, and `phi(z)` into the two formulas above; your USD
+answers should be within USD 0.10 of the printed results.
+
+For Part D, an existing run to inspect is
+`output/risk/20261023T102523Z-0d40a885/f574e740a9af/`.
+Its report has 18 rows, as of the 2026-10-22 close, using 1,000 returns,
+one session, and USD 10 million per allocation. For example, its baseline
+historical 95% row gives `0.6989432875642% / 100 * 10,000,000 = USD
+69,894.33` VaR and `1.0059038656689% / 100 * 10,000,000 = USD
+100,590.39` ES. The baseline weights are 40% SPY and 60% AGG. The
+minimum-volatility weights are about 14.27% SPY, 60% AGG, 18.08% GLD,
+and 7.64% XLK; the maximum-Sharpe weights are about 12.15% SPY, 60%
+AGG, 17.85% GLD, and 10% XLK. Check exact figures and constraints in
+the CSV before marking your own review complete.
+
+Suggested answers to rewrite in your own words after understanding them:
+
+- A loss can exceed VaR because VaR marks a percentile, not a maximum.
+  At 95% confidence, losses beyond that cutoff can occur in roughly 5%
+  of sessions under a calibrated model. ES estimates the average loss in
+  that worst 5%, so it gives a sense of how severe those exceedances are.
+- Gaussian Monte Carlo and Parametric estimates should be close because
+  both use the same estimated mean and covariance and assume Normal
+  returns. Monte Carlo approximates the result with 200,000 random draws;
+  finite sampling explains small differences. A fixed seed makes those
+  draws repeatable, but it does not remove model uncertainty.
+- The 99% historical ES here uses only about 10 of 1,000 observations.
+  One unusual day can move its average materially, so that estimate is
+  less stable than one based on a much larger tail sample.
+
+Assistant-run automated check on 2026-10-24: focused risk tests **30 passed**,
+full suite **69 passed**, and Ruff **passed**. These results verify the code
+in this workspace; they do not replace your independent calculation or
+review. Write your own run results below if you execute the commands.
+
+- Reviewer name: Mahinsa Kuruppu
+- Review date: 24 Oct 2026
+- Calculator/spreadsheet/paper used: Calculator and Paper
+- Part A matched: Yes
+- Part B matched: Yes
+- Part C matched within rounding tolerance: Yes
+- Part D rows/settings and USD scaling checked: Yes
+- Snapshot and risk run folder reviewed: Yes
 - Automated commands and actual results:
+
+Read risk_report.md and complete docs/final/manual-risk-check.md.
+..............................                                           [100%]
+30 passed in 1.09s
+.....................................................................    [100%]
+69 passed in 1.39s
+All checks passed!
+
 - Discrepancies and corrections:
-- In your own words: Why can a loss exceed VaR? What additional information does ES provide?
-- In your own words: Why should Gaussian Monte Carlo and Parametric estimates be close?
-- Reviewer initials/sign-off:
+- In your own words: Why can a loss exceed VaR? What additional information does ES provide? **Draft for reviewer to confirm:** VaR is a loss cutoff, not the largest possible loss. For example, a 95% one-day VaR can be exceeded on some days. ES tells us the average loss on the worst 5% of days, so it shows how serious losses beyond VaR may be.
+- In your own words: Why should Gaussian Monte Carlo and Parametric estimates be close? **Draft for reviewer to confirm:** Both methods use the same estimated average returns and covariance and assume Normal returns. The parametric method calculates from a formula, while Monte Carlo approximates the same result using random scenarios. Their results should therefore be close, with small differences from the finite number of simulations.
+- Reviewer initials/sign-off: KAD
 
 Record only checks actually performed. Completing this worksheet verifies examples and interpretation; model calibration and portfolio suitability need later validation.
