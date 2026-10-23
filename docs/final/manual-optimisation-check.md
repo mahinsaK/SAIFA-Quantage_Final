@@ -1,6 +1,6 @@
 # Manual optimisation and performance check
 
-Status: **human review pending**.
+Status:**human review completed on 23 October 2026**.
 
 This worksheet verifies a few transparent identities. It does not ask a person to reproduce the numerical optimiser by hand.
 
@@ -53,7 +53,7 @@ uv run --locked ruff check .
 
 - Reviewer name: Mahinsa Kuruppu
 - Review date: 23 Oct 2026
-- Calculator/spreadsheet/paper used:
+- Calculator/spreadsheet/paper used: Calculator and paper
 - Part A matched within tolerance: Yes 
 - Part B matched within tolerance: Yes 
 - Part C matched within tolerance: Yes 
