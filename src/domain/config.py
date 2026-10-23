@@ -73,3 +73,54 @@ class BaselinePortfolioConfig:
     @property
     def transaction_cost_rate(self) -> float:
         return self.transaction_cost_bps / 10_000
+
+
+@dataclass(frozen=True)
+class OptimisationConfig:
+    """Frozen research choices for constrained portfolio construction."""
+
+    development_end_exclusive: str = "2019-01-01"
+    validation_end_exclusive: str = "2022-01-01"
+    evaluation_end_exclusive: str = "2026-10-23"
+    initial_capital: float = 10_000_000.0
+    transaction_cost_bps: float = 10.0
+    annual_trading_days: int = 252
+    frontier_points: int = 25
+    bond_minimum: float = 0.40
+    single_asset_maximum: float = 0.60
+    equity_maximum: float = 0.50
+    sector_maximum: float = 0.10
+    sectors_combined_maximum: float = 0.15
+    gold_maximum: float = 0.20
+
+    def __post_init__(self) -> None:
+        dates = tuple(
+            date.fromisoformat(value)
+            for value in (
+                self.development_end_exclusive,
+                self.validation_end_exclusive,
+                self.evaluation_end_exclusive,
+            )
+        )
+        if not dates[0] < dates[1] < dates[2]:
+            raise ValueError("Development, validation and evaluation boundaries must be ordered")
+        if self.initial_capital <= 0 or not 0 <= self.transaction_cost_bps < 10_000:
+            raise ValueError("Invalid capital or transaction cost")
+        if self.annual_trading_days < 1 or self.frontier_points < 3:
+            raise ValueError("Invalid annualisation or frontier size")
+        fractions = (
+            self.bond_minimum,
+            self.single_asset_maximum,
+            self.equity_maximum,
+            self.sector_maximum,
+            self.sectors_combined_maximum,
+            self.gold_maximum,
+        )
+        if any(not 0 <= value <= 1 for value in fractions):
+            raise ValueError("Portfolio limits must be fractions in [0, 1]")
+        if self.bond_minimum > self.single_asset_maximum:
+            raise ValueError("AGG minimum exceeds the single-asset maximum")
+
+    @property
+    def transaction_cost_rate(self) -> float:
+        return self.transaction_cost_bps / 10_000

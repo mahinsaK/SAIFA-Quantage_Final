@@ -16,11 +16,13 @@ This tracks the final challenge, not the screening submission. Unchecked means n
 
 ## Definition of done
 
-Record a repository file/output and actual reviewer when marking an item complete. Numerical evidence must identify data snapshot, configuration and code revision. A chart alone does not prove correctness. No reviewers or approvals have yet been assigned.
+Record a repository file/output and actual reviewer when marking an item complete. Numerical evidence must identify data snapshot, configuration and code revision. A chart alone does not prove correctness. The baseline accounting reviewer is recorded; reviewers for the remaining open items still need to be assigned.
 
-**23 October data update:** data acquisition, frozen snapshots, calendar/quality checks, asset returns, lagged FRED rates and descriptive ADF are implemented. [Data milestone evidence](data-milestone.md) records the live dataset, 21 data-focused tests and offline reproduction. D01-D03 and D05-D07 now have automated implementation evidence; their final team sign-off remains open. D04 initially had asset-return evidence and is completed technically by the baseline update below. V05 remains open because no human validation is claimed.
+**23 October data update:** data acquisition, frozen snapshots, calendar/quality checks, asset returns, lagged FRED rates and descriptive ADF are implemented. [Data milestone evidence](data-milestone.md) records the live dataset, 21 data-focused tests and offline reproduction. D01-D03 and D05-D07 now have automated implementation evidence; their final team sign-off remains open. D04 initially had asset-return evidence and is completed by the baseline update below. V05 remains open because the completed accounting review covers only one part of the wider human-validation requirement.
 
-**Baseline update:** 40% SPY / 60% AGG buy-and-hold and monthly-rebalanced comparators, exact 10 bps gross-trade costs, daily weights/NAV, cumulative and annualised returns, volatility and drawdown are implemented. See [methodology](baseline-methodology.md) and the [manual check](manual-accounting-check.md). M06 has baseline evidence but remains open until candidate portfolios and team interpretation are complete. D04 now has portfolio accounting evidence. Human validation remains pending.
+**Baseline update:** 40% SPY / 60% AGG buy-and-hold and monthly-rebalanced comparators, exact 10 bps gross-trade costs, daily weights/NAV, cumulative and annualised returns, volatility and drawdown are implemented. The accounting was manually validated by Mahinsa Kuruppu on 23 October 2026: Parts A-C matched and the focused test suite passed. See [methodology](baseline-methodology.md) and the completed [manual check](manual-accounting-check.md). M06 has baseline evidence but remains open until the final investment interpretation is complete. D04 now has portfolio accounting and named human-review evidence.
+
+**Optimisation update:** constrained minimum-volatility and maximum-Sharpe candidates, a 25-point efficient frontier, CAPM and all named performance ratios are implemented with a chronological development/validation/evaluation split. See [methodology](optimisation-methodology.md), [milestone evidence](optimisation-milestone.md) and the pending [manual check](manual-optimisation-check.md). M04 and M05 have automated evidence but remain open until team review and final interpretation.
 
 ### Mandate and portfolio construction
 
@@ -40,7 +42,7 @@ Record a repository file/output and actual reviewer when marking an item complet
 | [ ] | D01 | Approved sources (p. 9) | Yahoo Finance via yfinance for ETFs; FRED for risk-free/macro; World Bank/IMF if relevant. Manifest records sources, dates, settings, coverage and snapshot. |
 | [ ] | D02 | Adjusted close (p. 9) | Verify downloaded field is adjusted; explain dividends/splits and avoid double-counting distributions. |
 | [ ] | D03 | Calendar alignment and non-overlap policy (p. 9) | Coverage/missingness table; reproducible holiday policy; no backward fill or silent fabrication. |
-| [ ] | D04 | Log returns for statistics; justify simple returns (p. 9) | Both defined; correct simple-return portfolio accounting, compounding, rebalancing and costs. |
+| [x] | D04 | Log returns for statistics; justify simple returns (p. 9) | Both defined; correct simple-return portfolio accounting, compounding, rebalancing and costs. |
 | [ ] | D05 | Flag suspicious data, document outliers (p. 9) | Stale/flat prices, breaks, jumps and negative-price flags with disposition log; genuine crisis returns retained. |
 | [ ] | D06 | Basic stationarity check (p. 9) | ADF specification, sample, results and interpretation on modelled returns; no claim that a test proves stationarity. |
 | [ ] | D07 | Reproducible cleaning, no manual hidden edits (p. 9) | Raw-to-clean pipeline regenerates data and audit outputs from snapshot. |

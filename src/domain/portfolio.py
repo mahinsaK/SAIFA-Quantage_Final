@@ -20,3 +20,14 @@ class RebalanceResult:
     cost: float
     nav_before: float
     nav_after: float
+
+
+@dataclass(frozen=True)
+class OptimisationResult:
+    name: str
+    weights: pd.Series
+    expected_return: float
+    volatility: float
+    sharpe: float
+    success: bool
+    message: str
