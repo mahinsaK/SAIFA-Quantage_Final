@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 from datetime import date
+from math import isclose
 
 UNIVERSE = ("SPY", "EFA", "EEM", "AGG", "GLD", "XLE", "XLK")
 
@@ -34,3 +35,41 @@ class DataConfig:
             raise ValueError("Invalid volatility or rate-age threshold")
         if self.minimum_prices < 2:
             raise ValueError("At least two prices are required")
+
+
+@dataclass(frozen=True)
+class BaselinePortfolioConfig:
+    """Transparent comparator assumptions, not an optimised recommendation."""
+
+    initial_capital: float = 10_000_000.0
+    target_weights: tuple[tuple[str, float], ...] = (("SPY", 0.40), ("AGG", 0.60))
+    transaction_cost_bps: float = 10.0
+    annual_trading_days: int = 252
+
+    def __post_init__(self) -> None:
+        tickers = [ticker for ticker, _ in self.target_weights]
+        weights = [weight for _, weight in self.target_weights]
+        if self.initial_capital <= 0:
+            raise ValueError("Initial capital must be positive")
+        if not tickers or len(tickers) != len(set(tickers)):
+            raise ValueError("Target tickers must be nonempty and unique")
+        if not set(tickers).issubset(UNIVERSE):
+            raise ValueError("Portfolio contains an ineligible ETF")
+        if any(weight < 0 for weight in weights) or not isclose(sum(weights), 1.0):
+            raise ValueError("Long-only target weights must sum to one")
+        if not 0 <= self.transaction_cost_bps < 10_000:
+            raise ValueError("Transaction cost must be between 0 and 10,000 bps")
+        if self.annual_trading_days < 1:
+            raise ValueError("Annual trading days must be positive")
+
+    @property
+    def tickers(self) -> tuple[str, ...]:
+        return tuple(ticker for ticker, _ in self.target_weights)
+
+    @property
+    def weights(self) -> tuple[float, ...]:
+        return tuple(weight for _, weight in self.target_weights)
+
+    @property
+    def transaction_cost_rate(self) -> float:
+        return self.transaction_cost_bps / 10_000
