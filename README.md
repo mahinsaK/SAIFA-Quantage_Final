@@ -6,7 +6,7 @@ A new project for the Serendib University Endowment Fund competition mandate: co
 
 The data foundation, 40% SPY / 60% AGG baseline and constrained Markowitz candidates are implemented. The baseline accounting was manually validated by Mahinsa Kuruppu on 23 October 2026; all three hand-calculated examples matched and the focused test suite passed. The optimiser produces minimum-volatility and maximum-Sharpe candidates, an efficient frontier, CAPM diagnostics and the required performance ratios with a chronological out-of-sample comparison.
 
-Advanced VaR/ES/EVT risk models and the Streamlit app are not yet implemented. Policy numbers remain proposed research assumptions, not client-supplied limits or validated investment recommendations. Optimisation and data-quality human reviews remain open.
+Historical, Parametric Normal and correlated Gaussian Monte Carlo VaR/ES are implemented at 95% and 99% confidence, with an equal-USD-10m target-allocation comparison. EVT, formal VaR backtesting and the Streamlit app remain outstanding. Policy numbers remain proposed research assumptions, not client-supplied limits or validated investment recommendations. Human review records are maintained separately in the linked worksheets.
 
 - [Requirements checklist](docs/final/requirements-checklist.md): 40 tracked requirements with brief page references and acceptance evidence, open decisions and the delivery schedule.
 - [Client investment policy draft](docs/final/client-investment-policy.md): mandate, proposed horizon/objective, allocation constraints, risk review levels and decision rules.
@@ -20,6 +20,9 @@ Advanced VaR/ES/EVT risk models and the Streamlit app are not yet implemented. P
 - [Optimisation milestone](docs/final/optimisation-milestone.md): frozen weights and out-of-sample results.
 - [Manual optimisation check](docs/final/manual-optimisation-check.md): constraint, covariance and CAPM calculations for team sign-off.
 - [Data quality review](docs/final/data-quality-review.md): grouped flags and the required human inspection record.
+- [Risk methodology](docs/final/risk-methodology.md): one-day loss definitions, shared inputs, timing and model limitations.
+- [Risk milestone](docs/final/risk-milestone.md): observed VaR/ES comparisons and verification evidence.
+- [Manual risk check](docs/final/manual-risk-check.md): hand examples and reviewer worksheet.
 
 ## Run the data pipeline
 
@@ -61,6 +64,23 @@ uv run --locked python run_optimisation.py
 
 Results are generated under `output/optimisation/<snapshot-id>/`. Candidate weights use development data through 2018; 2019-2021 is validation and 2022 onward is the final evaluation period.
 
+Build the one-day VaR/ES comparison from the frozen snapshot:
+
+```bash
+uv run --locked python run_risk.py
+```
+
+This rebuilds data and fits candidate allocations offline using the shared development-only estimator; it does not run or require the full performance backtest. It compares all three allocations at the same USD 10 million NAV using the last 1,000 daily return observations through the latest close, 95%/99% confidence, and 200,000 joint Normal scenarios with seed 42. Open `risk_report.md` in the printed `output/risk/<snapshot-id>/<settings-hash>/` folder. The estimates describe target holdings over the next trading session; they do not include future trading costs or drifted portfolio holdings.
+
+Optional settings (confidence uses fractions):
+
+```bash
+uv run --locked python run_risk.py --as-of 2026-10-22 --lookback 1000 --confidence 0.90 0.95 0.99
+uv run --locked pytest tests/test_risk.py -q
+```
+
+Different settings create separate risk folders; repeating identical settings reproduces that folder. Always require `status.json` to say `complete` before using its results.
+
 Final submission deadline: **31 October 2026**, as supplied by the team. Exact cutoff time, timezone and submission route still need confirmation. Internal completion target: **30 October 2026**.
 
 ## Relationship to the screening project
@@ -79,7 +99,7 @@ These paths are provenance notes for the team's machine, not portable dependenci
 
 ## Next implementation milestone
 
-Complete the named human reviews for data flags and optimisation calculations. Then implement Historical, Parametric and Monte Carlo VaR/ES with matching assumptions and small-number verification before EVT and formal backtesting.
+Complete the risk worksheet and any outstanding named human reviews. Next implement EVT diagnostics and threshold sensitivity, then walk-forward VaR coverage/independence tests and stress analysis. The current VaR/ES comparison is an as-of estimate, not coverage-validation evidence.
 
 ## Team review
 

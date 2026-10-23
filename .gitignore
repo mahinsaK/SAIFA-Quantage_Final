@@ -23,7 +23,7 @@ dist/
 !.env.example
 .streamlit/secrets.toml
 
-# Every file below is recreated by run_data.py from a frozen snapshot.
+# Derived data, portfolio, optimisation and risk outputs are reproduced by their runners.
 output/
 
 # New downloads and failed/partial acquisitions are local by default. Keep the

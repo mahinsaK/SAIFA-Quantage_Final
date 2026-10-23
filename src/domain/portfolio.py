@@ -31,3 +31,11 @@ class OptimisationResult:
     sharpe: float
     success: bool
     message: str
+
+
+@dataclass(frozen=True)
+class AllocationFit:
+    means: pd.Series
+    covariance: pd.DataFrame
+    annual_risk_free: float
+    candidates: tuple[OptimisationResult, ...]

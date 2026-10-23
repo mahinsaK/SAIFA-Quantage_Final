@@ -10,20 +10,13 @@ import pandas as pd
 from src.application.data_pipeline import build_data
 from src.data.snapshots import file_hash, load_snapshot, write_json
 from src.domain.config import UNIVERSE, OptimisationConfig
-from src.models.optimisation import annualised_inputs, efficient_frontier, optimise_portfolio
+from src.models.optimisation import efficient_frontier, fit_target_allocations
 from src.models.performance import performance_ratios
 from src.models.portfolio import complete_month_ends, performance_metrics, simulate_portfolio
 
 
 def _read_frame(path: Path) -> pd.DataFrame:
     return pd.read_csv(path, index_col="Date", parse_dates=True, float_precision="round_trip")
-
-
-def _risk_free_rate(risk_free: pd.DataFrame, end_exclusive: str) -> float:
-    development = risk_free.loc[risk_free.index < end_exclusive, "simple_return"]
-    if development.empty:
-        raise ValueError("No development risk-free observations")
-    return float(development.mean() * 252)
 
 
 def _month_ends(prices: pd.DataFrame, calendar_name: str) -> pd.DatetimeIndex:
@@ -55,18 +48,9 @@ def build_optimised_portfolios(
     if development.empty or validation.empty or len(evaluation_prices) < 2:
         raise ValueError("Configured development, validation or evaluation period is empty")
 
-    means, covariance = annualised_inputs(development, config.annual_trading_days)
-    annual_risk_free = _risk_free_rate(
-        risk_free.loc[risk_free.index < config.development_end_exclusive],
-        config.development_end_exclusive,
-    )
-    candidates = (
-        optimise_portfolio("minimum_volatility", means, covariance, annual_risk_free, config),
-        optimise_portfolio("maximum_sharpe", means, covariance, annual_risk_free, config),
-    )
-    if not all(result.success for result in candidates):
-        messages = "; ".join(f"{result.name}: {result.message}" for result in candidates)
-        raise RuntimeError(f"Portfolio optimisation failed: {messages}")
+    fit = fit_target_allocations(simple_returns, risk_free.simple_return, config)
+    means, covariance = fit.means, fit.covariance
+    annual_risk_free, candidates = fit.annual_risk_free, fit.candidates
     frontier = efficient_frontier(means, covariance, annual_risk_free, config)
 
     evaluation_month_ends = _month_ends(evaluation_prices, data_config.calendar)

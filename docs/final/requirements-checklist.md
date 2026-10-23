@@ -49,6 +49,8 @@ Record a repository file/output and actual reviewer when marking an item complet
 
 ### Risk models and validation
 
+**VaR/ES implementation update:** R01-R03 now have automated evidence from Historical, Parametric Normal and correlated Gaussian Monte Carlo estimates at 95%/99%. The methods use identical one-session target exposures, USD 10m NAV, 1,000-observation window and signed-loss convention. See [methodology](risk-methodology.md), [milestone](risk-milestone.md) and [manual worksheet](manual-risk-check.md). These requirements remain unchecked until named human review and final interpretation. The output is an as-of risk comparison; V01-V04 remain outstanding. The estimator also supports 90% for the future interface, but U02 is not implemented.
+
 | Done | ID | Brief requirement and source | Acceptance evidence |
 |---|---|---|---|
 | [ ] | R01 | Historical, Parametric, Monte Carlo VaR at 95% and 99% (p. 7) | Same portfolio, horizon, window and sign convention; repeatable simulation seed. |

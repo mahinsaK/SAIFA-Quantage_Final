@@ -5,10 +5,32 @@ import pandas as pd
 from scipy.optimize import minimize
 
 from src.domain.config import UNIVERSE, OptimisationConfig
-from src.domain.portfolio import OptimisationResult
+from src.domain.portfolio import AllocationFit, OptimisationResult
 
 EQUITIES = ("SPY", "EFA", "EEM", "XLE", "XLK")
 SECTORS = ("XLE", "XLK")
+
+
+def fit_target_allocations(
+    asset_returns: pd.DataFrame, risk_free_returns: pd.Series, config: OptimisationConfig
+) -> AllocationFit:
+    """Fit frozen candidates from development rows only, without evaluation data."""
+    development = asset_returns.loc[asset_returns.index < config.development_end_exclusive]
+    means, covariance = annualised_inputs(development, config.annual_trading_days)
+    if not risk_free_returns.index.is_unique:
+        raise ValueError("Development risk-free dates must be unique")
+    rates = risk_free_returns.reindex(development.index)
+    if not np.isfinite(rates.to_numpy(dtype=float)).all():
+        raise ValueError("Finite risk-free returns are required on all development dates")
+    annual_risk_free = float(rates.mean() * config.annual_trading_days)
+    candidates = tuple(
+        optimise_portfolio(name, means, covariance, annual_risk_free, config)
+        for name in ("minimum_volatility", "maximum_sharpe")
+    )
+    if not all(result.success for result in candidates):
+        messages = "; ".join(f"{r.name}: {r.message}" for r in candidates)
+        raise RuntimeError(f"Portfolio optimisation failed: {messages}")
+    return AllocationFit(means, covariance, annual_risk_free, candidates)
 
 
 def annualised_inputs(
@@ -36,13 +58,13 @@ def policy_constraints(config: OptimisationConfig) -> list[dict]:
         {"type": "ineq", "fun": lambda w: w[index["AGG"]] - config.bond_minimum},
         {
             "type": "ineq",
-            "fun": lambda w: config.equity_maximum
-            - sum(w[index[ticker]] for ticker in EQUITIES),
+            "fun": lambda w: config.equity_maximum - sum(w[index[ticker]] for ticker in EQUITIES),
         },
         {
             "type": "ineq",
-            "fun": lambda w: config.sectors_combined_maximum
-            - sum(w[index[ticker]] for ticker in SECTORS),
+            "fun": lambda w: (
+                config.sectors_combined_maximum - sum(w[index[ticker]] for ticker in SECTORS)
+            ),
         },
     ]
 
@@ -124,7 +146,13 @@ def optimise_portfolio(
     )
     if not solution.success:
         return OptimisationResult(
-            name, pd.Series(solution.x, index=UNIVERSE), np.nan, np.nan, np.nan, False, solution.message
+            name,
+            pd.Series(solution.x, index=UNIVERSE),
+            np.nan,
+            np.nan,
+            np.nan,
+            False,
+            solution.message,
         )
     weights = pd.Series(solution.x, index=UNIVERSE, dtype=float)
     weights[weights.abs() < 1e-10] = 0.0

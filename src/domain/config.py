@@ -2,9 +2,42 @@
 
 from dataclasses import dataclass
 from datetime import date
-from math import isclose
+from math import isclose, isfinite
 
 UNIVERSE = ("SPY", "EFA", "EEM", "AGG", "GLD", "XLE", "XLK")
+
+
+@dataclass(frozen=True)
+class RiskConfig:
+    """One-day market risk of funded, fixed portfolio exposures."""
+
+    as_of: str | None = None
+    lookback_observations: int = 1_000
+    confidence_levels: tuple[float, ...] = (0.95, 0.99)
+    reference_nav: float = 10_000_000.0
+    horizon_sessions: int = 1
+    simulations: int = 200_000
+    seed: int = 42
+
+    def __post_init__(self) -> None:
+        if self.as_of is not None:
+            date.fromisoformat(self.as_of)
+        if type(self.lookback_observations) is not int or self.lookback_observations < 250:
+            raise ValueError("Risk estimation requires at least 250 return observations")
+        if (
+            not self.confidence_levels
+            or len(set(self.confidence_levels)) != len(self.confidence_levels)
+            or any(not isfinite(c) or not 0 < c < 1 for c in self.confidence_levels)
+        ):
+            raise ValueError("Confidence levels must be unique finite fractions in (0, 1)")
+        if not isfinite(self.reference_nav) or self.reference_nav <= 0:
+            raise ValueError("Reference NAV must be finite and positive")
+        if type(self.horizon_sessions) is not int or self.horizon_sessions != 1:
+            raise ValueError("Only a one-trading-session horizon is implemented")
+        if type(self.simulations) is not int or self.simulations < 1_000:
+            raise ValueError("At least 1,000 Monte Carlo scenarios are required")
+        if type(self.seed) is not int or self.seed < 0:
+            raise ValueError("Seed must be a nonnegative integer")
 
 
 @dataclass(frozen=True)
