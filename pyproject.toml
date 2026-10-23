@@ -1,0 +1,27 @@
+[project]
+name = "quant-edge-final"
+version = "0.1.0"
+description = "Reproducible data and investment-risk research for Quant Edge final"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+  "numpy>=2.0,<3",
+  "pandas>=2.2,<3",
+  "yfinance>=0.2.66,<2",
+  "requests>=2.32,<3",
+  "exchange-calendars>=4.11,<5",
+  "statsmodels>=0.14,<0.16",
+]
+
+[dependency-groups]
+dev = ["pytest>=8,<10", "ruff>=0.12,<1"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+

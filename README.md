@@ -4,10 +4,39 @@ A new project for the Serendib University Endowment Fund competition mandate: co
 
 ## Current status
 
-Planning documents are ready for team review. Data acquisition, financial models, tests and the Streamlit application have not yet been implemented in this repository. Policy numbers are proposed research assumptions, not client-supplied limits or validated investment recommendations.
+The data foundation is implemented: explicit Yahoo/FRED acquisition, frozen snapshots, calendar and quality checks, simple/log asset returns, lagged risk-free accrual and descriptive stationarity diagnostics. The included dataset has 5,515 return observations per ETF, from 19 November 2004 through 22 October 2026. Review flags are retained for team investigation.
+
+Portfolio construction, risk models and the Streamlit app are not yet implemented. Policy numbers remain proposed research assumptions, not client-supplied limits or validated investment recommendations.
 
 - [Requirements checklist](docs/final/requirements-checklist.md): 40 tracked requirements with brief page references and acceptance evidence, open decisions and the delivery schedule.
 - [Client investment policy draft](docs/final/client-investment-policy.md): mandate, proposed horizon/objective, allocation constraints, risk review levels and decision rules.
+- [Data methodology](docs/final/data-methodology.md): sources, cleaning rules, financial conventions, limitations and code map.
+- [Data milestone evidence](docs/final/data-milestone.md): observed coverage, checks and remaining review work.
+- [AI assistance log](docs/final/ai-use-log.md): generated components and actual validation status.
+
+## Run the data pipeline
+
+Install uv, then run from this directory:
+
+```bash
+uv sync --locked
+uv run --locked python run_data.py
+```
+
+The included snapshot is reused. The pipeline does not contact Yahoo/FRED unless explicitly requested:
+
+```bash
+uv run --locked python run_data.py --download --start 2004-01-01 --end 2026-10-23
+```
+
+Run verification:
+
+```bash
+uv run --locked pytest -q
+uv run --locked ruff check .
+```
+
+Read the generated quality_report.md and quality_flags.csv in `output/data/<snapshot-id>/`. `data/LATEST` identifies the last complete acquisition; `status.json` separately records whether preparation succeeded. Raw snapshots are retained; failed acquisitions never replace the latest pointer. A successful build does not mean flagged market events have been reviewed by the team.
 
 Final submission deadline: **31 October 2026**, as supplied by the team. Exact cutoff time, timezone and submission route still need confirmation. Internal completion target: **30 October 2026**.
 
@@ -27,7 +56,7 @@ These paths are provenance notes for the team's machine, not portable dependenci
 
 ## Next implementation milestone
 
-Build the data foundation: adjusted prices for SPY, EFA, EEM, AGG, GLD, XLE and XLK; a documented FRED risk-free proxy; a frozen data snapshot; calendar and data-quality checks; and correct log/simple return handling. Establish a simple benchmark before adding portfolio optimisation and advanced risk models.
+Review data flags and financial conventions, then establish the proposed 40% SPY / 60% AGG benchmark with correct portfolio-value accounting, monthly rebalancing and transaction costs. Compare return and drawdown before adding portfolio optimisation and advanced risk models. No portfolio results are claimed by the data foundation.
 
 ## Team review
 

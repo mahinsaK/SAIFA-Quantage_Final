@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "snapshot_id": "20261023T102523Z-0d40a885",
+  "retrieved_at_utc": "2026-10-23T10:25:23.184200+00:00",
+  "config": {
+    "start": "2004-01-01",
+    "end_exclusive": "2026-10-23",
+    "tickers": [
+      "SPY",
+      "EFA",
+      "EEM",
+      "AGG",
+      "GLD",
+      "XLE",
+      "XLK"
+    ],
+    "risk_free_series": "DGS3MO",
+    "calendar": "XNYS",
+    "jump_threshold": 0.1,
+    "flat_sessions": 5,
+    "volatility_ratio_threshold": 3.0,
+    "max_rate_age_days": 7,
+    "minimum_prices": 252
+  },
+  "python": "3.11.15",
+  "packages": {
+    "yfinance": "1.7.0",
+    "pandas": "2.3.3",
+    "numpy": "2.4.6",
+    "requests": "2.34.2",
+    "exchange-calendars": "4.13.2",
+    "statsmodels": "0.15.0"
+  },
+  "sources": {
+    "prices": "Yahoo Finance via yfinance.Ticker.history",
+    "risk_free": "https://fred.stlouisfed.org/series/DGS3MO"
+  },
+  "yahoo_settings": {
+    "interval": "1d",
+    "auto_adjust": false,
+    "back_adjust": false,
+    "actions": true,
+    "repair": false,
+    "keepna": true,
+    "rounding": false
+  },
+  "limitations": [
+    "Yahoo frames are provider/library-normalised responses, not raw HTTP payloads.",
+    "Adjusted prices and FRED history can be revised; this is not a point-in-time archive.",
+    "Download start/end are research coverage, not train/test split dates."
+  ],
+  "files": {
+    "SPY.csv": "7bbdd3ed24c2939d65c1b80381f487caf9a1ccafc75d244c6bc03cf9093a4c05",
+    "EFA.csv": "d19c72e27de677dc653d1c16b1befa4ed2bb2aff67ba0b36609305828fe3b32f",
+    "EEM.csv": "2e795cd3a8bdbdedde17efbdf2718562732a90fbd289a9b950cde3da4d8890c1",
+    "AGG.csv": "fd8b9dfbbcf99dae2d6f3815b309d588e2e41b7722703d5c401a493913715dd5",
+    "GLD.csv": "a7cd6e2ad15bfddd8f95293dbf7e68e5003798f85f396ba662a8873a707c7661",
+    "XLE.csv": "e1eadf46f55b0f4556f8d2accd1a57a816040f67cf3c1e8f343e5500c754ef95",
+    "XLK.csv": "402e72cd3a0aa7e97774fc32cdba17382150932f6f29669359a1f3cdf11307b2",
+    "fred.csv": "bb5b27f1171f47b8a615bf3101fda9181a7eecee9bc1b37d64ca95517fd2311b"
+  }
+}

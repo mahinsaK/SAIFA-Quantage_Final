@@ -18,6 +18,8 @@ This tracks the final challenge, not the screening submission. Unchecked means n
 
 Record a repository file/output and actual reviewer when marking an item complete. Numerical evidence must identify data snapshot, configuration and code revision. A chart alone does not prove correctness. No reviewers or approvals have yet been assigned.
 
+**23 October implementation update:** data acquisition, frozen snapshots, calendar/quality checks, asset returns, lagged FRED rates and descriptive ADF are implemented. [Data milestone evidence](data-milestone.md) records the live dataset, 21 passing tests and offline reproduction. D01-D03 and D05-D07 now have automated implementation evidence; their final team sign-off remains open. D04 has asset-return calculations, but portfolio accounting is still pending. V05 remains open because no human validation is claimed.
+
 ### Mandate and portfolio construction
 
 | Done | ID | Brief requirement and source | Acceptance evidence |

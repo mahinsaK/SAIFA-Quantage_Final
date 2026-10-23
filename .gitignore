@@ -1,0 +1,35 @@
+.venv/
+.cache/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.DS_Store
+tmp/
+
+# Local Python/tool state
+.coverage
+htmlcov/
+.mypy_cache/
+.ipynb_checkpoints/
+build/
+dist/
+*.egg-info/
+*.log
+
+# Local credentials and Streamlit settings (keep examples/templates trackable)
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# Every file below is recreated by run_data.py from a frozen snapshot.
+output/
+
+# New downloads and failed/partial acquisitions are local by default. Keep the
+# selected submission snapshot below so judges can reproduce results offline.
+data/snapshots/*/
+!data/snapshots/20261023T102523Z-0d40a885/
+!data/snapshots/20261023T102523Z-0d40a885/**
+data/LATEST.tmp
+
