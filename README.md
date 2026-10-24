@@ -6,7 +6,7 @@ A new project for the Serendib University Endowment Fund competition mandate: co
 
 The data foundation, 40% SPY / 60% AGG baseline and constrained Markowitz candidates are implemented. The baseline accounting was manually validated by Mahinsa Kuruppu on 23 October 2026; all three hand-calculated examples matched and the focused test suite passed. The optimiser produces minimum-volatility and maximum-Sharpe candidates, an efficient frontier, CAPM diagnostics and the required performance ratios with a chronological out-of-sample comparison.
 
-Historical, Parametric Normal, correlated Gaussian Monte Carlo and EVT POT/GPD VaR/ES are implemented at 95% and 99% confidence, with an equal-USD-10m target-allocation comparison. EVT includes development/as-of diagnostics, threshold sensitivity and block-bootstrap uncertainty; threshold approval and human review remain pending. Formal VaR backtesting and the Streamlit app remain outstanding. Policy numbers remain proposed research assumptions, not client-supplied limits or validated investment recommendations. Human review records are maintained separately in the linked worksheets.
+Historical, Parametric Normal, correlated Gaussian Monte Carlo and EVT POT/GPD VaR/ES are implemented at 95% and 99% confidence, with an equal-USD-10m target-allocation comparison. EVT includes development/as-of diagnostics, threshold sensitivity and block-bootstrap uncertainty. Mahinsa Kuruppu completed the manual EVT arithmetic and signed off 90% as a provisional research threshold on 24 October 2026. Formal VaR backtesting and the Streamlit app remain outstanding. Policy numbers remain proposed research assumptions, not client-supplied limits or validated investment recommendations. Human review records are maintained separately in the linked worksheets.
 
 - [Requirements checklist](docs/final/requirements-checklist.md): 40 tracked requirements with brief page references and acceptance evidence, open decisions and the delivery schedule.
 - [Client investment policy draft](docs/final/client-investment-policy.md): mandate, proposed horizon/objective, allocation constraints, risk review levels and decision rules.
@@ -91,7 +91,7 @@ uv run --locked python run_evt.py
 uv run --locked pytest tests/test_evt.py -q
 ```
 
-Open `evt_report.md` in the printed `output/evt/<snapshot>/<settings-hash>/` folder. It includes six diagnostic charts, threshold sensitivity, six EVT estimates and 95% bootstrap intervals. `risk_comparison.csv` contains all four methods on identical inputs. The default 90% loss threshold is a prespecified research rule; development diagnostics support its review, and current-window results never automatically change it. Unsupported confidence/threshold combinations and unreliable fits are marked unavailable, not zero. Complete the manual EVT worksheet before recording human approval.
+Open `evt_report.md` in the printed `output/evt/<snapshot>/<settings-hash>/` folder. It includes six diagnostic charts, threshold sensitivity, six EVT estimates and 95% bootstrap intervals. `risk_comparison.csv` contains all four methods on identical inputs. The default 90% loss threshold is a prespecified and provisionally reviewed research rule; current-window results never automatically change it. Unsupported confidence/threshold combinations and unreliable fits are marked unavailable, not zero. The signed manual review is in `manual-evt-check.md`.
 
 Optional research settings: `--as-of YYYY-MM-DD`, `--lookback 1000`, `--threshold 0.90`, `--confidence 0.95 0.99`, `--bootstrap 200`, `--block-length 10`, `--seed 314159`. A 90% forecast confidence is at the default threshold boundary and is explicitly unsupported. Changing a setting creates a separate run folder. Always check `status.json` and row-level warnings.
 
@@ -113,7 +113,7 @@ These paths are provenance notes for the team's machine, not portable dependenci
 
 ## Next implementation milestone
 
-Complete the risk/EVT worksheets and threshold interpretation. Next implement walk-forward VaR coverage/independence tests, risk contributions and stress analysis. The current four-method comparison is an as-of estimate, not coverage-validation evidence.
+Complete any remaining risk worksheet interpretation. Next implement walk-forward VaR coverage/independence tests, risk contributions and stress analysis. The current four-method comparison is an as-of estimate, not coverage-validation evidence.
 
 ## Team review
 
