@@ -74,6 +74,36 @@ class RiskConfig:
 
 
 @dataclass(frozen=True)
+class BacktestConfig:
+    """Prespecified forecast dates and statistical conventions for daily VaR validation."""
+
+    start: str = "2019-01-01"
+    end_exclusive: str = "2026-10-23"
+    lookback_observations: int = 1000
+    confidence_levels: tuple[float, ...] = (0.95, 0.99)
+    reference_nav: float = 10_000_000.0
+    simulations: int = 200_000
+    seed: int = 42
+    significance: float = 0.05
+    minimum_previous_state: int = 5
+
+    def __post_init__(self) -> None:
+        if date.fromisoformat(self.start) >= date.fromisoformat(self.end_exclusive):
+            raise ValueError("Backtest start must precede exclusive end")
+        RiskConfig(
+            lookback_observations=self.lookback_observations,
+            confidence_levels=self.confidence_levels,
+            reference_nav=self.reference_nav,
+            simulations=self.simulations,
+            seed=self.seed,
+        )
+        if not isfinite(self.significance) or not 0 < self.significance < 1:
+            raise ValueError("Significance must be in (0, 1)")
+        if type(self.minimum_previous_state) is not int or self.minimum_previous_state < 1:
+            raise ValueError("Minimum previous-state count must be a positive integer")
+
+
+@dataclass(frozen=True)
 class DataConfig:
     start: str = "2004-01-01"
     end_exclusive: str = "2026-10-23"

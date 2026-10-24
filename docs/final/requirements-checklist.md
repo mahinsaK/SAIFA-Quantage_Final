@@ -60,11 +60,13 @@ Record a repository file/output and actual reviewer when marking an item complet
 | [ ] | R03 | ES and rationale (p. 7) | Matching confidence/horizon; explanation of losses beyond VaR and why neither is a guaranteed loss ceiling. |
 | [x] | R04 | EVT and justified threshold (p. 7) | Diagnostics, exceedance count, parameters, uncertainty and sensitivity; 90% provisional rule reviewed and signed, with limitations. Forecast validation tracked separately in V01-V04. |
 | [ ] | R05 | Model limitations and stressed behaviour (p. 7) | Stress-period comparison; unreliable/undefined estimates visibly flagged rather than fabricated. |
-| [ ] | V01 | Out-of-sample selected VaR models (p. 7) | Timestamped forecasts/losses; training, validation and final-test boundaries. Team plan: walk-forward evaluation without future-data leakage. |
-| [ ] | V02 | Kupiec proportion-of-failures test (p. 7) | Exceptions, observations, expected rate, statistic, p-value, interpretation and edge cases. |
-| [ ] | V03 | Christoffersen independence test (p. 7) | Transition counts, statistic/p-value; insufficient transitions explicitly flagged, not treated as a pass. |
-| [ ] | V04 | Basel traffic light (p. 7) | Canonical 250-observation/99% view. Other settings use a labelled, justified adaptation; no regulatory-compliance claim. |
+| [ ] | V01 | Out-of-sample selected VaR models (p. 7) | Implemented timestamped past-only forecasts for all four candidates, fixed development weights and separate validation/evaluation periods; retrospective-evaluation caveat. Named human interpretation pending. |
+| [ ] | V02 | Kupiec proportion-of-failures test (p. 7) | Implemented counts, expected rate, LR/p-value, exact binomial diagnostic and boundary/missing cases. Hand likelihood and automated checks supplied; human review pending. |
+| [ ] | V03 | Christoffersen independence test (p. 7) | Implemented transition counts and LR/p-value; missing/insufficient evidence unavailable, sparse cells warned. Manual transition exercise supplied; human review pending. |
+| [ ] | V04 | Basel traffic light (p. 7) | Implemented canonical rolling/latest 250-session/99% views, reset by period; other confidence levels have no colour. No regulatory-compliance claim. Human interpretation pending. |
 | [ ] | V05 | Human validation (pp. 8-9); team test plan | Hand-worked checks, analytical/simulation checks, accounting and future-data leakage checks; actual reviewer records. |
+
+**Backtesting implementation update (24 Oct):** V01–V04 now have code and automated evidence: 1,963 next-session targets, 47,112 forecasts, 48 separate-period test summaries and dated rolling Basel results. See [methodology](backtesting-methodology.md), [milestone evidence](backtesting-milestone.md) and the pending [manual worksheet](manual-backtest-check.md). Earlier references to pending forecast validation describe the previous milestone. Some coverage and independence nulls are rejected; implementation completion does not mean all models are approved. The requirements stay unchecked until named human review and final interpretation. ES severity backtesting is not claimed.
 
 ### Investor decisions and stress
 
@@ -100,7 +102,7 @@ Record a repository file/output and actual reviewer when marking an item complet
 | Horizon / objective | 10 years; 3% annualised real growth after modelled trading costs, before withdrawals | Suitability and feasibility assessed on development data |
 | Constraints / risk triggers | Defined in companion policy | Feasibility and sensitivity, then policy freeze |
 | Spending / liquidity | No client schedule given | Explicitly hypothetical withdrawal analysis, not invented client commitments |
-| Sample / windows | Unset | Verify ETF/crisis coverage and enough tail observations; freeze before evaluation |
+| Sample / windows | Development through 2018; validation 2019–2021; evaluation 2022–22 Oct 2026; rolling risk window 1,000 sessions | Existing evaluation has been viewed; retain retrospective caveat and avoid post-hoc selection. Stress coverage and final team interpretation remain open. |
 | Benchmarks | 40% SPY / 60% AGG comparator; SPY CAPM proxy | Explain suitability and mixed-asset proxy limitations |
 | Logistics | 31 Oct deadline | Exact time/timezone, submission route and pitch date |
 | Owners / reviewers | Unassigned | Record actual members and review outcomes |

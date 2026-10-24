@@ -29,7 +29,7 @@ See [methodology](evt-methodology.md) for formulas, provenance, bootstrap caveat
 
 Automated verification covers analytic GPD/exponential identities, known-distribution recovery, units/translation, ties, support limits, insufficient/degenerate/failed fits, infinite ES, block structure, repeatability and future-data isolation. See the final validation record below for the executed results.
 
-R04 now has implementation and named human-review evidence. Walk-forward coverage/independence tests, stress analysis and the committee decision remain outstanding. The threshold decision is provisional and must be revisited if forecasting evidence is poor.
+R04 now has implementation and named human-review evidence. The subsequent [backtesting milestone](backtesting-milestone.md) implements walk-forward coverage/independence tests and records their rejections; human interpretation remains pending. Stress analysis and the committee decision remain outstanding. The threshold decision is provisional and must be revisited if forecasting evidence is poor, without tuning the already-viewed evaluation sample to pass.
 
 ## Executed validation record — 24 October 2026
 

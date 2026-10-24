@@ -6,7 +6,7 @@ A new project for the Serendib University Endowment Fund competition mandate: co
 
 The data foundation, 40% SPY / 60% AGG baseline and constrained Markowitz candidates are implemented. The baseline accounting was manually validated by Mahinsa Kuruppu on 23 October 2026; all three hand-calculated examples matched and the focused test suite passed. The optimiser produces minimum-volatility and maximum-Sharpe candidates, an efficient frontier, CAPM diagnostics and the required performance ratios with a chronological out-of-sample comparison.
 
-Historical, Parametric Normal, correlated Gaussian Monte Carlo and EVT POT/GPD VaR/ES are implemented at 95% and 99% confidence, with an equal-USD-10m target-allocation comparison. EVT includes development/as-of diagnostics, threshold sensitivity and block-bootstrap uncertainty. Mahinsa Kuruppu completed the manual EVT arithmetic and signed off 90% as a provisional research threshold on 24 October 2026. Formal VaR backtesting and the Streamlit app remain outstanding. Policy numbers remain proposed research assumptions, not client-supplied limits or validated investment recommendations. Human review records are maintained separately in the linked worksheets.
+Historical, Parametric Normal, correlated Gaussian Monte Carlo and EVT POT/GPD VaR/ES are implemented at 95% and 99% confidence, with an equal-USD-10m target-allocation comparison. EVT includes development/as-of diagnostics, threshold sensitivity and block-bootstrap uncertainty. Mahinsa Kuruppu completed the manual EVT arithmetic and signed off 90% as a provisional research threshold on 24 October 2026. Walk-forward forecasts, Kupiec coverage, Christoffersen independence and the historical Basel traffic light are now implemented; their human review is pending. Some model/period tests reject, and the reports retain those results. Risk contributions, stress analysis and the Streamlit app remain outstanding. Policy numbers remain proposed research assumptions, not client-supplied limits or validated investment recommendations. Human review records are maintained separately in the linked worksheets.
 
 - [Requirements checklist](docs/final/requirements-checklist.md): 40 tracked requirements with brief page references and acceptance evidence, open decisions and the delivery schedule.
 - [Client investment policy draft](docs/final/client-investment-policy.md): mandate, proposed horizon/objective, allocation constraints, risk review levels and decision rules.
@@ -26,6 +26,9 @@ Historical, Parametric Normal, correlated Gaussian Monte Carlo and EVT POT/GPD V
 - [EVT methodology](docs/final/evt-methodology.md): threshold rationale, GPD formulas and uncertainty.
 - [EVT milestone](docs/final/evt-milestone.md): frozen-data results and diagnostic interpretation.
 - [Manual EVT check](docs/final/manual-evt-check.md): independent calculations and threshold-review record.
+- [Backtesting methodology](docs/final/backtesting-methodology.md): forecast timing, statistical definitions, missing-data handling and limitations.
+- [Backtesting milestone](docs/final/backtesting-milestone.md): frozen results, rejections and automated verification evidence.
+- [Manual backtest check](docs/final/manual-backtest-check.md): timing, likelihood and transition-count exercises for actual team review.
 
 ## Run the data pipeline
 
@@ -111,9 +114,24 @@ The final brief was located at:
 
 These paths are provenance notes for the team's machine, not portable dependencies.
 
+## Run walk-forward VaR backtesting
+
+```bash
+uv run --locked python run_backtest.py
+uv run --locked pytest tests/test_backtesting.py -q
+```
+
+This offline runner uses the frozen snapshot, development-only allocations and rolling 1,000-return windows. It forecasts each next exchange session at 95%/99% for all four methods, with 200,000 date-seeded Normal simulations. The default covers 2019–22 October 2026 and may take several minutes. Read `backtest_report.md` in the printed `output/backtest/<snapshot>/<settings-hash>/` folder, then complete the manual worksheet. Require `status.json` to say `complete`.
+
+```bash
+uv run --locked python run_backtest.py --start 2022-01-01 --end-exclusive 2026-10-23
+```
+
+Changing the forecast range does not change a shared date's forecasts. Missing or insufficient evidence is explicitly unavailable. Validation and evaluation results remain separate; Basel colours require 250 complete sessions at 99%. This tests one-day losses of fixed target exposures at USD 10m, not the monthly-rebalanced NAV after costs. The evaluation is retrospective because earlier final-period results have already been viewed. Non-rejection or a green latest window is not a safety guarantee; these tests do not validate ES severity.
+
 ## Next implementation milestone
 
-Complete any remaining risk worksheet interpretation. Next implement walk-forward VaR coverage/independence tests, risk contributions and stress analysis. The current four-method comparison is an as-of estimate, not coverage-validation evidence.
+Complete the backtesting worksheet and any remaining risk interpretation. Next implement marginal/component VaR and ES contributions, historical crisis replays and a team-designed hypothetical stress scenario. Carry the backtest's coverage/clustering limitations into the investment decision; do not choose or retune a model simply to make the evaluation tests pass.
 
 ## Team review
 
