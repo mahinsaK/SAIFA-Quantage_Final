@@ -171,8 +171,8 @@ def build_evt(
                 config=settings,
                 git=_git_state(source_root),
                 threshold_rule="prespecified_quantile; no automatic selection from evaluation results",
-                threshold_approval="pending human diagnostic review",
-                human_validation="pending",
+                threshold_approval="recorded separately in docs/final/manual-evt-check.md",
+                human_validation="recorded separately in docs/final/manual-evt-check.md",
                 coverage_backtest="not_implemented",
                 weight_basis="frozen_target_allocations",
                 uncertainty="95% circular-block percentile intervals; rule fixed, threshold refitted",
@@ -198,5 +198,5 @@ def build_evt(
             dict(status, status="failed", error=f"{type(exc).__name__}: {exc}"),
         )
         raise
-    write_json(output / "status.json", dict(status, status="complete", human_validation="pending"))
+    write_json(output / "status.json", dict(status, status="complete", human_validation="see manual worksheet"))
     return output

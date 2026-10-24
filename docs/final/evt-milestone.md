@@ -1,6 +1,6 @@
 # EVT implementation milestone
 
-Implemented 24 October 2026. Human arithmetic check and threshold approval remain pending.
+Implemented 24 October 2026. Mahinsa Kuruppu completed the manual arithmetic and signed off the 90% threshold as a provisional research choice on 24 October 2026. Forecast coverage validation remains pending.
 
 Default snapshot: `20261023T102523Z-0d40a885`. Settings run: `5feb6a842858`.
 As-of close: 2026-10-22. Next session: 2026-10-23. Current window: 2022-10-27 through 2026-10-22, 1,000 observations. Development diagnostics: 2004-11-19 through 2018-12-31, 3,552 observations.
@@ -19,17 +19,17 @@ These are research estimates, not guaranteed limits. Intervals are conditional o
 
 ## Threshold evidence and limits
 
-Development baseline shape estimates at 85%, 90%, 92.5% are approximately 0.2515, 0.2162, 0.2722. The baseline's estimated 99% VaR is relatively stable across this area, while parameters and ES vary. Optimized development shape estimates rise at the highest thresholds, so there is no basis to claim perfect parameter stability. Q-Q plots show departures in the largest observations. The default remains a transparent sample-size/tail-focus compromise awaiting team interpretation.
+Development baseline shape estimates at 85%, 90%, 92.5% are approximately 0.2515, 0.2162, 0.2722. The baseline's estimated 99% VaR is relatively stable across this area, while parameters and ES vary. Optimized development shape estimates rise at the highest thresholds, so there is no basis to claim perfect parameter stability. Q-Q plots show departures in the largest observations. The named reviewer retained the default as a provisional sample-size/tail-focus compromise, with these limitations recorded.
 
 The current 97.5% threshold leaves only 25 excesses and is withheld. At 95% confidence, thresholds at/above the effective 95% boundary are unsupported. Neither condition is silently replaced with a usable-looking number. The current-window evidence is not used to tune the default rule.
 
 ## Reproduction and review
 
-See [methodology](evt-methodology.md) for formulas, provenance, bootstrap caveats and file definitions. Complete [manual worksheet](manual-evt-check.md) for independent arithmetic and threshold reasoning. Run `uv run --locked python run_evt.py` to reproduce the report, six diagnostic charts and all supporting CSVs. The runner verifies snapshot integrity and records dependency, code and output hashes.
+See [methodology](evt-methodology.md) for formulas, provenance, bootstrap caveats and file definitions. The completed [manual worksheet](manual-evt-check.md) records independent arithmetic and threshold reasoning. Run `uv run --locked python run_evt.py` to reproduce the report, six diagnostic charts and all supporting CSVs. The runner verifies snapshot integrity and records dependency, code and output hashes.
 
 Automated verification covers analytic GPD/exponential identities, known-distribution recovery, units/translation, ties, support limits, insufficient/degenerate/failed fits, infinite ES, block structure, repeatability and future-data isolation. See the final validation record below for the executed results.
 
-R04 now has implementation evidence. Human threshold approval, walk-forward coverage/independence tests, stress analysis and the committee decision remain outstanding.
+R04 now has implementation and named human-review evidence. Walk-forward coverage/independence tests, stress analysis and the committee decision remain outstanding. The threshold decision is provisional and must be revisited if forecasting evidence is poor.
 
 ## Executed validation record — 24 October 2026
 
@@ -41,4 +41,4 @@ R04 now has implementation evidence. Human threshold approval, walk-forward cove
 - Existing 18 Historical/Normal/Gaussian-MC estimate values are exactly equal to the earlier risk run.
 - Generated baseline development/as-of charts inspected visually for readable axes and layout. Mean excess is plotted against the loss threshold (not percentile), as required for interpreting linearity.
 
-These are assistant-executed checks. The team worksheet remains unsigned.
+These were assistant-executed checks. The team later completed and signed the separate manual worksheet.

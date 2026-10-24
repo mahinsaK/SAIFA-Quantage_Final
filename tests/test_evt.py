@@ -207,8 +207,8 @@ def test_pipeline_provenance_units_repeatability_future_exclusion_and_failure(tm
     assert diagnostics.loc[diagnostics.period.eq("development"), "end"].max() < "2019-01-01"
     assert len(list(output.glob("*.png"))) == 6
     summary = json.loads((output / "summary.json").read_text())
-    assert summary["human_validation"] == "pending"
-    assert summary["threshold_approval"] == "pending human diagnostic review"
+    assert summary["human_validation"] == "recorded separately in docs/final/manual-evt-check.md"
+    assert summary["threshold_approval"] == "recorded separately in docs/final/manual-evt-check.md"
     before = {p.name: p.read_bytes() for p in output.iterdir()}
     # Future mutations must not alter fitting, diagnostics, selection or any result artifact.
     panel.iloc[1601:] = 500

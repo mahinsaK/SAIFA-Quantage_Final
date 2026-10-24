@@ -99,8 +99,9 @@ def render_evt_report(estimates: pd.DataFrame, diagnostics: pd.DataFrame, contex
         (
             "Inspect mean excess, shape/modified-scale stability and Q-Q plots together. "
             "A low threshold may include the distribution body; a high threshold has too few "
-            "observations. R04 approval remains pending named human review; chart generation "
-            "and successful numerical fits alone do not establish adequacy."
+            "observations. See docs/final/manual-evt-check.md for the named review record; "
+            "this generated report does not assert human approval. Chart generation and "
+            "successful numerical fits alone do not establish adequacy."
         ),
         "",
         "## Estimates and 95% bootstrap intervals",

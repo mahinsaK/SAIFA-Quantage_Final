@@ -1,6 +1,6 @@
 # EVT methodology: peaks over a loss threshold
 
-Implemented research model; threshold approval, human validation and out-of-sample coverage are separate checks.
+Implemented research model. The named reviewer completed manual arithmetic and retained the 90% threshold provisionally; out-of-sample coverage remains a separate check.
 
 ## Inputs and timing
 
@@ -81,4 +81,4 @@ Settings changes create different folders; identical settings reproduce outputs 
 
 ## Remaining validation
 
-Human arithmetic and threshold interpretation are pending. Walk-forward forecast coverage, independence, stress-period behaviour and a final allocation recommendation remain separate milestones. This unconditional EVT model has no volatility filter or declustering. It should not be assumed to outperform empirical or Normal risk models merely because it models extremes.
+Human arithmetic and provisional threshold interpretation are recorded in `manual-evt-check.md`. Walk-forward forecast coverage, independence, stress-period behaviour and a final allocation recommendation remain separate milestones. This unconditional EVT model has no volatility filter or declustering. It should not be assumed to outperform empirical or Normal risk models merely because it models extremes.

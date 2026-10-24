@@ -1,6 +1,6 @@
 # Manual EVT check and threshold review
 
-Status: **human review pending**. Calculate independently, then compare. Do not copy a sign-off from another worksheet.
+Status: **human arithmetic and provisional threshold review completed by Mahinsa Kuruppu on 24 Oct 2026**. Forecast coverage validation remains pending.
 
 ## A. Count and loss convention
 
@@ -62,21 +62,32 @@ Open the printed `evt_report.md`. Confirm:
 
 ## Reviewer record
 
-- Reviewer name:
-- Review date:
-- Calculator/spreadsheet/paper used:
-- Part A count and sign matched:
-- Part B VaR and ES matched within USD 0.10:
-- Part C exponential calculation and unavailable cases understood:
-- Part D output and USD checks performed:
-- Snapshot and exact run folder reviewed:
-- Commands actually run and their results:
-- Discrepancies and corrections:
-- In your own words: What is the difference between threshold percentile and VaR confidence?
-- In your own words: Why can raising the threshold make the estimate less reliable?
-- Development plots and sensitivity values inspected:
-- Threshold decision (retain 90% candidate / investigate further) and evidence:
-- In your own words: What does a bootstrap interval tell us, and what does it not tell us?
-- Reviewer initials/sign-off:
+- Reviewer name: Mahinsa Kuruppu
+- Review date: 24 Oct 2026
+- Calculator/spreadsheet/paper used: Calculator and paper
+- Part A count and sign matched: Yes
+- Part B VaR and ES matched within USD 0.10: Yes
+- Part C exponential calculation and unavailable cases understood: Yes
+- Part D output and USD checks performed: Yes
+- Snapshot and exact run folder reviewed: 20261023T102523Z-0d40a885 / 5feb6a842858
+- Commands actually run and their results: `run_evt.py`, focused EVT tests (24 passed), full tests (93 passed), and Ruff (passed). Recorded terminal output:
+
+```text
+EVT outputs: /Users/mahinsak/SAIFA/output/evt/20261023T102523Z-0d40a885/5feb6a842858
+Read evt_report.md and docs/final/manual-evt-check.md; review threshold diagnostics.
+........................                                                                 [100%]
+24 passed in 4.53s
+........................................................................................ [ 94%]
+.....                                                                                    [100%]
+93 passed in 5.34s
+All checks passed!
+```
+- Discrepancies and corrections: None found
+- In your own words: What is the difference between threshold percentile and VaR confidence? The 90% threshold selects the largest observed losses used to fit the tail model. The 95% or 99% VaR confidence specifies the loss level we want the fitted model to estimate. They serve different purposes.
+- In your own words: Why can raising the threshold make the estimate less reliable? A higher threshold leaves fewer losses for fitting. With fewer observations, one extreme day can change the fitted parameters and VaR/ES estimates more strongly.
+- Development plots and sensitivity values inspected: Reviewed the three development diagnostic charts and compared the 85%, 90% and 92.5% thresholds. For the baseline, exceedances were 532, 355 and 266; shape estimates were approximately 0.2515, 0.2162 and 0.2722; 99% ES estimates were approximately 2.0841%, 2.0426% and 2.0922%.
+- Threshold decision (retain 90% candidate / investigate further) and evidence: Retain 90% as a provisional research threshold. It gives 355 development exceedances and 100 current-window exceedances for the baseline. Nearby 99% ES estimates are fairly close, although the shape parameter is not fully stable. We will keep this limitation visible and assess forecasting performance in the later backtest.
+- In your own words: What does a bootstrap interval tell us, and what does it not tell us? It shows how much the estimated VaR or ES changes when we resample the observed losses under the chosen model settings. It does not guarantee that future losses will fall inside the interval or prove that the model forecasts accurately.
+- Reviewer initials/sign-off: KAD
 
 Only record checks actually completed. A human may complete the arithmetic while leaving threshold approval pending; state both separately. Mathematical checks do not prove forecasting quality or suitability for the endowment.
