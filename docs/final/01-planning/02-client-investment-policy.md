@@ -2,7 +2,7 @@
 
 Version 0.1 | 23 October 2026 | Proposed research policy; validation pending
 
-This is a research starting point, not an implemented portfolio, approved client instruction or performance claim. **Brief facts** come from the final challenge, pp. 3-5. All numerical choices beyond the USD 10 million mandate are **team proposals**, to be evaluated before using the final test period. Track evidence in the [requirements checklist](requirements-checklist.md).
+This is a research starting point, not an implemented portfolio, approved client instruction or performance claim. **Brief facts** come from the final challenge, pp. 3-5. All numerical choices beyond the USD 10 million mandate are **team proposals**, to be evaluated before using the final test period. Track evidence in the [requirements checklist](01-requirements-checklist.md).
 
 ## Mandate and objectives
 

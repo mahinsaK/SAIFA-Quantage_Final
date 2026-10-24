@@ -62,4 +62,4 @@ Generated outputs are ignored by Git because the selected frozen snapshot and co
 
 This is a full-history descriptive comparison. It does not establish that 40/60 is suitable, optimised or likely to repeat. It does not model taxes, variable bid-ask spreads, price impact, management fees, integer shares, external cash flows or the endowment's actual spending schedule. Ten basis points is a proposed assumption, not a broker quote. Adjusted prices represent reinvested distributions rather than spendable cash income. Later model comparisons must use fixed development/test rules and must not select a portfolio using final test outcomes.
 
-Human accounting validation remains pending until a named team member independently completes and records the [manual accounting check](manual-accounting-check.md).
+Human accounting validation remains pending until a named team member independently completes and records the [manual accounting check](03-manual-accounting-check.md).

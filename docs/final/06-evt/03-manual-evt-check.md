@@ -74,7 +74,7 @@ Open the printed `evt_report.md`. Confirm:
 
 ```text
 EVT outputs: /Users/mahinsak/SAIFA/output/evt/20261023T102523Z-0d40a885/5feb6a842858
-Read evt_report.md and docs/final/manual-evt-check.md; review threshold diagnostics.
+Read evt_report.md and docs/final/06-evt/03-manual-evt-check.md; review threshold diagnostics.
 ........................                                                                 [100%]
 24 passed in 4.53s
 ........................................................................................ [ 94%]

@@ -40,7 +40,7 @@ def main() -> int:
             progress=lambda n, total: print(f"Forecast sessions: {n}/{total}", flush=True),
         )
         print(f"Backtest outputs: {output}")
-        print("Read backtest_report.md and docs/final/manual-backtest-check.md.")
+        print("Read backtest_report.md and docs/final/07-backtesting/03-manual-backtest-check.md.")
         return 0
     except Exception as exc:  # noqa: BLE001 - CLI boundary
         print(f"Backtest failed: {exc}", file=sys.stderr)

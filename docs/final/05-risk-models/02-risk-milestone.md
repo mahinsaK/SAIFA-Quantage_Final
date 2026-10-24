@@ -51,6 +51,6 @@ uv run --locked python run_risk.py
 uv run --locked pytest tests/test_risk.py -q
 ```
 
-Open `output/risk/20261023T102523Z-0d40a885/f574e740a9af/risk_report.md` and complete [manual-risk-check.md](manual-risk-check.md). See [risk-methodology.md](risk-methodology.md) for exact formulas, limitations, output meaning and reference documentation.
+Open `output/risk/20261023T102523Z-0d40a885/f574e740a9af/risk_report.md` and complete [manual-risk-check.md](03-manual-risk-check.md). See [risk-methodology.md](01-risk-methodology.md) for exact formulas, limitations, output meaning and reference documentation.
 
 This milestone supplies R01-R03 implementation evidence. Human review, EVT threshold work, walk-forward coverage testing, crisis/scenario analysis and the committee decision remain outstanding. The snapshot comparison is not a loss ceiling or a backtest pass.

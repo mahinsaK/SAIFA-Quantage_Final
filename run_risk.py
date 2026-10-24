@@ -31,7 +31,7 @@ def main() -> int:
         )
         output = build_risk(root, resolve_snapshot(root, args.snapshot), config)
         print(f"Risk comparison outputs: {output}")
-        print("Read risk_report.md and complete docs/final/manual-risk-check.md.")
+        print("Read risk_report.md and complete docs/final/05-risk-models/03-manual-risk-check.md.")
         return 0
     except Exception as exc:  # noqa: BLE001 - command-line boundary.
         print(f"Risk pipeline failed: {exc}", file=sys.stderr)

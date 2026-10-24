@@ -1,6 +1,6 @@
 # Walk-forward VaR backtesting methodology
 
-Implemented 24 October 2026. Human review is recorded separately in [manual-backtest-check.md](manual-backtest-check.md). This evaluates forecasting, not whether an allocation should be recommended to the client.
+Implemented 24 October 2026. Human review is recorded separately in [manual-backtest-check.md](03-manual-backtest-check.md). This evaluates forecasting, not whether an allocation should be recommended to the client.
 
 ## Protocol and information timing
 
@@ -29,13 +29,13 @@ Equality is not an exception. A gain is a negative loss; do not clip it to zero.
 
 ## Models
 
-Historical uses the inverse empirical CDF and fractional probability mass for ES, as in [risk methodology](risk-methodology.md). Parametric Normal uses the portfolio's sample mean and sample standard deviation (`ddof=1`). Projecting the asset panel first preserves covariance: `Var(Rw) = w' Cov(R) w`.
+Historical uses the inverse empirical CDF and fractional probability mass for ES, as in [risk methodology](../05-risk-models/01-risk-methodology.md). Parametric Normal uses the portfolio's sample mean and sample standard deviation (`ddof=1`). Projecting the asset panel first preserves covariance: `Var(Rw) = w' Cov(R) w`.
 
 Monte Carlo draws 200,000 standard Normal losses per target date, then applies `-mean + sigma × draw` for each portfolio. This has exactly the marginal distribution of the linear portfolio under a joint Gaussian asset model; it is a computational shortcut, not an independent distributional alternative to Parametric Normal. The same standard sample across portfolios is a numerical coupling and must not be used as a simulated joint distribution of different portfolios. Covariance within each portfolio is preserved.
 
 The generator is PCG64 with `SeedSequence([42, target_date.toordinal()])`. Changing the selected start date or portfolio order cannot change a given date's draws. Monte Carlo results can differ slightly from analytical Normal results and from the earlier single-as-of risk runner's random realization. Both implementations retain their stated Gaussian assumptions.
 
-EVT refits the numeric 90th-percentile loss threshold and GPD parameters from each historical window, while keeping the quantile-selection rule fixed. Ties use the actual strict-exceedance count. The confidence must be above the fitted tail boundary. Insufficient excesses, unsupported confidence, failed fits and undefined ES retain explicit statuses. A finite VaR remains testable when ES is unavailable because the fitted tail has no finite mean. See [EVT methodology](evt-methodology.md).
+EVT refits the numeric 90th-percentile loss threshold and GPD parameters from each historical window, while keeping the quantile-selection rule fixed. Ties use the actual strict-exceedance count. The confidence must be above the fitted tail boundary. Insufficient excesses, unsupported confidence, failed fits and undefined ES retain explicit statuses. A finite VaR remains testable when ES is unavailable because the fitted tail has no finite mean. See [EVT methodology](../06-evt/01-evt-methodology.md).
 
 ## Coverage: Kupiec
 

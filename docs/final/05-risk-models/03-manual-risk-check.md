@@ -124,7 +124,7 @@ review. Write your own run results below if you execute the commands.
 - Snapshot and risk run folder reviewed: Yes
 - Automated commands and actual results:
 
-Read risk_report.md and complete docs/final/manual-risk-check.md.
+Read risk_report.md and complete docs/final/05-risk-models/03-manual-risk-check.md.
 ..............................                                           [100%]
 30 passed in 1.09s
 .....................................................................    [100%]

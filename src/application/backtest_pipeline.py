@@ -172,7 +172,7 @@ def build_backtest(
                 git=_git_state(source_root),
                 weight_basis="fixed target exposures; one-session hypothetical P/L, no compounding or fees",
                 exception_rule="realized signed loss strictly greater than forecast VaR; equality is no exception",
-                review_record="docs/final/manual-backtest-check.md",
+                review_record="docs/final/07-backtesting/03-manual-backtest-check.md",
                 evaluation_caveat="retrospective evaluation; final-period performance has previously been viewed",
                 model_selection="none; all four prespecified methods reported separately by period",
                 input_manifest_sha256=file_hash(snapshot / "manifest.json"),

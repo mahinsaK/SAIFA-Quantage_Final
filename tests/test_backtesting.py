@@ -303,7 +303,7 @@ def test_pipeline_frozen_weights_provenance_failed_status_and_repeatability(tmp_
     assert forecasts.loc[forecasts.method.eq("evt_pot_gpd"), "exception"].isna().all()
     meta = json.loads((output / "summary.json").read_text())
     assert meta["model_selection"].startswith("none")
-    assert meta["review_record"] == "docs/final/manual-backtest-check.md"
+    assert meta["review_record"] == "docs/final/07-backtesting/03-manual-backtest-check.md"
     assert json.loads((output / "status.json").read_text())["status"] == "complete"
     before = {p.name: p.read_bytes() for p in output.iterdir()}
     # Future risk-free and asset returns cannot affect frozen weights or forecasts.

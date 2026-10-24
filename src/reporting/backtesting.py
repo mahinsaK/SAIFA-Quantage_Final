@@ -169,7 +169,7 @@ def render_backtest_report(summary: pd.DataFrame, lights: pd.DataFrame, context:
         (
             "Review forecasts.csv (including missing statuses), test_summary.csv (transition counts "
             "and warnings), and basel_rolling.csv (all dated windows). Complete "
-            "docs/final/manual-backtest-check.md before recording human validation."
+            "docs/final/07-backtesting/03-manual-backtest-check.md before recording human validation."
         ),
     ]
     for period, rows in summary.groupby("period", sort=False):

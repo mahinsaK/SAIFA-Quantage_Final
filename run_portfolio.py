@@ -22,7 +22,7 @@ def main() -> int:
         config = BaselinePortfolioConfig(transaction_cost_bps=args.cost_bps)
         output = build_baseline_portfolio(root, snapshot, config)
         print(f"Baseline portfolio outputs: {output}")
-        print("See manual-accounting-check.md for the separately recorded human review status.")
+        print("See docs/final/03-baseline/03-manual-accounting-check.md for human review status.")
         return 0
     except Exception as exc:  # noqa: BLE001 - CLI boundary reports the failure and exits nonzero.
         print(f"Portfolio pipeline failed: {exc}", file=sys.stderr)

@@ -103,7 +103,7 @@ The 10 bps strategy charges transaction cost on buys plus sells. Initial funding
 - Adjusted-price returns assume distributions are reinvested. Taxes, market impact, bid-ask variation, management fees and fractional-share constraints are not modelled.
 - All three strategies use the same dates and prices. This is full-history descriptive evidence, not out-of-sample proof or an investable recommendation.
 
-See docs/final/baseline-methodology.md and docs/final/manual-accounting-check.md.
+See docs/final/03-baseline/01-baseline-methodology.md and docs/final/03-baseline/03-manual-accounting-check.md.
 """
         (output / "baseline_report.md").write_text(report, encoding="utf-8")
         summary = {

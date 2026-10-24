@@ -88,7 +88,7 @@ Snapshot: {snapshot.name}
 - Crisis coverage only confirms date coverage, not completion of stress testing.
 - Download dates do not define an approved train/test split. No allocation or risk-model decision is made here.
 
-See docs/final/data-methodology.md for provenance, review rules and limitations.
+See docs/final/02-data/01-data-methodology.md for provenance, review rules and limitations.
 """
         (output / "quality_report.md").write_text(report, encoding="utf-8")
         status.update(status="complete", review_flags=review_count)

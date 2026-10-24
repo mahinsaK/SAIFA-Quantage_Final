@@ -24,7 +24,7 @@ The fixed diagnostic grid is 80%, 85%, 90%, 92.5%, 95%, 97.5%. The lower levels 
 - Selected-threshold GPD Q-Q points and plot: systematic deviations matter, especially at the largest losses.
 - VaR/ES sensitivity across the grid; unavailable cells remain blank with reasons.
 
-No automatic procedure chooses the threshold with the lowest risk or best final-period backtest. Development diagnostics support review of the prespecified rule; current-window diagnostics describe sensitivity. The team must record its reasoning in `manual-evt-check.md`. The default is a defensible candidate, not an asserted optimal threshold. The actual development shape estimates vary across the grid, particularly for optimized portfolios, so stability is imperfect and must be acknowledged.
+No automatic procedure chooses the threshold with the lowest risk or best final-period backtest. Development diagnostics support review of the prespecified rule; current-window diagnostics describe sensitivity. The team must record its reasoning in the [manual EVT check](03-manual-evt-check.md). The default is a defensible candidate, not an asserted optimal threshold. The actual development shape estimates vary across the grid, particularly for optimized portfolios, so stability is imperfect and must be acknowledged.
 
 At default settings, 90% *forecast confidence* is not supported: it is at the threshold boundary. Return `below_tail_domain` rather than extrapolating the tail model into the body. A future app must show this explanation. A lower threshold can be researched explicitly, but requires its own justification.
 
@@ -81,4 +81,4 @@ Settings changes create different folders; identical settings reproduce outputs 
 
 ## Remaining validation
 
-Human arithmetic and provisional threshold interpretation are recorded in `manual-evt-check.md`. Walk-forward forecast coverage, independence, stress-period behaviour and a final allocation recommendation remain separate milestones. This unconditional EVT model has no volatility filter or declustering. It should not be assumed to outperform empirical or Normal risk models merely because it models extremes.
+Human arithmetic and provisional threshold interpretation are recorded in the [manual EVT check](03-manual-evt-check.md). Walk-forward forecast coverage, independence, stress-period behaviour and a final allocation recommendation remain separate milestones. This unconditional EVT model has no volatility filter or declustering. It should not be assumed to outperform empirical or Normal risk models merely because it models extremes.

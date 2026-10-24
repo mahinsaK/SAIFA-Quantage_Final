@@ -106,7 +106,7 @@ def render_risk_report(results: pd.DataFrame, context: dict) -> str:
             ),
             "",
             (
-                "Complete docs/final/manual-risk-check.md before recording human validation. "
+                "Complete docs/final/05-risk-models/03-manual-risk-check.md before recording human validation. "
                 "EVT, stress analysis and formal VaR backtesting remain separate milestones."
             ),
             "",

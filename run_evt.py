@@ -43,7 +43,7 @@ def main() -> int:
         output = build_evt(root, resolve_snapshot(root, args.snapshot), risk, evt)
         print(f"EVT outputs: {output}")
         print(
-            "Read evt_report.md and docs/final/manual-evt-check.md; review threshold diagnostics."
+            "Read evt_report.md and docs/final/06-evt/03-manual-evt-check.md; review threshold diagnostics."
         )
         return 0
     except Exception as exc:  # noqa: BLE001 - CLI boundary

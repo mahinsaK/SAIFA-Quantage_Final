@@ -17,7 +17,7 @@ def main() -> int:
     try:
         output = build_optimised_portfolios(root, resolve_snapshot(root, args.snapshot), OptimisationConfig())
         print(f"Optimisation outputs: {output}")
-        print("Human review remains pending; follow manual-optimisation-check.md.")
+        print("Human review remains pending; follow docs/final/04-optimisation/03-manual-optimisation-check.md.")
         return 0
     except Exception as exc:  # noqa: BLE001 - CLI boundary reports failure.
         print(f"Optimisation pipeline failed: {exc}", file=sys.stderr)

@@ -30,6 +30,6 @@ Generated evidence is under `output/portfolio/20261023T102523Z-0d40a885/` and is
 
 ## Human accounting validation
 
-The completed calculation result, reviewer explanation and sign-off are recorded in [manual-accounting-check.md](manual-accounting-check.md) and [ai-use-log.md](ai-use-log.md). Generated `summary.json` and `status.json` remain conservatively marked pending because the script cannot infer or certify a human review.
+The completed calculation result, reviewer explanation and sign-off are recorded in [manual-accounting-check.md](03-manual-accounting-check.md) and [ai-use-log.md](../01-planning/03-ai-use-log.md). Generated `summary.json` and `status.json` remain conservatively marked pending because the script cannot infer or certify a human review.
 
 This review validates the accounting example only. Data-quality flags, assumptions, investment suitability and future Markowitz/CAPM/risk-model work require their own reviews.

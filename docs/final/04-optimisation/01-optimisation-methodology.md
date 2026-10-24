@@ -43,4 +43,4 @@ uv run --locked python run_optimisation.py
 uv run --locked pytest tests/test_optimisation.py -q
 ```
 
-Generated evidence is written under `output/optimisation/<snapshot-id>/`. Human checks are in [manual-optimisation-check.md](manual-optimisation-check.md).
+Generated evidence is written under `output/optimisation/<snapshot-id>/`. Human checks are in [manual-optimisation-check.md](03-manual-optimisation-check.md).

@@ -25,11 +25,11 @@ The current 97.5% threshold leaves only 25 excesses and is withheld. At 95% conf
 
 ## Reproduction and review
 
-See [methodology](evt-methodology.md) for formulas, provenance, bootstrap caveats and file definitions. The completed [manual worksheet](manual-evt-check.md) records independent arithmetic and threshold reasoning. Run `uv run --locked python run_evt.py` to reproduce the report, six diagnostic charts and all supporting CSVs. The runner verifies snapshot integrity and records dependency, code and output hashes.
+See [methodology](01-evt-methodology.md) for formulas, provenance, bootstrap caveats and file definitions. The completed [manual worksheet](03-manual-evt-check.md) records independent arithmetic and threshold reasoning. Run `uv run --locked python run_evt.py` to reproduce the report, six diagnostic charts and all supporting CSVs. The runner verifies snapshot integrity and records dependency, code and output hashes.
 
 Automated verification covers analytic GPD/exponential identities, known-distribution recovery, units/translation, ties, support limits, insufficient/degenerate/failed fits, infinite ES, block structure, repeatability and future-data isolation. See the final validation record below for the executed results.
 
-R04 now has implementation and named human-review evidence. The subsequent [backtesting milestone](backtesting-milestone.md) implements walk-forward coverage/independence tests and records their rejections; human interpretation remains pending. Stress analysis and the committee decision remain outstanding. The threshold decision is provisional and must be revisited if forecasting evidence is poor, without tuning the already-viewed evaluation sample to pass.
+R04 now has implementation and named human-review evidence. The subsequent [backtesting milestone](../07-backtesting/02-backtesting-milestone.md) implements walk-forward coverage/independence tests and records their rejections; human interpretation remains pending. Stress analysis and the committee decision remain outstanding. The threshold decision is provisional and must be revisited if forecasting evidence is poor, without tuning the already-viewed evaluation sample to pass.
 
 ## Executed validation record — 24 October 2026
 

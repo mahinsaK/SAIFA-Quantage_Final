@@ -1,6 +1,6 @@
 # One-day VaR and Expected Shortfall methodology
 
-Research implementation; human review is recorded separately in [manual-risk-check.md](manual-risk-check.md).
+Research implementation; human review is recorded separately in [manual-risk-check.md](03-manual-risk-check.md).
 
 ## What is being compared
 

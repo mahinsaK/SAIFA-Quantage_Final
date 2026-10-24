@@ -25,4 +25,4 @@ Both candidates beat the baseline in this held-out historical period while showi
 
 CAPM and remaining KPI values are in `performance_ratios.csv`. The efficient frontier, frozen weights, validation results, daily accounting and transactions are under `output/optimisation/20261023T102523Z-0d40a885/` and reproduce with `uv run --locked python run_optimisation.py`.
 
-Complete [manual-optimisation-check.md](manual-optimisation-check.md) before human sign-off. Data flags separately require the review in [data-quality-review.md](data-quality-review.md).
+Complete [manual-optimisation-check.md](03-manual-optimisation-check.md) before human sign-off. Data flags separately require the review in [data-quality-review.md](../02-data/03-data-quality-review.md).

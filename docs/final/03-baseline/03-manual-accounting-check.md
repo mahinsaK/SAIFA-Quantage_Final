@@ -107,4 +107,4 @@ Recorded from the team member's confirmation in the project conversation:
 - Reviewer explanation in own words: Transaction costs are paid from the portfolio itself. Therefore, the sale must finance both the purchase and the trading cost. The amount sold is slightly larger than the amount bought by exactly the transaction cost. Equal buy and sell amounts would require an external cash contribution or a separate cash reserve.
 - Reviewer initials/sign-off: KAD
 
-After completion, copy the factual review outcome into `docs/final/ai-use-log.md`. Do not claim that the whole investment strategy is human-validated; this check validates the portfolio accounting example only.
+After completion, copy the factual review outcome into `docs/final/01-planning/03-ai-use-log.md`. Do not claim that the whole investment strategy is human-validated; this check validates the portfolio accounting example only.

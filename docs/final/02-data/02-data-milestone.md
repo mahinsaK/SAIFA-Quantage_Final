@@ -29,14 +29,14 @@ Snapshot: `20261023T102523Z-0d40a885`.
 
 ## Evidence
 
-- [Raw manifest](../../data/snapshots/20261023T102523Z-0d40a885/manifest.json): sources, settings, package versions and input hashes.
-- [Summary](../../output/data/20261023T102523Z-0d40a885/summary.json): dates, counts, source-code and output hashes.
-- [Coverage](../../output/data/20261023T102523Z-0d40a885/coverage.csv).
-- [Quality report](../../output/data/20261023T102523Z-0d40a885/quality_report.md).
-- [Flag register](../../output/data/20261023T102523Z-0d40a885/quality_flags.csv).
-- [Stationarity results](../../output/data/20261023T102523Z-0d40a885/stationarity.csv).
-- [Implementation and commands](data-methodology.md).
-- [Executable tests](../../tests/test_data_foundation.py).
+- [Raw manifest](../../../data/snapshots/20261023T102523Z-0d40a885/manifest.json): sources, settings, package versions and input hashes.
+- [Summary](../../../output/data/20261023T102523Z-0d40a885/summary.json): dates, counts, source-code and output hashes.
+- [Coverage](../../../output/data/20261023T102523Z-0d40a885/coverage.csv).
+- [Quality report](../../../output/data/20261023T102523Z-0d40a885/quality_report.md).
+- [Flag register](../../../output/data/20261023T102523Z-0d40a885/quality_flags.csv).
+- [Stationarity results](../../../output/data/20261023T102523Z-0d40a885/stationarity.csv).
+- [Implementation and commands](01-data-methodology.md).
+- [Executable tests](../../../tests/test_data_foundation.py).
 
 The first live run exposed a calendar-boundary bug when the requested start date was a holiday. It was corrected by selecting actual sessions within the requested bounds and adding a regression test. No data was redownloaded or manually edited to resolve it.
 
