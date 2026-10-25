@@ -12,6 +12,7 @@ dependencies = [
   "statsmodels>=0.14,<0.16",
   "scipy>=1.14,<2",
   "matplotlib>=3.9,<4",
+  "streamlit>=1.50,<2",
 ]
 
 [dependency-groups]

@@ -81,6 +81,8 @@ Record a repository file/output and actual reviewer when marking an item complet
 
 ### Interface, deliverables and accountability
 
+**Streamlit implementation update (25 Oct):** U01–U07 now have automated implementation evidence: all five pages, real 90/95/99% selection, dated-forecast test recalculation, unavailable EVT/short-window states, explicit financial conventions, stress breaches and limitations. The offline preparation command produces a hash-verified bundle; the local app launched and its health endpoint responded. See [methodology](../09-streamlit-app/01-app-methodology.md), [milestone](../09-streamlit-app/02-app-milestone.md) and the pending [manual browser check](../09-streamlit-app/03-manual-app-check.md). Browser visual inspection was unavailable in the agent session; final human UI acceptance remains open, so these rows are not marked signed off. Hosting, judge-access checks and final investment approval are separate.
+
 | Done | ID | Brief requirement and source | Acceptance evidence |
 |---|---|---|---|
 | [ ] | U01 | Python, Streamlit, free-tier resources (pp. 5-6) | Runnable application and dependency list without paid data/compute dependency. |

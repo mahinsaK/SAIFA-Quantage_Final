@@ -6,9 +6,27 @@ A new project for the Serendib University Endowment Fund competition mandate: co
 
 The data foundation, 40% SPY / 60% AGG baseline and constrained Markowitz candidates are implemented. The baseline accounting was manually validated by Mahinsa Kuruppu on 23 October 2026; all three hand-calculated examples matched and the focused test suite passed. The optimiser produces minimum-volatility and maximum-Sharpe candidates, an efficient frontier, CAPM diagnostics and the required performance ratios with a chronological out-of-sample comparison.
 
-Historical, Parametric Normal, correlated Gaussian Monte Carlo and EVT POT/GPD VaR/ES are implemented at 95% and 99% confidence, with an equal-USD-10m target-allocation comparison. EVT includes development/as-of diagnostics, threshold sensitivity and block-bootstrap uncertainty. Mahinsa Kuruppu completed the manual EVT arithmetic and signed off 90% as a provisional research threshold on 24 October 2026. Walk-forward forecasts, Kupiec coverage, Christoffersen independence and the historical Basel traffic light are now implemented; their human review is pending. Some model/period tests reject, and the reports retain those results. Normal VaR/ES contributions, Historical ES contributions, funded allocation sensitivity, historical crisis replays and hypothetical stress analysis are now implemented; their manual review and scenario approval remain pending. The Streamlit app remains outstanding. Policy numbers remain proposed research assumptions, not client-supplied limits or validated investment recommendations. Human review records are maintained separately in the linked worksheets.
+Historical, Parametric Normal, correlated Gaussian Monte Carlo and EVT POT/GPD VaR/ES are implemented at 95% and 99% confidence, with an equal-USD-10m target-allocation comparison. EVT includes development/as-of diagnostics, threshold sensitivity and block-bootstrap uncertainty. Mahinsa Kuruppu completed the manual EVT arithmetic and signed off 90% as a provisional research threshold on 24 October 2026. Walk-forward forecasts, Kupiec coverage, Christoffersen independence and the historical Basel traffic light are now implemented; their human review is pending. Some model/period tests reject, and the reports retain those results. Normal VaR/ES contributions, Historical ES contributions, funded allocation sensitivity, historical crisis replays and hypothetical stress analysis are now implemented; their manual review and scenario approval remain pending. The Streamlit app now presents all five research pages with working portfolio, confidence, method, date-range and severity controls. Automated verification is complete; browser visual review remains open. Policy numbers remain proposed research assumptions, not client-supplied limits or validated investment recommendations. Human review records are maintained separately in the linked worksheets.
 
-The [documentation index](docs/final/README.md) lists every file by phase. Start with the [requirements checklist](docs/final/01-planning/01-requirements-checklist.md), then use the numbered folders from planning through contributions and stress. Within each phase, `01` explains the method, `02` records results, and `03` holds the review worksheet (planning uses checklist, policy and AI log).
+The [documentation index](docs/final/README.md) lists every file by phase. Start with the [requirements checklist](docs/final/01-planning/01-requirements-checklist.md), then use the numbered folders from planning through the Streamlit app. Within each phase, `01` explains the method, `02` records results, and `03` holds the review worksheet (planning uses checklist, policy and AI log).
+
+## Open the Streamlit app
+
+First-time setup from this project directory:
+
+```bash
+uv sync --locked
+uv run --locked python run_app_data.py
+uv run --locked streamlit run app.py
+```
+
+Open the local URL printed by Streamlit. Preparation uses the included frozen snapshot offline and can take several minutes; it builds all 90/95/99% outputs and verifies a manifest at `output/app/<snapshot>/bundle.json`. Repeat launches need only `uv run --locked streamlit run app.py`. Installation of dependencies may require internet access, but opening the app does not download market data.
+
+The five pages cover portfolio performance, side-by-side risk, date-sensitive backtesting, stress analysis and limitations. Sidebar dates affect backtesting only. The app recomputes tests from the selected dated forecasts and retains missing forecasts. EVT at 90% is explicitly unavailable under the current 90% threshold; no higher-confidence value is substituted. Basel colours require 250 complete sessions at 99% within the selected period.
+
+If outputs are absent, incomplete or modified, the app explains the issue and shows the preparation command. Rerun preparation after rebuilding individual pipelines that change files used by the app. The app follows `data/LATEST`; keep it aligned with the intended frozen submission snapshot. Generated outputs remain ignored by Git, so a fresh checkout requires preparation.
+
+See the [app methodology](docs/final/09-streamlit-app/01-app-methodology.md), [verification evidence](docs/final/09-streamlit-app/02-app-milestone.md) and [manual browser check](docs/final/09-streamlit-app/03-manual-app-check.md).
 
 ## Run the data pipeline
 
@@ -124,7 +142,7 @@ See the [methodology](docs/final/08-contributions-stress/01-contributions-stress
 
 ## Next implementation milestone
 
-Complete the backtesting and contributions/stress worksheets, review the proposed hypothetical scenario and decide how to respond to breached stress review levels. Next integrate the verified results into the Streamlit app and develop the committee recommendation, report and tear sheet. Carry the backtest's coverage/clustering limitations into the investment decision; do not choose or retune a model simply to make the evaluation tests pass.
+Complete the backtesting and contributions/stress worksheets, review the proposed hypothetical scenario and decide how to respond to breached stress review levels. Complete the app browser review, then develop the committee recommendation, report and tear sheet using its verified results. Carry the backtest's coverage/clustering limitations into the investment decision; do not choose or retune a model simply to make the evaluation tests pass.
 
 ## Team review
 
