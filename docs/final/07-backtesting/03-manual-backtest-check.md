@@ -1,6 +1,6 @@
 # Manual walk-forward backtest check
 
-Status: **pending actual human calculations and interpretation**. Expected answers below are reference values, not a completed reviewer record. Use a calculator/paper or a spreadsheet and record only checks actually performed. You do not need to calculate thousands of forecasts manually.
+Status: **Parts A–D calculations and interpretation recorded; Part E forecast, output and chart inspection pending**. Model calibration and final portfolio suitability remain under review.
 
 ## A. Timing, units and exceptions
 
@@ -77,21 +77,76 @@ Open the output folder printed by the runner. The current default is `output/bac
 
 ## Reviewer record — complete after checking
 
-- Reviewer name:
-- Review date:
-- Calculator/spreadsheet/paper used:
+- Reviewer name: Mahinsa Kuruppu
+- Review date: 25 Oct 2026
+- Calculator/spreadsheet/paper used: Calculator
 - Part A timing, USD values and exception flags matched:
+  VaR = $120,000. Exceptions: Yes, No, No. Training data must exclude future returns.
+
 - Part B calculated LRuc and interpretation:
+  LRuc = 1.956810, p = 0.161855. Do not reject at 5%.
+
 - Part C transition counts and calculated LRind:
+  n00=6, n01=6, n10=5, n11=2. LRind = 0.852614, p = 0.355814. Do not reject.
+
 - Part D boundary and unavailable cases understood:
+  4 = Green, 5–9 = Yellow, 10+ = Red. Incomplete windows and insufficient transitions are unavailable.
+
 - Part E exact snapshot/run folder and selected forecast row:
+  Default: output/backtest/20261023T102523Z-0d40a885/93efaf13a75a/. Actual folder and selected row pending verification.
+
 - Commands actually run and observed results:
+Forecast sessions: 1/1963
+Forecast sessions: 101/1963
+Forecast sessions: 201/1963
+Forecast sessions: 301/1963
+Forecast sessions: 401/1963
+Forecast sessions: 501/1963
+Forecast sessions: 601/1963
+Forecast sessions: 701/1963
+Forecast sessions: 801/1963
+Forecast sessions: 901/1963
+Forecast sessions: 1001/1963
+Forecast sessions: 1101/1963
+Forecast sessions: 1201/1963
+Forecast sessions: 1301/1963
+Forecast sessions: 1401/1963
+Forecast sessions: 1501/1963
+Forecast sessions: 1601/1963
+Forecast sessions: 1701/1963
+Forecast sessions: 1801/1963
+Forecast sessions: 1901/1963
+Forecast sessions: 1963/1963
+Backtest outputs: /Users/mahinsak/SAIFA/output/backtest/20261023T102523Z-0d40a885/93efaf13a75a
+Read backtest_report.md and docs/final/07-backtesting/03-manual-backtest-check.md.
+..............................                                                     [100%]
+30 passed in 6.53s
+.................................................................................. [ 54%]
+.....................................................................              [100%]
+151 passed in 12.55s
+All checks passed!
+
 - Plots/table rows inspected:
+  Pending actual inspection of forecasts, test summaries and evaluation charts.
+
 - Discrepancies and corrections:
-- In your own words: Why can correct overall exception frequency coexist with dangerous clustering?
-- In your own words: Why is a green latest window or p-value above 0.05 not proof that the model is safe?
-- In your own words: Why must tomorrow's return be excluded from today's forecast?
+  No arithmetic discrepancies identified in Parts A–D. Part E remains unverified.
+
+- In your own words:
+Why can correct overall exception frequency coexist with dangerous clustering?
+The total number of VaR exceptions can be close to the expected number even if several happen on nearby days. In our baseline Historical 99% evaluation, 11 exceptions occurred versus 12.06 expected, but the independence test found evidence of clustering. Consecutive large losses can be especially difficult for an endowment that needs to preserve capital.
+
+- In your own words:
+Why is a green latest window or p-value above 0.05 not proof that the model is safe?
+A green result describes only that 250-day window. A p-value above 0.05 means the test did not find enough evidence to reject its assumption; it does not prove the assumption is true or guarantee future forecasts. Other periods and tests can reveal problems.
+
+- In your own words:
+Why must tomorrow's return be excluded from today's forecast?
+Tomorrow's return is unknown when today's forecast is made. Using it would give the model future information and make the backtest look more accurate than a forecast that could actually have been made.
+
 - Interpretation decision and limitations to carry into stress analysis:
-- Reviewer initials/sign-off:
+I accept the checked calculations as a record of how the backtest behaved, but I do not treat any VaR model as proven safe. I will retain the coverage and clustering warnings, compare them with the historical and hypothetical stress losses, and discuss the drawdown review-level breaches before recommending an allocation.
+
+- Reviewer initials/sign-off (Parts A–D): KAD
 
 Keep human arithmetic completion separate from model approval. It is valid to confirm the implementation's calculations while recording concerns about the model's forecasting performance.

@@ -1,6 +1,6 @@
 # Manual contributions and stress check
 
-Status: **pending actual human calculation, scenario review and sign-off**. Expected answers below are reference values, not a completed reviewer record. Work through the examples with a calculator or spreadsheet, then fill the record in your own words.
+Status: **Parts A–D manually reviewed and signed off; Part E output inspection and team scenario review pending**. The final investment decision is also pending.
 
 ## A. Normal contributions
 
@@ -21,11 +21,11 @@ Use tolerance 0.00000001 in fractions or USD 0.02 after rounding. The mean terms
 These are asset **losses**, not returns. Set both weights to 0.5 and confidence to 50% for easy arithmetic:
 
 | Observation | A loss | B loss | Portfolio loss |
-|---|---:|---:|---:|
-| 1 | 0.04 | 0.00 | 0.02 |
-| 2 | 0.02 | 0.02 | 0.02 |
-| 3 | 0.03 | 0.01 | 0.02 |
-| 4 | 0.00 | 0.00 | 0.00 |
+|------------:|-------:|-------:|---:  |
+| 1           | 0.04   | 0.00   | 0.02 |
+| 2           | 0.02   | 0.02   | 0.02 |
+| 3           | 0.03   | 0.01   | 0.02 |
+| 4           | 0.00   | 0.00   | 0.00 |
 
 Tail mass = `4×(1-0.5)=2`. Three observations tie at the boundary. Share the two units of tail mass equally: after normalization each tied observation has probability 1/3. Marginal A = 0.03; marginal B = 0.01. Components = 0.015 and 0.005; ES=0.02. Explain why arbitrarily selecting two tied observations could change the allocation even though total ES stays the same. This symmetric allocation is a selected subgradient, not always a unique derivative.
 
@@ -70,21 +70,32 @@ Use the output folder printed by the runner. The default folder is `output/stres
 
 ## Reviewer record — complete only after doing the work
 
-- Reviewer name:
-- Review date:
-- Calculator/spreadsheet/paper used:
-- Part A calculated VaR/ES and contribution totals:
-- Part B calculated tail allocation and explanation of ties:
-- Part C terminal loss versus drawdown calculations:
-- Part D signed shock contributions:
+- Reviewer name: Mahinsa Kuruppu
+- Review date: 25 Oct 2026
+- Calculator/spreadsheet/paper used: Calculator
+
+- Part A calculated VaR/ES and contribution totals: Verified as shown above.
+- Part B calculated tail allocation and explanation of ties: Verified as shown above.
+- Part C terminal loss versus drawdown calculations: Verified as shown above.
+- Part D signed shock contributions: Verified as shown above.
+
 - Part E exact run folder, selected rows and charts inspected:
 - Commands actually run and observed results:
-- Discrepancies and corrections (write “None found” only if true):
+- Discrepancies and corrections (write “None found” only if true): None found
+
 - In your own words: What is a marginal versus a component contribution?
+  A marginal contribution measures how risk changes for a tiny increase in an asset's weight. A component contribution is the asset's weight multiplied by its marginal contribution, representing that asset's share of total portfolio risk.
+
 - In your own words: Why must a fully invested transfer specify its funding asset?
+  Because increasing one asset's weight requires decreasing another asset's weight so that total weights still sum to 100%. The risk impact depends on both sides of the trade.
+
 - In your own words: Why is the 2008 replay not the historical performance of our 2018-fitted strategy?
+  A replay applies today's model or portfolio structure to historical market data. It is a stress experiment, not evidence that the strategy actually existed and traded during that period.
+
 - Scenario decision: accept as a research assumption / revise (give reasons):
+  Pending review of actual scenario assumptions and output files.
 - Response to breached review levels and backtesting limitations:
-- Reviewer initials/sign-off:
+  Drawdown breaches and backtesting failures should be treated as risk warnings requiring investigation. Passing one risk measure does not prove safety.
+- Reviewer initials/sign-off (Parts A–D): KAD
 
 Arithmetic sign-off, scenario approval and final portfolio recommendation are separate decisions. Record concerns even when all calculations match.

@@ -1,6 +1,6 @@
 # Manual one-day VaR and Expected Shortfall check
 
-Status: **manual calculations and output checks signed off; interpretation confirmation pending**.
+Status: **manual calculations and output checks signed off; interpretation draft recorded for reviewer confirmation**. Model calibration and final portfolio suitability remain under review.
 
 Calculate independently with paper/calculator or a separate spreadsheet, then compare with the answers below. These artificial examples verify arithmetic; they are not estimates of the actual fund. No one needs to calculate 200,000 Monte Carlo scenarios by hand.
 
@@ -132,8 +132,13 @@ Read risk_report.md and complete docs/final/05-risk-models/03-manual-risk-check.
 All checks passed!
 
 - Discrepancies and corrections:
-- In your own words: Why can a loss exceed VaR? What additional information does ES provide? **Draft for reviewer to confirm:** VaR is a loss cutoff, not the largest possible loss. For example, a 95% one-day VaR can be exceeded on some days. ES tells us the average loss on the worst 5% of days, so it shows how serious losses beyond VaR may be.
-- In your own words: Why should Gaussian Monte Carlo and Parametric estimates be close? **Draft for reviewer to confirm:** Both methods use the same estimated average returns and covariance and assume Normal returns. The parametric method calculates from a formula, while Monte Carlo approximates the same result using random scenarios. Their results should therefore be close, with small differences from the finite number of simulations.
+- In your own words:
+Why can a loss exceed VaR?
+What additional information does ES provide?
+**Draft for reviewer to confirm:** VaR is a loss cutoff, not the largest possible loss. For example, a 95% one-day VaR can be exceeded on some days. ES tells us the average loss on the worst 5% of days, so it shows how serious losses beyond VaR may be.
+- In your own words:
+Why should Gaussian Monte Carlo and Parametric estimates be close?
+**Draft for reviewer to confirm:** Both methods use the same estimated average returns and covariance and assume Normal returns. The parametric method calculates from a formula, while Monte Carlo approximates the same result using random scenarios. Their results should therefore be close, with small differences from the finite number of simulations.
 - Reviewer initials/sign-off: KAD
 
 Record only checks actually performed. Completing this worksheet verifies examples and interpretation; model calibration and portfolio suitability need later validation.
