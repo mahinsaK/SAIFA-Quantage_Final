@@ -77,7 +77,7 @@ The traffic light is a historical research diagnostic, not a statement that this
 
 Report both frequency and clustering, including failures. `do_not_reject` means insufficient evidence to reject that null at the chosen significance level, not model correctness. Tests have limited power, overlapping rolling windows are dependent, and no correction for the many reported tests is applied. These VaR tests do **not** validate ES severity forecasts. Rejection warrants investigation and stress analysis; do not remove crisis days or tune the evaluation period until it passes.
 
-Run `uv run --locked python run_backtest.py`. Outputs are under `output/backtest/<snapshot>/<settings-hash>/`; identical settings reproduce the same folder. Require `status.json` to say `complete`.
+Run `uv run --locked python commands/run_backtest.py`. Outputs are under `output/backtest/<snapshot>/<settings-hash>/`; identical settings reproduce the same folder. Require `status.json` to say `complete`.
 
 | File | Purpose |
 |---|---|
@@ -89,7 +89,7 @@ Run `uv run --locked python run_backtest.py`. Outputs are under `output/backtest
 | `summary.json` | Configuration, Git state, source/dependency/output hashes, manifest and development-return hashes, scope and review record |
 | `status.json` | Building, failed or complete; completion is not human sign-off |
 
-Code map: `src/domain/config.py` holds settings; `src/domain/backtesting.py` holds typed records; `src/models/walk_forward.py` generates forecasts; `src/models/backtesting.py` calculates statistical tests; `src/application/backtest_pipeline.py` orchestrates and records provenance; `src/reporting/backtesting.py` renders results; `tests/test_backtesting.py` verifies timing, formulas, failures and repeatability. `run_backtest.py` is the entry point.
+Code map: `src/saifa/domain/config.py` holds settings; `src/saifa/domain/backtesting.py` holds typed records; `src/saifa/models/walk_forward.py` generates forecasts; `src/saifa/models/backtesting.py` calculates statistical tests; `src/saifa/application/backtest_pipeline.py` orchestrates and records provenance; `src/saifa/reporting/backtesting.py` renders results; `tests/test_backtesting.py` verifies timing, formulas, failures and repeatability. `commands/run_backtest.py` is the entry point.
 
 ## Primary references
 

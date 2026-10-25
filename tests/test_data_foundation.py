@@ -1,17 +1,23 @@
 """Small, hand-checkable cases and failure modes; no live network required."""
 
 import json
+import shutil
 
 import numpy as np
 import pandas as pd
 import pytest
 
-from src.application.data_pipeline import build_data
-from src.data.diagnostics import stationarity_table
-from src.data.preparation import align_risk_free, audit_prices, calculate_returns, trading_sessions
-from src.data.providers import YahooPrices, parse_fred
-from src.data.snapshots import acquire, load_snapshot, resolve_snapshot
-from src.domain.config import DataConfig
+from saifa.application.data_pipeline import build_data
+from saifa.data.diagnostics import stationarity_table
+from saifa.data.preparation import (
+    align_risk_free,
+    audit_prices,
+    calculate_returns,
+    trading_sessions,
+)
+from saifa.data.providers import YahooPrices, parse_fred
+from saifa.data.snapshots import acquire, load_snapshot, resolve_snapshot
+from saifa.domain.config import DataConfig
 
 
 def frame(values, dates):
@@ -178,6 +184,12 @@ def test_snapshot_roundtrip_offline_reproduction_and_tampering(tmp_path):
     second_output = build_data(tmp_path, snapshot)
     assert (second_output / "summary.json").read_bytes() == first_summary
     assert json.loads((second_output / "status.json").read_text())["status"] == "complete"
+    manifest = json.loads((second_output / "manifest.json").read_text())
+    assert manifest["status"] == "complete"
+    assert {"status.json", "summary.json"}.issubset(manifest["files"])
+    shutil.rmtree(second_output)
+    recreated = build_data(tmp_path, snapshot)
+    assert json.loads((recreated / "manifest.json").read_text())["status"] == "complete"
     with (snapshot / "SPY.csv").open("a") as handle:
         handle.write("corruption\n")
     with pytest.raises(ValueError, match="integrity"):
@@ -207,7 +219,7 @@ def test_yahoo_settings_are_explicit_and_raw_close_is_not_a_fallback(monkeypatch
             assert kwargs["keepna"] is True
             return pd.DataFrame({"Close": [100]}, index=pd.to_datetime(["2024-01-02"]))
 
-    monkeypatch.setattr("src.data.providers.yf.Ticker", lambda ticker: FakeTicker())
+    monkeypatch.setattr("saifa.data.providers.yf.Ticker", lambda ticker: FakeTicker())
     with pytest.raises(ValueError, match="Adj Close"):
         YahooPrices(tmp_path).fetch("SPY", "2024-01-01", "2024-01-03")
 

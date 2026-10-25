@@ -8,13 +8,13 @@ From the project root:
 
 ```bash
 uv sync --locked
-uv run --locked python run_app_data.py
+uv run --locked python commands/run_app_data.py
 uv run --locked streamlit run app.py
 ```
 
 Dependency installation needs access to the package registry on first setup. The preparation command and app use the local snapshot identified by `data/LATEST`; they do not acquire market data. Preparation invokes the existing optimisation, EVT/risk comparison, stress and backtesting pipelines. It can take several minutes. Later launches need only the Streamlit command.
 
-`run_app_data.py --snapshot <id>` prepares an explicitly selected snapshot, but the app always follows `data/LATEST`; these must identify the same intended submission snapshot. The default submission snapshot is `20261023T102523Z-0d40a885`. Do not change the pointer merely to hide a failed acquisition.
+`commands/run_app_data.py --snapshot <id>` prepares an explicitly selected snapshot, but the app always follows `data/LATEST`; these must identify the same intended submission snapshot. The default submission snapshot is `20261023T102523Z-0d40a885`. Do not change the pointer merely to hide a failed acquisition.
 
 The builder publishes `output/app/<snapshot>/bundle.json` only after verification. It records exact output directories and file hashes. The app does not choose whichever settings folder happens to be newest. An incomplete bundle, missing file, wrong snapshot or changed checksum yields a visible explanation and the preparation command. Generated output remains ignored by Git. If an individual pipeline rewrites a file used by the bundle, rebuild the bundle before using the app again.
 
@@ -48,12 +48,12 @@ The backtest date control does not alter the performance evaluation period, curr
 | File | Responsibility |
 |---|---|
 | `app.py` | Entry point, sidebar, verified cache and page routing |
-| `run_app_data.py` | Explicit offline preparation command |
-| `src/application/dashboard_pipeline.py` | Reuses the pipelines and publishes the app bundle |
-| `src/domain/dashboard.py` | Bundle/result types, labels and required output contract |
-| `src/dashboard/data.py` | Integrity checks, loading and cross-stage validation |
-| `src/dashboard/selections.py` | Pure selection and date-range statistical recalculation |
-| `src/dashboard/views.py` | Portfolio, risk, backtesting, stress and limitations pages |
+| `commands/run_app_data.py` | Explicit offline preparation command |
+| `src/saifa/application/dashboard_pipeline.py` | Reuses the pipelines and publishes the app bundle |
+| `src/saifa/domain/dashboard.py` | Bundle/result types, labels and required output contract |
+| `src/saifa/dashboard/data.py` | Integrity checks, loading and cross-stage validation |
+| `src/saifa/dashboard/selections.py` | Pure selection and date-range statistical recalculation |
+| `src/saifa/dashboard/views.py` | Portfolio, risk, backtesting, stress and limitations pages |
 | `.streamlit/config.toml` | Shared light theme and disabled usage telemetry |
 | `tests/test_dashboard.py` | Independent examples, input integrity and Streamlit control tests |
 

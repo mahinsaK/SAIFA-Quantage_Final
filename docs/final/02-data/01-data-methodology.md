@@ -73,37 +73,37 @@ From the repository root, after installing uv:
 
 ```bash
 uv sync --locked
-uv run --locked python run_data.py
+uv run --locked python commands/run_data.py
 uv run --locked pytest -q
 ```
 
-The included frozen snapshot is the default; run_data.py itself makes no network requests in this mode. Dependency installation may need network access on a fresh computer. With dependencies already installed, verify offline reproduction with:
+The included frozen snapshot is the default; commands/run_data.py itself makes no network requests in this mode. Dependency installation may need network access on a fresh computer. With dependencies already installed, verify offline reproduction with:
 
 ```bash
-uv run --offline --locked python run_data.py
+uv run --offline --locked python commands/run_data.py
 ```
 
 Explicitly acquire new data (internet required):
 
 ```bash
-uv run --locked python run_data.py --download --start 2004-01-01 --end 2026-10-23
+uv run --locked python commands/run_data.py --download --start 2004-01-01 --end 2026-10-23
 ```
 
 Select a historical snapshot without refreshing:
 
 ```bash
-uv run --locked python run_data.py --snapshot SNAPSHOT_DIRECTORY_NAME
+uv run --locked python commands/run_data.py --snapshot SNAPSHOT_DIRECTORY_NAME
 ```
 
 Outputs are under `output/data/<snapshot-id>/`: adjusted_prices.csv, simple_returns.csv, log_returns.csv, risk_free_returns.csv, coverage.csv, quality_flags.csv, stationarity.csv, summary.json, status.json and quality_report.md. Failed acquisition or preparation exits nonzero. Review warnings do not pretend to be human sign-off.
 
 ## Code map
 
-- `src/domain/config.py`: validated, serialisable assumptions.
-- `src/data/providers.py`: Yahoo/FRED acquisition contracts and adapters.
-- `src/data/snapshots.py`: immutable acquisition storage, provenance and integrity checks.
-- `src/data/preparation.py`: calendar, quality screening, returns and lagged rate alignment.
-- `src/data/diagnostics.py`: descriptive ADF results.
-- `src/application/data_pipeline.py`: preparation orchestration and output publication.
-- `run_data.py`: CLI composition and explicit online/offline modes.
+- `src/saifa/domain/config.py`: validated, serialisable assumptions.
+- `src/saifa/data/providers.py`: Yahoo/FRED acquisition contracts and adapters.
+- `src/saifa/data/snapshots.py`: immutable acquisition storage, provenance and integrity checks.
+- `src/saifa/data/preparation.py`: calendar, quality screening, returns and lagged rate alignment.
+- `src/saifa/data/diagnostics.py`: descriptive ADF results.
+- `src/saifa/application/data_pipeline.py`: preparation orchestration and output publication.
+- `commands/run_data.py`: CLI composition and explicit online/offline modes.
 - `tests/test_data_foundation.py`: network-free financial examples and failure cases.

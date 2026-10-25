@@ -25,7 +25,7 @@ The current 97.5% threshold leaves only 25 excesses and is withheld. At 95% conf
 
 ## Reproduction and review
 
-See [methodology](01-evt-methodology.md) for formulas, provenance, bootstrap caveats and file definitions. The completed [manual worksheet](03-manual-evt-check.md) records independent arithmetic and threshold reasoning. Run `uv run --locked python run_evt.py` to reproduce the report, six diagnostic charts and all supporting CSVs. The runner verifies snapshot integrity and records dependency, code and output hashes.
+See [methodology](01-evt-methodology.md) for formulas, provenance, bootstrap caveats and file definitions. The completed [manual worksheet](03-manual-evt-check.md) records independent arithmetic and threshold reasoning. Run `uv run --locked python commands/run_evt.py` to reproduce the report, six diagnostic charts and all supporting CSVs. The runner verifies snapshot integrity and records dependency, code and output hashes.
 
 Automated verification covers analytic GPD/exponential identities, known-distribution recovery, units/translation, ties, support limits, insufficient/degenerate/failed fits, infinite ES, block structure, repeatability and future-data isolation. See the final validation record below for the executed results.
 

@@ -46,7 +46,7 @@ The first daily row records the initial allocation. In the costed strategy its r
 
 ## Output files
 
-Running `uv run --locked python run_portfolio.py` first reproduces the selected data snapshot and then writes files under `output/portfolio/<snapshot-id>/`:
+Running `uv run --locked python commands/run_portfolio.py` first reproduces the selected data snapshot and then writes files under `output/portfolio/<snapshot-id>/`:
 
 - `portfolio_daily.csv`: daily NAV, return, drawdown, asset values/weights, costs and rebalance flag for all strategies.
 - `portfolio_metrics.csv`: comparison metrics.
@@ -56,7 +56,7 @@ Running `uv run --locked python run_portfolio.py` first reproduces the selected 
 - `summary.json`: assumptions, source snapshot, output hashes and human-validation status.
 - `status.json`: complete/failed pipeline state.
 
-Generated outputs are ignored by Git because the selected frozen snapshot and code reproduce them. The source implementation is in `src/models/portfolio.py`; orchestration is in `src/application/portfolio_pipeline.py`; configuration is in `src/domain/config.py`; automated examples are in `tests/test_portfolio.py`.
+Generated outputs are ignored by Git because the selected frozen snapshot and code reproduce them. The source implementation is in `src/saifa/models/portfolio.py`; orchestration is in `src/saifa/application/portfolio_pipeline.py`; configuration is in `src/saifa/domain/config.py`; automated examples are in `tests/test_portfolio.py`.
 
 ## Limitations
 

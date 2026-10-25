@@ -51,8 +51,8 @@ Gaussian simple returns are unbounded and can theoretically imply losses above 1
 ## Files and reproduction
 
 ```bash
-uv run --locked python run_risk.py
-uv run --locked python run_risk.py --as-of 2026-10-22 --lookback 1000 --confidence 0.90 0.95 0.99
+uv run --locked python commands/run_risk.py
+uv run --locked python commands/run_risk.py --as-of 2026-10-22 --lookback 1000 --confidence 0.90 0.95 0.99
 uv run --locked pytest tests/test_risk.py -q
 ```
 
@@ -72,12 +72,12 @@ The same request replaces its reproducible outputs; different windows, seeds, co
 
 | Source | Responsibility |
 |---|---|
-| `src/domain/config.py`, `src/domain/risk.py` | Validated settings and typed results |
-| `src/models/risk.py` | Window selection, portfolio exposure, distribution fitting, VaR/ES and simulation |
-| `src/models/optimisation.py` | Shared development-only allocation fit, used by both risk and performance pipelines |
-| `src/application/risk_pipeline.py` | Inputs, provenance, orchestration and outputs |
-| `src/reporting/risk.py` | Markdown report content |
-| `run_risk.py` | Command-line options |
+| `src/saifa/domain/config.py`, `src/saifa/domain/risk.py` | Validated settings and typed results |
+| `src/saifa/models/risk.py` | Window selection, portfolio exposure, distribution fitting, VaR/ES and simulation |
+| `src/saifa/models/optimisation.py` | Shared development-only allocation fit, used by both risk and performance pipelines |
+| `src/saifa/application/risk_pipeline.py` | Inputs, provenance, orchestration and outputs |
+| `src/saifa/reporting/risk.py` | Markdown report content |
+| `commands/run_risk.py` | Command-line options |
 | `tests/test_risk.py` | Hand examples, invariants, dependence, simulation convergence and integration checks |
 
 ## Definition references

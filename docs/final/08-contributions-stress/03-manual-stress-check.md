@@ -52,7 +52,7 @@ At USD 10m with A=40%, B=60%, assume A falls 20% while B gains 5%.
 ## E. Inspect the actual frozen run
 
 ```bash
-uv run --locked python run_stress.py
+uv run --locked python commands/run_stress.py
 uv run --locked pytest tests/test_stress.py -q
 ```
 

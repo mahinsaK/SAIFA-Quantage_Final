@@ -8,21 +8,21 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.application.stress_pipeline import build_stress
-from src.domain.config import (
+from saifa.application.stress_pipeline import build_stress
+from saifa.domain.config import (
     UNIVERSE,
     HistoricalStressPeriod,
     OptimisationConfig,
     RiskConfig,
     StressConfig,
 )
-from src.models.contributions import (
+from saifa.models.contributions import (
     funded_transfer_checks,
     historical_es_contributions,
     normal_contributions,
 )
-from src.models.risk import empirical_tail, normal_tail
-from src.models.stress import historical_replay, joint_shock
+from saifa.models.risk import empirical_tail, normal_tail
+from saifa.models.stress import historical_replay, joint_shock
 
 
 def diagonal_panel():

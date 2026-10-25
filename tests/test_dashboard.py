@@ -9,12 +9,12 @@ import pandas as pd
 import pytest
 from streamlit.testing.v1 import AppTest
 
-from src.application.dashboard_pipeline import publish_bundle
-from src.dashboard.data import load_bundle, verify_bundle
-from src.dashboard.selections import backtest_view, select_risk
-from src.data.snapshots import file_hash
-from src.domain.config import UNIVERSE, BacktestConfig, OptimisationConfig, RiskConfig
-from src.domain.dashboard import CONFIDENCES, METHODS, STRATEGIES, TABLES, DashboardDataError
+from saifa.application.dashboard_pipeline import publish_bundle
+from saifa.dashboard.data import load_bundle, verify_bundle
+from saifa.dashboard.selections import backtest_view, select_risk
+from saifa.data.snapshots import file_hash
+from saifa.domain.config import UNIVERSE, BacktestConfig, OptimisationConfig, RiskConfig
+from saifa.domain.dashboard import CONFIDENCES, METHODS, STRATEGIES, TABLES, DashboardDataError
 
 
 def forecasts_fixture():
@@ -449,7 +449,7 @@ def test_app_missing_bundle_is_actionable_and_does_not_download(tmp_path, monkey
     app = app_test(tmp_path)
     assert not app.exception
     assert "not ready" in app.error[0].value
-    assert "run_app_data.py" in app.code[0].value
+    assert "commands/run_app_data.py" in app.code[0].value
 
 
 def test_app_controls_pages_and_unavailable_results(prepared, monkeypatch):

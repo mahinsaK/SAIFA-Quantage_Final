@@ -23,6 +23,6 @@ EFA, EEM and XLE received zero weight in both solutions. Zero weights are solver
 
 Both candidates beat the baseline in this held-out historical period while showing lower volatility and a smaller drawdown. This is useful evidence but does not establish future superiority. The candidates are close because AGG reaches its 60% single-asset ceiling and both use substantial GLD; input sensitivity and the required risk models may change the final decision.
 
-CAPM and remaining KPI values are in `performance_ratios.csv`. The efficient frontier, frozen weights, validation results, daily accounting and transactions are under `output/optimisation/20261023T102523Z-0d40a885/` and reproduce with `uv run --locked python run_optimisation.py`.
+CAPM and remaining KPI values are in `performance_ratios.csv`. The efficient frontier, frozen weights, validation results, daily accounting and transactions are under `output/optimisation/20261023T102523Z-0d40a885/` and reproduce with `uv run --locked python commands/run_optimisation.py`.
 
 Complete [manual-optimisation-check.md](03-manual-optimisation-check.md) before human sign-off. Data flags separately require the review in [data-quality-review.md](../02-data/03-data-quality-review.md).

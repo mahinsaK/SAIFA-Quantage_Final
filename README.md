@@ -16,11 +16,15 @@ First-time setup from this project directory:
 
 ```bash
 uv sync --locked
-uv run --locked python run_app_data.py
+uv run --locked python commands/run_app_data.py
 uv run --locked streamlit run app.py
 ```
 
 Open the local URL printed by Streamlit. Preparation uses the included frozen snapshot offline and can take several minutes; it builds all 90/95/99% outputs and verifies a manifest at `output/app/<snapshot>/bundle.json`. Repeat launches need only `uv run --locked streamlit run app.py`. Installation of dependencies may require internet access, but opening the app does not download market data.
+
+After installation, the packaged equivalents are available from the project
+root: `uv run --locked saifa-dashboard-data`, `uv run --locked saifa-data`,
+and `uv run --locked saifa-risk`.
 
 The five pages cover portfolio performance, side-by-side risk, date-sensitive backtesting, stress analysis and limitations. Sidebar dates affect backtesting only. The app recomputes tests from the selected dated forecasts and retains missing forecasts. EVT at 90% is explicitly unavailable under the current 90% threshold; no higher-confidence value is substituted. Basel colours require 250 complete sessions at 99% within the selected period.
 
@@ -34,13 +38,13 @@ Install uv, then run from this directory:
 
 ```bash
 uv sync --locked
-uv run --locked python run_data.py
+uv run --locked python commands/run_data.py
 ```
 
 The included snapshot is reused. The pipeline does not contact Yahoo/FRED unless explicitly requested:
 
 ```bash
-uv run --locked python run_data.py --download --start 2004-01-01 --end 2026-10-23
+uv run --locked python commands/run_data.py --download --start 2004-01-01 --end 2026-10-23
 ```
 
 Run verification:
@@ -55,7 +59,7 @@ Read the generated quality_report.md and quality_flags.csv in `output/data/<snap
 Build the baseline portfolio from the same frozen snapshot:
 
 ```bash
-uv run --locked python run_portfolio.py
+uv run --locked python commands/run_portfolio.py
 ```
 
 Results are generated under `output/portfolio/<snapshot-id>/`. This command does not download new data. It reproduces the data outputs first, then builds the three baseline strategies.
@@ -63,7 +67,7 @@ Results are generated under `output/portfolio/<snapshot-id>/`. This command does
 Build the constrained Markowitz candidates and out-of-sample comparison:
 
 ```bash
-uv run --locked python run_optimisation.py
+uv run --locked python commands/run_optimisation.py
 ```
 
 Results are generated under `output/optimisation/<snapshot-id>/`. Candidate weights use development data through 2018; 2019-2021 is validation and 2022 onward is the final evaluation period.
@@ -71,7 +75,7 @@ Results are generated under `output/optimisation/<snapshot-id>/`. Candidate weig
 Build the one-day VaR/ES comparison from the frozen snapshot:
 
 ```bash
-uv run --locked python run_risk.py
+uv run --locked python commands/run_risk.py
 ```
 
 This rebuilds data and fits candidate allocations offline using the shared development-only estimator; it does not run or require the full performance backtest. It compares all three allocations at the same USD 10 million NAV using the last 1,000 daily return observations through the latest close, 95%/99% confidence, and 200,000 joint Normal scenarios with seed 42. Open `risk_report.md` in the printed `output/risk/<snapshot-id>/<settings-hash>/` folder. The estimates describe target holdings over the next trading session; they do not include future trading costs or drifted portfolio holdings.
@@ -79,7 +83,7 @@ This rebuilds data and fits candidate allocations offline using the shared devel
 Optional settings (confidence uses fractions):
 
 ```bash
-uv run --locked python run_risk.py --as-of 2026-10-22 --lookback 1000 --confidence 0.90 0.95 0.99
+uv run --locked python commands/run_risk.py --as-of 2026-10-22 --lookback 1000 --confidence 0.90 0.95 0.99
 uv run --locked pytest tests/test_risk.py -q
 ```
 
@@ -88,7 +92,7 @@ Different settings create separate risk folders; repeating identical settings re
 ## Run the EVT study
 
 ```bash
-uv run --locked python run_evt.py
+uv run --locked python commands/run_evt.py
 uv run --locked pytest tests/test_evt.py -q
 ```
 
@@ -115,14 +119,14 @@ These paths are provenance notes for the team's machine, not portable dependenci
 ## Run walk-forward VaR backtesting
 
 ```bash
-uv run --locked python run_backtest.py
+uv run --locked python commands/run_backtest.py
 uv run --locked pytest tests/test_backtesting.py -q
 ```
 
 This offline runner uses the frozen snapshot, development-only allocations and rolling 1,000-return windows. It forecasts each next exchange session at 95%/99% for all four methods, with 200,000 date-seeded Normal simulations. The default covers 2019–22 October 2026 and may take several minutes. Read `backtest_report.md` in the printed `output/backtest/<snapshot>/<settings-hash>/` folder, then complete the manual worksheet. Require `status.json` to say `complete`.
 
 ```bash
-uv run --locked python run_backtest.py --start 2022-01-01 --end-exclusive 2026-10-23
+uv run --locked python commands/run_backtest.py --start 2022-01-01 --end-exclusive 2026-10-23
 ```
 
 Changing the forecast range does not change a shared date's forecasts. Missing or insufficient evidence is explicitly unavailable. Validation and evaluation results remain separate; Basel colours require 250 complete sessions at 99%. This tests one-day losses of fixed target exposures at USD 10m, not the monthly-rebalanced NAV after costs. The evaluation is retrospective because earlier final-period results have already been viewed. Non-rejection or a green latest window is not a safety guarantee; these tests do not validate ES severity.
@@ -130,7 +134,7 @@ Changing the forecast range does not change a shared date's forecasts. Missing o
 ## Run contributions and stress analysis
 
 ```bash
-uv run --locked python run_stress.py
+uv run --locked python commands/run_stress.py
 uv run --locked pytest tests/test_stress.py -q
 ```
 

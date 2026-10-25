@@ -26,7 +26,7 @@ Buy-and-hold finished higher in this realised period because the weights were al
 - The incomplete October 2026 month was not rebalanced.
 - All seven generated portfolio output files were byte-identical on a second offline run.
 
-Generated evidence is under `output/portfolio/20261023T102523Z-0d40a885/` and is reproducible with `uv run --locked python run_portfolio.py`. The generated directory is intentionally ignored by Git.
+Generated evidence is under `output/portfolio/20261023T102523Z-0d40a885/` and is reproducible with `uv run --locked python commands/run_portfolio.py`. The generated directory is intentionally ignored by Git.
 
 ## Human accounting validation
 

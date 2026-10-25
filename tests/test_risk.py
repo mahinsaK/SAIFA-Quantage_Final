@@ -7,10 +7,10 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.application.risk_pipeline import build_risk
-from src.domain.config import UNIVERSE, OptimisationConfig, RiskConfig
-from src.models.optimisation import fit_target_allocations
-from src.models.risk import (
+from saifa.application.risk_pipeline import build_risk
+from saifa.domain.config import UNIVERSE, OptimisationConfig, RiskConfig
+from saifa.models.optimisation import fit_target_allocations
+from saifa.models.risk import (
     compare_risk,
     empirical_tail,
     fit_gaussian,

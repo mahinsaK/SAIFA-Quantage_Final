@@ -5,7 +5,7 @@ Implementation and automated verification: **complete, 25 October 2026**. Human 
 ## Reproduce
 
 ```bash
-uv run --locked python run_stress.py
+uv run --locked python commands/run_stress.py
 uv run --locked pytest tests/test_stress.py -q
 uv run --locked pytest -q
 uv run --locked ruff check .

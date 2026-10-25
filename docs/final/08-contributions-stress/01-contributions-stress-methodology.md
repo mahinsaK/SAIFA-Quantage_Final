@@ -4,7 +4,7 @@ Implemented 25 October 2026. Human arithmetic, scenario approval and investment 
 
 ## Scope and comparable inputs
 
-`run_stress.py` uses the frozen snapshot offline. It fits the same development-only baseline, minimum-volatility and maximum-Sharpe allocations as the other runners. Default risk attribution uses 1,000 consecutive exchange-session simple returns through the as-of close, 95%/99% confidence and USD 10m per allocation. The forecast horizon is the next exchange session. No future observations enter the attribution window. Candidate weights use data through 31 December 2018; an earlier as-of date is rejected.
+`commands/run_stress.py` uses the frozen snapshot offline. It fits the same development-only baseline, minimum-volatility and maximum-Sharpe allocations as the other runners. Default risk attribution uses 1,000 consecutive exchange-session simple returns through the as-of close, 95%/99% confidence and USD 10m per allocation. The forecast horizon is the next exchange session. No future observations enter the attribution window. Candidate weights use data through 31 December 2018; an earlier as-of date is rejected.
 
 This phase implements Normal marginal/component VaR and ES, empirical Historical ES contributions, funded sizing checks, three historical replays and an illustrative joint shock. It does not claim marginal Historical VaR, Monte Carlo or EVT allocation formulas. Empirical VaR is nonsmooth; assigning standalone ETF VaR/ES to the portfolio would not provide the requested portfolio attribution.
 
@@ -54,10 +54,10 @@ Proposed research review levels are 2% one-day 99% ES, 15% historical maximum dr
 
 ## Files, evidence and limitations
 
-- `src/domain/config.py`: scenarios, levels and validated settings; `src/domain/stress.py`: typed results.
-- `src/models/contributions.py`: attribution and funded transfers; `src/models/stress.py`: replay and shock accounting.
-- `src/application/stress_pipeline.py`: shared inputs, provenance and additive checks.
-- `src/reporting/stress.py`: report and five charts; `tests/test_stress.py`: independent arithmetic, derivatives, boundaries, calendars and future-data exclusion.
+- `src/saifa/domain/config.py`: scenarios, levels and validated settings; `src/saifa/domain/stress.py`: typed results.
+- `src/saifa/models/contributions.py`: attribution and funded transfers; `src/saifa/models/stress.py`: replay and shock accounting.
+- `src/saifa/application/stress_pipeline.py`: shared inputs, provenance and additive checks.
+- `src/saifa/reporting/stress.py`: report and five charts; `tests/test_stress.py`: independent arithmetic, derivatives, boundaries, calendars and future-data exclusion.
 
 The run folder records input returns, moments, weights, scenario inputs, results, source/dependency/input hashes, package versions and a status file. Only `complete` runs may be used, and row-level availability/warnings must still be checked. Settings identify folders; changing code can overwrite the same settings folder, with the updated code hashes retained in its metadata. Generated outputs remain outside Git and must be regenerated or packaged separately for submission.
 

@@ -2,7 +2,7 @@
 
 Implemented 24 October 2026. Human review of the arithmetic and interpretation remains pending in [manual-backtest-check.md](03-manual-backtest-check.md).
 
-Snapshot: `20261023T102523Z-0d40a885`. Settings run: `93efaf13a75a`. Run `uv run --locked python run_backtest.py` and read the printed `backtest_report.md`. Full assumptions and primary references are in [backtesting-methodology.md](01-backtesting-methodology.md).
+Snapshot: `20261023T102523Z-0d40a885`. Settings run: `93efaf13a75a`. Run `uv run --locked python commands/run_backtest.py` and read the printed `backtest_report.md`. Full assumptions and primary references are in [backtesting-methodology.md](01-backtesting-methodology.md).
 
 ## Frozen run
 

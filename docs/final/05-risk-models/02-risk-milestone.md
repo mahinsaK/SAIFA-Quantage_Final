@@ -47,7 +47,7 @@ The generated summary records Git revision and working-tree state, source hashes
 ## Reproduce and review
 
 ```bash
-uv run --locked python run_risk.py
+uv run --locked python commands/run_risk.py
 uv run --locked pytest tests/test_risk.py -q
 ```
 

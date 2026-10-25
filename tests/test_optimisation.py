@@ -4,14 +4,14 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.domain.config import UNIVERSE, OptimisationConfig
-from src.models.optimisation import (
+from saifa.domain.config import UNIVERSE, OptimisationConfig
+from saifa.models.optimisation import (
     annualised_inputs,
     efficient_frontier,
     optimise_portfolio,
     validate_policy_weights,
 )
-from src.models.performance import performance_ratios
+from saifa.models.performance import performance_ratios
 
 
 def synthetic_inputs() -> tuple[pd.Series, pd.DataFrame]:

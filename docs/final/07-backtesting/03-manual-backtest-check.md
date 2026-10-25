@@ -59,7 +59,7 @@ At 99% confidence with exactly 250 complete sessions, verify: four exceptions = 
 ## E. Check the actual frozen run
 
 ```bash
-uv run --locked python run_backtest.py
+uv run --locked python commands/run_backtest.py
 uv run --locked pytest tests/test_backtesting.py -q
 uv run --locked pytest -q
 uv run --locked ruff check .

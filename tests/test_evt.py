@@ -8,10 +8,10 @@ import pandas as pd
 import pytest
 from scipy.stats import genpareto
 
-from src.application.evt_pipeline import build_evt
-from src.domain.config import UNIVERSE, EVTConfig, RiskConfig
-from src.domain.evt import POTFit
-from src.models.evt import (
+from saifa.application.evt_pipeline import build_evt
+from saifa.domain.config import UNIVERSE, EVTConfig, RiskConfig
+from saifa.domain.evt import POTFit
+from saifa.models.evt import (
     bootstrap_intervals,
     bootstrap_tail,
     circular_block_sample,
@@ -109,7 +109,7 @@ def test_optimizer_failure_is_explicit(monkeypatch):
     def fail(*args, **kwargs):
         raise ValueError("synthetic convergence failure")
 
-    monkeypatch.setattr("src.models.evt.genpareto.fit", fail)
+    monkeypatch.setattr("saifa.models.evt.genpareto.fit", fail)
     fit = fit_pot(np.linspace(0, 1, 1000), 0.9)
     assert fit.status == "fit_failed"
     assert "convergence" in fit.warning

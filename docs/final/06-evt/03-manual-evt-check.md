@@ -44,7 +44,7 @@ Explain why the code must show unavailable ES when `xi >= 1`: the fitted GPD tai
 ## D. Reproduce and inspect the actual run
 
 ```bash
-uv run --locked python run_evt.py
+uv run --locked python commands/run_evt.py
 uv run --locked pytest tests/test_evt.py -q
 uv run --locked pytest -q
 uv run --locked ruff check .
@@ -70,7 +70,7 @@ Open the printed `evt_report.md`. Confirm:
 - Part C exponential calculation and unavailable cases understood: Yes
 - Part D output and USD checks performed: Yes
 - Snapshot and exact run folder reviewed: 20261023T102523Z-0d40a885 / 5feb6a842858
-- Commands actually run and their results: `run_evt.py`, focused EVT tests (24 passed), full tests (93 passed), and Ruff (passed). Recorded terminal output:
+- Commands actually run and their results: `commands/run_evt.py`, focused EVT tests (24 passed), full tests (93 passed), and Ruff (passed). Recorded terminal output:
 
 ```text
 EVT outputs: /Users/mahinsak/SAIFA/output/evt/20261023T102523Z-0d40a885/5feb6a842858

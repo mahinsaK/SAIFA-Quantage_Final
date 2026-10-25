@@ -56,7 +56,7 @@ Rounding tolerance: USD 0.10 for this Normal example. Both estimates describe th
 Run:
 
 ```bash
-uv run --locked python run_risk.py
+uv run --locked python commands/run_risk.py
 uv run --locked pytest tests/test_risk.py -q
 uv run --locked pytest -q
 uv run --locked ruff check .
@@ -67,7 +67,7 @@ Open the printed folder's `risk_report.md` and `risk_estimates.csv`.
 1. Confirm the default report has 18 estimates: 3 portfolios x 3 methods x 2 confidence levels.
 2. Confirm all rows use the same close date, lookback, one-session horizon and USD 10 million NAV.
 3. Pick one row: verify `var_usd = var_percent / 100 * reference_nav`; repeat for ES.
-4. Check `portfolio_weights.csv`: baseline must be exactly 40% SPY / 60% AGG; each optimized allocation must sum to 100% and satisfy the policy constraints. If you have run `run_optimisation.py` on the same snapshot and settings, compare against its `candidate_weights.csv` too. `run_risk.py` fits the weights directly and does not create the performance-backtest files.
+4. Check `portfolio_weights.csv`: baseline must be exactly 40% SPY / 60% AGG; each optimized allocation must sum to 100% and satisfy the policy constraints. If you have run `commands/run_optimisation.py` on the same snapshot and settings, compare against its `candidate_weights.csv` too. `commands/run_risk.py` fits the weights directly and does not create the performance-backtest files.
 5. Compare Monte Carlo with Parametric. Small differences are expected because both use the same Normal distribution but one uses finite random draws. Read the standard-error columns; a seed makes the output repeatable, not exact.
 6. Run the same command again: its values should be unchanged in the same environment. The automatic tests separately check repeatability and convergence within simulation error.
 7. At 99%, find the historical tail warning: 1,000 observations provide only ten effective tail observations. Explain why this is weaker evidence than a large historical tail sample.

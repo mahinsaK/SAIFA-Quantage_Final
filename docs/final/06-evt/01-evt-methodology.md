@@ -6,7 +6,7 @@ Implemented research model. The named reviewer completed manual arithmetic and r
 
 Use the same three frozen target allocations, aligned simple returns, one-session horizon and USD 10m reference NAV as the earlier risk comparison. Portfolio loss is `L = -(returns @ weights)`; positive means loss. We do not average individual ETF VaRs. There is no trade, fee or withdrawal during the scenario.
 
-`run_evt.py` rebuilds the data outputs offline from the verified snapshot and fits portfolio weights using development data ending before 2019-01-01. It uses only observations through the requested as-of close. The default current window has 1,000 returns. The independent development diagnostic panel ends on 2018-12-31. Estimates forecast the next exchange session, not the already observed as-of session.
+`commands/run_evt.py` rebuilds the data outputs offline from the verified snapshot and fits portfolio weights using development data ending before 2019-01-01. It uses only observations through the requested as-of close. The default current window has 1,000 returns. The independent development diagnostic panel ends on 2018-12-31. Estimates forecast the next exchange session, not the already observed as-of session.
 
 The final-period performance has already been seen in earlier milestones. These are retrospective research diagnostics, not a claim of a fresh untouched test set. Changing a threshold after viewing current-period results must be disclosed, even if the code prevents future observations entering a particular fit.
 
@@ -56,7 +56,7 @@ These intervals measure sampling variability under the chosen resampling assumpt
 ## Outputs and reproduction
 
 ```bash
-uv run --locked python run_evt.py
+uv run --locked python commands/run_evt.py
 uv run --locked pytest tests/test_evt.py -q
 uv run --locked pytest -q
 uv run --locked ruff check .

@@ -15,11 +15,23 @@ dependencies = [
   "streamlit>=1.50,<2",
 ]
 
+[project.scripts]
+saifa-data = "saifa.cli:data_main"
+saifa-risk = "saifa.cli:risk_main"
+saifa-dashboard-data = "saifa.cli:dashboard_data_main"
+
 [dependency-groups]
 dev = ["pytest>=8,<10", "ruff>=0.12,<1"]
 
 [tool.uv]
-package = false
+package = true
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -27,4 +39,3 @@ pythonpath = ["."]
 
 [tool.ruff]
 line-length = 100
-

@@ -25,6 +25,9 @@ dist/
 
 # Derived data, portfolio, optimisation and risk outputs are reproduced by their runners.
 output/
+!output/
+output/*
+!output/README.md
 
 # New downloads and failed/partial acquisitions are local by default. Keep the
 # selected submission snapshot below so judges can reproduce results offline.
@@ -32,4 +35,3 @@ data/snapshots/*/
 !data/snapshots/20261023T102523Z-0d40a885/
 !data/snapshots/20261023T102523Z-0d40a885/**
 data/LATEST.tmp
-

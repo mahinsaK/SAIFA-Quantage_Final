@@ -39,7 +39,7 @@ SPY is an incomplete market proxy for a global mixed-asset portfolio. Arithmetic
 ## Reproduction
 
 ```bash
-uv run --locked python run_optimisation.py
+uv run --locked python commands/run_optimisation.py
 uv run --locked pytest tests/test_optimisation.py -q
 ```
 

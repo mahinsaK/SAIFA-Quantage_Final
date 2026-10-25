@@ -6,7 +6,7 @@ Status: **pending actual browser inspection and reviewer sign-off**. Automated e
 
 ```bash
 uv sync --locked
-uv run --locked python run_app_data.py
+uv run --locked python commands/run_app_data.py
 uv run --locked streamlit run app.py
 ```
 

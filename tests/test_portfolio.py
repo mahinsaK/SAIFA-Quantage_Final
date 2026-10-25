@@ -4,9 +4,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.domain.config import BaselinePortfolioConfig
-from src.domain.portfolio import PortfolioRun
-from src.models.portfolio import (
+from saifa.domain.config import BaselinePortfolioConfig
+from saifa.domain.portfolio import PortfolioRun
+from saifa.models.portfolio import (
     complete_month_ends,
     initial_allocation,
     performance_metrics,

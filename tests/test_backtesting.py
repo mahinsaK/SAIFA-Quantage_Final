@@ -8,11 +8,11 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.application.backtest_pipeline import build_backtest, evaluate_forecasts
-from src.domain.config import UNIVERSE, BacktestConfig, EVTConfig, OptimisationConfig
-from src.models.backtesting import basel_traffic_light, christoffersen_test, kupiec_test
-from src.models.risk import empirical_tail, normal_tail
-from src.models.walk_forward import forecast_positions, walk_forward
+from saifa.application.backtest_pipeline import build_backtest, evaluate_forecasts
+from saifa.domain.config import UNIVERSE, BacktestConfig, EVTConfig, OptimisationConfig
+from saifa.models.backtesting import basel_traffic_light, christoffersen_test, kupiec_test
+from saifa.models.risk import empirical_tail, normal_tail
+from saifa.models.walk_forward import forecast_positions, walk_forward
 
 
 def panel():
