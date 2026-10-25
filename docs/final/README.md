@@ -11,5 +11,6 @@ Folders follow the order in which the project was built. Within each phase, `01`
 | 05 Risk models | [Risk methodology](05-risk-models/01-risk-methodology.md) | [Risk milestone](05-risk-models/02-risk-milestone.md) | [Manual risk check](05-risk-models/03-manual-risk-check.md) |
 | 06 EVT | [EVT methodology](06-evt/01-evt-methodology.md) | [EVT milestone](06-evt/02-evt-milestone.md) | [Manual EVT check](06-evt/03-manual-evt-check.md) |
 | 07 Backtesting | [Backtesting methodology](07-backtesting/01-backtesting-methodology.md) | [Backtesting milestone](07-backtesting/02-backtesting-milestone.md) | [Manual backtest check](07-backtesting/03-manual-backtest-check.md) |
+| 08 Contributions and stress | [Methodology](08-contributions-stress/01-contributions-stress-methodology.md) | [Milestone evidence](08-contributions-stress/02-contributions-stress-milestone.md) | [Manual stress check](08-contributions-stress/03-manual-stress-check.md) |
 
 The worksheets distinguish completed human checks from pending ones. Generated numerical reports remain under `output/` and can be recreated with the runners in the [project README](../../README.md).

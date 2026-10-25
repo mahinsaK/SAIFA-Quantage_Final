@@ -70,6 +70,8 @@ Record a repository file/output and actual reviewer when marking an item complet
 
 ### Investor decisions and stress
 
+**Contributions and stress update (25 Oct):** S01–S03 now have implementation and automated evidence: additive Normal VaR/ES and Historical ES contributions, policy-constrained funded transfer sensitivity, full-calendar 2008/March 2020/2022 buy-and-hold replays and a proposed joint shock with severity sensitivity. See [methodology](../08-contributions-stress/01-contributions-stress-methodology.md), [milestone evidence](../08-contributions-stress/02-contributions-stress-milestone.md) and the pending [manual worksheet](../08-contributions-stress/03-manual-stress-check.md). The hypothetical scenario still needs team approval. All three allocations breach the proposed drawdown review level in 2008 and 2022; R05 and the final suitability decision must retain this evidence and earlier forecasting limitations. S01–S03 remain unchecked until named human review and interpretation; S04 and the interface remain outstanding.
+
 | Done | ID | Brief requirement and source | Acceptance evidence |
 |---|---|---|---|
 | [ ] | S01 | Marginal VaR/ES contributions and sizing (p. 8) | Define marginal versus weighted/component contributions; show allocation implications. Standalone asset ES is not portfolio ES contribution. |

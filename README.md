@@ -6,9 +6,9 @@ A new project for the Serendib University Endowment Fund competition mandate: co
 
 The data foundation, 40% SPY / 60% AGG baseline and constrained Markowitz candidates are implemented. The baseline accounting was manually validated by Mahinsa Kuruppu on 23 October 2026; all three hand-calculated examples matched and the focused test suite passed. The optimiser produces minimum-volatility and maximum-Sharpe candidates, an efficient frontier, CAPM diagnostics and the required performance ratios with a chronological out-of-sample comparison.
 
-Historical, Parametric Normal, correlated Gaussian Monte Carlo and EVT POT/GPD VaR/ES are implemented at 95% and 99% confidence, with an equal-USD-10m target-allocation comparison. EVT includes development/as-of diagnostics, threshold sensitivity and block-bootstrap uncertainty. Mahinsa Kuruppu completed the manual EVT arithmetic and signed off 90% as a provisional research threshold on 24 October 2026. Walk-forward forecasts, Kupiec coverage, Christoffersen independence and the historical Basel traffic light are now implemented; their human review is pending. Some model/period tests reject, and the reports retain those results. Risk contributions, stress analysis and the Streamlit app remain outstanding. Policy numbers remain proposed research assumptions, not client-supplied limits or validated investment recommendations. Human review records are maintained separately in the linked worksheets.
+Historical, Parametric Normal, correlated Gaussian Monte Carlo and EVT POT/GPD VaR/ES are implemented at 95% and 99% confidence, with an equal-USD-10m target-allocation comparison. EVT includes development/as-of diagnostics, threshold sensitivity and block-bootstrap uncertainty. Mahinsa Kuruppu completed the manual EVT arithmetic and signed off 90% as a provisional research threshold on 24 October 2026. Walk-forward forecasts, Kupiec coverage, Christoffersen independence and the historical Basel traffic light are now implemented; their human review is pending. Some model/period tests reject, and the reports retain those results. Normal VaR/ES contributions, Historical ES contributions, funded allocation sensitivity, historical crisis replays and hypothetical stress analysis are now implemented; their manual review and scenario approval remain pending. The Streamlit app remains outstanding. Policy numbers remain proposed research assumptions, not client-supplied limits or validated investment recommendations. Human review records are maintained separately in the linked worksheets.
 
-The [documentation index](docs/final/README.md) lists every file by phase. Start with the [requirements checklist](docs/final/01-planning/01-requirements-checklist.md), then use the numbered folders from planning through backtesting. Within each phase, `01` explains the method, `02` records results, and `03` holds the review worksheet (planning uses checklist, policy and AI log).
+The [documentation index](docs/final/README.md) lists every file by phase. Start with the [requirements checklist](docs/final/01-planning/01-requirements-checklist.md), then use the numbered folders from planning through contributions and stress. Within each phase, `01` explains the method, `02` records results, and `03` holds the review worksheet (planning uses checklist, policy and AI log).
 
 ## Run the data pipeline
 
@@ -109,9 +109,22 @@ uv run --locked python run_backtest.py --start 2022-01-01 --end-exclusive 2026-1
 
 Changing the forecast range does not change a shared date's forecasts. Missing or insufficient evidence is explicitly unavailable. Validation and evaluation results remain separate; Basel colours require 250 complete sessions at 99%. This tests one-day losses of fixed target exposures at USD 10m, not the monthly-rebalanced NAV after costs. The evaluation is retrospective because earlier final-period results have already been viewed. Non-rejection or a green latest window is not a safety guarantee; these tests do not validate ES severity.
 
+## Run contributions and stress analysis
+
+```bash
+uv run --locked python run_stress.py
+uv run --locked pytest tests/test_stress.py -q
+```
+
+Open `stress_report.md` in the printed `output/stress/<snapshot>/<settings-hash>/` folder. The offline run provides Normal marginal/component VaR and ES, Historical ES attribution, feasible/infeasible funded 1 percentage point transfers, three crisis replays and joint-shock severity sensitivity. Use `--as-of YYYY-MM-DD`, `--lookback 1000` or `--confidence 0.95 0.99` for explicit research settings. Require `status.json` to say `complete` and inspect row-level warnings.
+
+The replays use USD 10m, fixed initial allocations and drifting buy-and-hold holdings without fees or withdrawals. They are retrospective scenarios; 2018-fitted weights were not available in 2008. The hypothetical one-session ETF shocks are proposed assumptions requiring team approval. All three portfolios exceed the proposed 15% drawdown review level in 2008 and 2022, even though their current-window Normal/Historical 99% ES estimates are below the separate 2% one-day level. Neither result is a safety guarantee.
+
+See the [methodology](docs/final/08-contributions-stress/01-contributions-stress-methodology.md), [milestone evidence](docs/final/08-contributions-stress/02-contributions-stress-milestone.md) and [manual worksheet](docs/final/08-contributions-stress/03-manual-stress-check.md). Implementation is complete; human review and the investment decision remain open.
+
 ## Next implementation milestone
 
-Complete the backtesting worksheet and any remaining risk interpretation. Next implement marginal/component VaR and ES contributions, historical crisis replays and a team-designed hypothetical stress scenario. Carry the backtest's coverage/clustering limitations into the investment decision; do not choose or retune a model simply to make the evaluation tests pass.
+Complete the backtesting and contributions/stress worksheets, review the proposed hypothetical scenario and decide how to respond to breached stress review levels. Next integrate the verified results into the Streamlit app and develop the committee recommendation, report and tear sheet. Carry the backtest's coverage/clustering limitations into the investment decision; do not choose or retune a model simply to make the evaluation tests pass.
 
 ## Team review
 

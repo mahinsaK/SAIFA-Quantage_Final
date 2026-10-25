@@ -8,6 +8,83 @@ UNIVERSE = ("SPY", "EFA", "EEM", "AGG", "GLD", "XLE", "XLK")
 
 
 @dataclass(frozen=True)
+class HistoricalStressPeriod:
+    name: str
+    start: str
+    end_exclusive: str
+
+    def __post_init__(self) -> None:
+        if not self.name or date.fromisoformat(self.start) >= date.fromisoformat(
+            self.end_exclusive
+        ):
+            raise ValueError("Stress period needs a name and ordered dates")
+
+
+@dataclass(frozen=True)
+class StressConfig:
+    """Research scenarios and review triggers; no client approval or probability implied."""
+
+    historical_periods: tuple[HistoricalStressPeriod, ...] = (
+        HistoricalStressPeriod("2008_GFC", "2008-01-01", "2009-01-01"),
+        HistoricalStressPeriod("March_2020", "2020-03-01", "2020-04-01"),
+        HistoricalStressPeriod("2022_rate_shock", "2022-01-01", "2023-01-01"),
+    )
+    shock_name: str = "inflation_liquidity_squeeze"
+    shock_narrative: str = (
+        "Illustrative one-session inflation and liquidity squeeze: real yields and credit spreads "
+        "rise, stocks sell off as growth expectations weaken, and forced selling affects bonds "
+        "and gold. Energy equities suffer the assumed demand shock. ETF shocks are direct total "
+        "return assumptions, not a calibrated macro model or assigned probability. Team review pending."
+    )
+    shocks: tuple[tuple[str, float], ...] = (
+        ("SPY", -0.12),
+        ("EFA", -0.15),
+        ("EEM", -0.18),
+        ("AGG", -0.06),
+        ("GLD", -0.04),
+        ("XLE", -0.20),
+        ("XLK", -0.18),
+    )
+    shock_multipliers: tuple[float, ...] = (0.5, 1.0, 1.5)
+    transfer_weight: float = 0.01
+    es_review_level: float = 0.02
+    drawdown_review_level: float = 0.15
+    shock_review_level: float = 0.10
+
+    def __post_init__(self) -> None:
+        if not self.historical_periods or len({p.name for p in self.historical_periods}) != len(
+            self.historical_periods
+        ):
+            raise ValueError("Unique nonempty historical scenarios required")
+        if not self.shock_name or not self.shock_narrative:
+            raise ValueError("Hypothetical scenario needs a name and narrative")
+        if tuple(t for t, _ in self.shocks) != UNIVERSE:
+            raise ValueError("Shock vector must include the seven eligible ETFs in order")
+        multipliers = self.shock_multipliers
+        if (
+            not multipliers
+            or len(set(multipliers)) != len(multipliers)
+            or 1.0 not in multipliers
+            or any(not isfinite(v) or v <= 0 for v in multipliers)
+        ):
+            raise ValueError("Positive unique multipliers including 1.0 required")
+        if any(
+            not isfinite(v) or any(not isfinite(v * m) or v * m < -1 for m in multipliers)
+            for _, v in self.shocks
+        ):
+            raise ValueError("Scaled shocks must be finite simple returns >= -100%")
+        for name in (
+            "transfer_weight",
+            "es_review_level",
+            "drawdown_review_level",
+            "shock_review_level",
+        ):
+            value = getattr(self, name)
+            if not isfinite(value) or not 0 < value < 1:
+                raise ValueError(f"{name} must be a finite fraction in (0, 1)")
+
+
+@dataclass(frozen=True)
 class EVTConfig:
     """Prespecified POT research settings; diagnostics never silently select a threshold."""
 
