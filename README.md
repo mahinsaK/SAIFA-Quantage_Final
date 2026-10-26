@@ -12,15 +12,21 @@ The [documentation index](docs/final/README.md) lists every file by phase. Start
 
 ## Open the Streamlit app
 
-First-time setup from this project directory:
+From a fresh checkout, with `uv` installed, use one command:
 
 ```bash
-uv sync --locked
-uv run --locked python commands/run_app_data.py
-uv run --locked streamlit run app.py
+uv run --locked python commands/run_judge_app.py
 ```
 
-Open the local URL printed by Streamlit. Preparation uses the included frozen snapshot offline and can take several minutes; it builds all 90/95/99% outputs and verifies a manifest at `output/app/<snapshot>/bundle.json`. Repeat launches need only `uv run --locked streamlit run app.py`. Installation of dependencies may require internet access, but opening the app does not download market data.
+Open the local URL printed by Streamlit. The launcher verifies existing results and prepares anything missing from the included frozen snapshot before opening the app. The first run can take several minutes because it builds all 90/95/99% forecasts, committee evidence and PDFs. Later runs reuse verified results. Dependency installation may require internet access; preparation does **not** download market data.
+
+For separate preparation and launch steps while developing:
+
+```bash
+uv run --locked python commands/run_app_data.py
+uv run --locked python commands/run_submission.py
+uv run --locked streamlit run app.py
+```
 
 After installation, the packaged equivalents are available from the project
 root: `uv run --locked saifa-dashboard-data`, `uv run --locked saifa-data`,
@@ -28,7 +34,7 @@ and `uv run --locked saifa-risk`.
 
 The five pages cover portfolio performance, side-by-side risk, date-sensitive backtesting, stress analysis and limitations. Sidebar dates affect backtesting only. The app recomputes tests from the selected dated forecasts and retains missing forecasts. EVT at 90% is explicitly unavailable under the current 90% threshold; no higher-confidence value is substituted. Basel colours require 250 complete sessions at 99% within the selected period.
 
-If outputs are absent, incomplete or modified, the app explains the issue and shows the preparation command. Rerun preparation after rebuilding individual pipelines that change files used by the app. The app follows `data/LATEST`; keep it aligned with the intended frozen submission snapshot. Generated outputs remain ignored by Git, so a fresh checkout requires preparation.
+If outputs are absent, incomplete or modified, the app explains the issue and shows the preparation command. The one-command launcher prepares those outputs automatically. It follows `data/LATEST`; keep it aligned with the intended frozen submission snapshot. Generated outputs remain ignored by Git, so a fresh checkout rebuilds them.
 
 See the [app methodology](docs/final/09-streamlit-app/01-app-methodology.md), [verification evidence](docs/final/09-streamlit-app/02-app-milestone.md) and [manual browser check](docs/final/09-streamlit-app/03-manual-app-check.md).
 
@@ -144,9 +150,21 @@ The replays use USD 10m, fixed initial allocations and drifting buy-and-hold hol
 
 See the [methodology](docs/final/08-contributions-stress/01-contributions-stress-methodology.md), [milestone evidence](docs/final/08-contributions-stress/02-contributions-stress-milestone.md) and [manual worksheet](docs/final/08-contributions-stress/03-manual-stress-check.md). Implementation is complete; human review and the investment decision remain open.
 
-## Next implementation milestone
+## Committee evidence and submission documents
 
-Complete the backtesting and contributions/stress worksheets, review the proposed hypothetical scenario and decide how to respond to breached stress review levels. Complete the app browser review, then develop the committee recommendation, report and tear sheet using its verified results. Carry the backtest's coverage/clustering limitations into the investment decision; do not choose or retune a model simply to make the evaluation tests pass.
+After preparing the app bundle, run:
+
+```bash
+uv run --locked python commands/run_submission.py
+```
+
+This offline command produces a verified decision extension and the investment report, executive tear sheet and one-page committee memo in `output/pdf/<snapshot>/`. The Portfolio page presents the same decision and selected-portfolio spending figures. Rebuild after source changes. Missing/stale evidence is explained rather than displayed. Generated PDFs remain Git-ignored: include the rebuilt files in the submission package.
+
+The proposed recommendation defers implementation and retains minimum volatility only as a conditional discussion candidate. All candidates breach crisis review levels. The snapshot has no CPI; observed real-growth attainment stays unavailable. Spending uses explicitly hypothetical 0%, 2% and 4% constant-inflation assumptions, never substituted for observed data. See the [decision methodology](docs/final/10-investment-decision/01-decision-methodology.md), [verification evidence](docs/final/10-investment-decision/02-decision-milestone.md) and [manual team review](docs/final/10-investment-decision/03-manual-decision-check.md).
+
+## Next submission milestone
+
+Complete the backtesting and contributions/stress worksheets, review the proposed hypothetical scenario and decide how to respond to breached stress review levels. Complete the app browser review and independently evaluate the draft committee recommendation, report and tear sheet. Confirm actual spending/client needs, missing CPI evidence, final PDF versions and judge access. Carry the backtest's coverage/clustering limitations into the investment decision; do not choose or retune a model simply to make the evaluation tests pass.
 
 ## Team review
 

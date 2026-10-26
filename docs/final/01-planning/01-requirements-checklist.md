@@ -137,3 +137,13 @@ Rubric: decision-making 30%, technical correctness 25%, software 15%, innovation
 - [ ] Team assigns owners and explains policy in its own words.
 - [ ] Numerical assumptions evaluated on development data and policy frozen.
 - [ ] Final requirements above verified with evidence and actual review.
+
+## Phase 10 implementation update - 26 October 2026
+
+S04/O03/O04 now have AI-assisted draft artifacts generated from the same verified bundle as the app: a conditional committee recommendation, 7-15-page report and separate one-page executive tear sheet. See [methodology](../10-investment-decision/01-decision-methodology.md), [milestone](../10-investment-decision/02-decision-milestone.md) and [manual review](../10-investment-decision/03-manual-decision-check.md). These rows remain unchecked until actual team interpretation, document acceptance and final access checks.
+
+M01/M02/M06 now have an explicit decision response and spending sensitivity. The current recommendation defers implementation, retaining minimum volatility as a conditional discussion candidate; all portfolios breach proposed crisis review levels. The original 3% real target is before spending, while the new after-spending test is a separately labelled stricter scenario. No CPI is in the frozen snapshot: actual real-growth attainment is unavailable. Assumed 0/2/4% inflation scenarios do not resolve that evidence gap or establish ten-year sustainability.
+
+Implementation evidence does not complete V05, O05 or any human worksheets. Scenario approval, client policy approval, team acceptance of the recommendation, spending/liquidity needs, CPI provenance, browser acceptance, repository access, final cutoff and submission delivery remain human actions. Earlier dated milestone notes describe their own phase, not the current cumulative implementation status.
+
+**Judge launch follow-up:** `uv run --locked python commands/run_judge_app.py` now verifies and reuses existing outputs or builds the missing app/decision/PDF artifacts from the frozen snapshot, then starts Streamlit. An isolated ZIP-style copy without `.git` or generated outputs successfully built every stage and launched the app with a passing health check; matching PDFs were byte-identical. Human browser sign-off and judge-access checks remain open, so O02 stays unchecked pending those checks.

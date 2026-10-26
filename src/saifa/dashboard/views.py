@@ -30,7 +30,10 @@ def download(frame, label, name):
 
 
 def portfolio_page(bundle: DashboardBundle, strategy: str):
+    from saifa.dashboard.decision import decision_summary
+
     st.header("Portfolio performance")
+    decision_summary(bundle, strategy)
     st.write(
         "Compare what the three allocations earned and how far their value fell during the same evaluation period."
     )
@@ -95,7 +98,7 @@ def portfolio_page(bundle: DashboardBundle, strategy: str):
         y_label="Loss from running peak (%)",
     )
     st.caption(
-        "Drawdown is shown as a positive loss. The initial USD 10m is included as the opening peak. Holdings drift between month-end rebalances; distributions are reinvested and withdrawals are not modelled."
+        "Drawdown is shown as a positive loss. The initial USD 10m is included as the opening peak. Holdings drift between month-end rebalances; distributions are reinvested. These performance paths exclude withdrawals; the separate committee sensitivity above models hypothetical spending."
     )
     with st.expander("Performance measures and latest holdings"):
         comparison = metrics.merge(
@@ -514,7 +517,7 @@ def assumptions_page(bundle: DashboardBundle):
         "The 2% one-day 99% ES, 15% historical drawdown and 10% hypothetical-loss levels are proposed research review triggers, not client-approved limits. They have different horizons and denominators. Breaches require interpretation; the app does not automatically approve an allocation."
     )
     st.write(
-        "The proposed ten-year horizon and 3% real-growth objective are not established forecasts. Adjusted total returns reinvest distributions and are not all spendable income. No client spending schedule, inflation-adjusted withdrawal plan, tax profile or management fee is known. Purchasing-power and spending sustainability have not been demonstrated by this app. Market impact, bid–ask changes, forced sales, fractional-share restrictions and intra-day liquidity are unmodelled."
+        "The proposed ten-year horizon and 3% real-growth objective are not established forecasts. Adjusted total returns reinvest distributions and are not all spendable income. No client spending schedule, inflation-adjusted withdrawal plan, tax profile or management fee is known. The committee extension illustrates 0%, 2% and 4% assumed inflation with annual withdrawals. No CPI series is in the frozen data, so actual purchasing-power growth and spending sustainability remain unestablished. Market impact, bid–ask changes, forced sales, fractional-share restrictions and intra-day liquidity are unmodelled."
     )
     st.subheader("Human review")
     st.write(

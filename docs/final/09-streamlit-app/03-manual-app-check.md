@@ -5,9 +5,7 @@ Status: **pending actual browser inspection and reviewer sign-off**. Automated e
 ## Start and inspect
 
 ```bash
-uv sync --locked
-uv run --locked python commands/run_app_data.py
-uv run --locked streamlit run app.py
+uv run --locked python commands/run_judge_app.py
 ```
 
 Open the URL printed by Streamlit. If results are absent or incomplete, confirm the app shows a reason and the preparation command. It must not show fabricated sample results. A changed consumed file requires the bundle to be rebuilt.

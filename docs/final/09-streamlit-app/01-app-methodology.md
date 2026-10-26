@@ -4,15 +4,13 @@ Implemented 25 October 2026. The app presents the research candidates and eviden
 
 ## Launch and offline preparation
 
-From the project root:
+From the project root, the judge-facing route is:
 
 ```bash
-uv sync --locked
-uv run --locked python commands/run_app_data.py
-uv run --locked streamlit run app.py
+uv run --locked python commands/run_judge_app.py
 ```
 
-Dependency installation needs access to the package registry on first setup. The preparation command and app use the local snapshot identified by `data/LATEST`; they do not acquire market data. Preparation invokes the existing optimisation, EVT/risk comparison, stress and backtesting pipelines. It can take several minutes. Later launches need only the Streamlit command.
+The launcher verifies and reuses complete app, decision and PDF artifacts. It prepares missing or changed artifacts and then starts Streamlit. Dependency installation needs access to the package registry on first setup. Preparation and app use the local snapshot identified by `data/LATEST`; they do not acquire market data. Preparation invokes the existing optimisation, EVT/risk comparison, stress and backtesting pipelines and may take several minutes. For debugging, run `commands/run_app_data.py` and `commands/run_submission.py` separately before `uv run --locked streamlit run app.py`.
 
 `commands/run_app_data.py --snapshot <id>` prepares an explicitly selected snapshot, but the app always follows `data/LATEST`; these must identify the same intended submission snapshot. The default submission snapshot is `20261023T102523Z-0d40a885`. Do not change the pointer merely to hide a failed acquisition.
 
@@ -49,6 +47,7 @@ The backtest date control does not alter the performance evaluation period, curr
 |---|---|
 | `app.py` | Entry point, sidebar, verified cache and page routing |
 | `commands/run_app_data.py` | Explicit offline preparation command |
+| `commands/run_judge_app.py` | One-command verified preparation and local launch |
 | `src/saifa/application/dashboard_pipeline.py` | Reuses the pipelines and publishes the app bundle |
 | `src/saifa/domain/dashboard.py` | Bundle/result types, labels and required output contract |
 | `src/saifa/dashboard/data.py` | Integrity checks, loading and cross-stage validation |

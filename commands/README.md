@@ -23,3 +23,7 @@ uv run --locked python commands/run_app_data.py
 
 The scripts resolve project data and cache paths from their location. Invoke
 them from the repository root so Python can resolve the local `src` package.
+
+`uv run --locked python commands/run_submission.py` builds committee evidence, spending sensitivity and PDF submission drafts from the already prepared app bundle, offline. See Phase 10 documentation.
+
+`uv run --locked python commands/run_judge_app.py` verifies or builds all local outputs from the frozen snapshot and launches Streamlit with one command. First preparation may take several minutes; it does not fetch market data.

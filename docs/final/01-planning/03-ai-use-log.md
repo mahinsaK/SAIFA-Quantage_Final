@@ -17,3 +17,9 @@ This is an evolving record, not a claim of completed human validation.
 Risk implementation follow-up review: OpenAI Codex checked formulas, timing, covariance simulation, units, output claims and the full test suite. Corrected fractional-confidence display and an unnecessary dependency on future performance-evaluation data; shared allocation fitting now uses aligned development rates and configured annualisation. The default numerical outputs were unchanged. The revised suite has 69 passing tests. This is AI-assisted review, not human sign-off.
 
 Team members must record actual checks, corrections and reviewers as they occur. Automated tests and AI review are not substitutes for the human validation required by the competition. No final investment conclusion or strategy has been chosen in this milestone.
+
+## Phase 10 - 26 October 2026
+
+OpenAI Codex assisted spending accounting, illustrative inflation assumptions, tests, the verified app decision extension, PDF generation and the draft recommendation/report/tear sheet. Source evidence and automated verification are recorded in the [Phase 10 milestone](../10-investment-decision/02-decision-milestone.md). No new market data was downloaded. Observed CPI-based outcomes remain unavailable. The recommendation is an AI-assisted draft requiring independent team evaluation, substantiation and approval; no earlier human record or scenario approval was completed on the team's behalf.
+
+Codex also implemented the one-command local launcher and performed an isolated clean-copy build without Git metadata or generated outputs. Four additional focused tests, 196 full-suite tests, a localhost health check and byte-for-byte PDF comparison passed. This is software verification; browser visual acceptance and human investment judgment remain pending.
