@@ -50,54 +50,98 @@ def load_decision(root: Path, bundle: DashboardBundle) -> tuple[dict, dict[str, 
         raise DashboardDataError(f"Decision evidence unavailable: {exc}") from exc
 
 
-def decision_summary(bundle: DashboardBundle, strategy: str) -> None:
+def decision_evidence(bundle: DashboardBundle) -> tuple[dict, dict[str, pd.DataFrame]] | None:
     root = bundle.manifest_path.resolve().parents[3]
     try:
-        summary, tables = load_decision(root, bundle)
+        return load_decision(root, bundle)
     except DashboardDataError as exc:
         st.info(
             "Committee summary unavailable. Prepare it with: "
             "uv run --locked python commands/run_submission.py"
         )
         st.caption(str(exc))
-        return
+        return None
+
+
+def decision_banner(summary: dict) -> None:
     with st.container(border=True):
-        st.subheader("Committee decision - proposed, awaiting human review")
+        st.subheader("Committee view · proposed")
         st.warning(summary["decision"])
         st.caption(
-            "This overall decision is fixed across sidebar choices. The spending "
-            "comparison below follows the selected portfolio; risk controls retain "
-            "their existing scope."
+            "Human approval is pending. This overall decision is fixed across portfolio selections."
         )
-        st.write(summary["inflation_limitation"])
-        st.metric("Observed real-growth objective", "Not established")
-        selected = tables["spending_summary"].query("strategy == @strategy").copy()
-        display = pd.DataFrame(
-            {
-                "Assumed inflation": selected.inflation_assumption.map(lambda x: f"{x:.0%}"),
-                "Ending nominal wealth (USD)": selected.ending_nominal_wealth,
-                "Ending scenario-real wealth (USD)": selected.ending_scenario_real_wealth,
-                "Total spending paid (USD)": selected.total_paid,
-                "Real remaining-capital growth (%) / year": selected.annualised_real_remaining_capital_growth
-                * 100,
-                "At least 3% after spending? (scenario only)": selected.meets_after_spending_objective,
-            }
+
+
+def spending_sensitivity(summary: dict, tables: dict[str, pd.DataFrame], strategy: str) -> None:
+    selected = tables["spending_summary"].query("strategy == @strategy").copy()
+    example = selected.loc[selected.inflation_assumption == 0.02]
+    st.subheader("Hypothetical spending sensitivity")
+    with st.container(border=True):
+        st.markdown("**Illustrative annual spending · 2% assumed inflation**")
+        with st.container(horizontal=True):
+            st.metric("Observed real-growth objective", "Not established", border=True)
+            if not example.empty:
+                row = example.iloc[0]
+                st.metric(
+                    "Scenario-real wealth after spending",
+                    f"${row.ending_scenario_real_wealth:,.0f}",
+                    border=True,
+                )
+                st.metric(
+                    "Real remaining-capital growth / year",
+                    f"{row.annualised_real_remaining_capital_growth:.2%}",
+                    border=True,
+                )
+        st.caption(
+            "Spending figures follow the selected portfolio. The inflation rate is an assumption, "
+            "not observed CPI; actual real-growth attainment remains unavailable."
         )
-        st.dataframe(
-            display,
-            hide_index=True,
-            width="stretch",
-            alt="Selected portfolio spending outcomes under assumed inflation",
-        )
-        st.caption(summary["payment_rule"])
-        st.caption(summary["objective_note"] + " " + summary["horizon_note"])
-        with st.expander("Funding rules and decisions still required"):
+        with st.expander("See all spending scenarios, assumptions and decisions required"):
+            st.write(summary["inflation_limitation"])
+            display = pd.DataFrame(
+                {
+                    "Assumed inflation": selected.inflation_assumption.map(lambda x: f"{x:.0%}"),
+                    "Ending nominal wealth (USD)": selected.ending_nominal_wealth,
+                    "Ending scenario-real wealth (USD)": selected.ending_scenario_real_wealth,
+                    "Total spending paid (USD)": selected.total_paid,
+                    "Real remaining-capital growth (%) / year": selected.annualised_real_remaining_capital_growth
+                    * 100,
+                    "At least 3% after spending? (scenario only)": selected.meets_after_spending_objective,
+                }
+            )
+            st.dataframe(
+                display,
+                hide_index=True,
+                width="stretch",
+                column_config={
+                    "Ending nominal wealth (USD)": st.column_config.NumberColumn(format="$%.2f"),
+                    "Ending scenario-real wealth (USD)": st.column_config.NumberColumn(
+                        format="$%.2f"
+                    ),
+                    "Total spending paid (USD)": st.column_config.NumberColumn(format="$%.2f"),
+                    "Real remaining-capital growth (%) / year": st.column_config.NumberColumn(
+                        format="%.2f%%"
+                    ),
+                },
+                alt="Selected portfolio spending outcomes under assumed inflation",
+            )
+            st.caption(summary["payment_rule"])
+            st.caption(summary["objective_note"] + " " + summary["horizon_note"])
             st.write(summary["funding_rule"])
             for condition in summary["conditions"]:
                 st.write("- " + condition)
-        st.download_button(
-            "Download spending comparison",
-            selected.to_csv(index=False),
-            file_name=f"{strategy}_spending.csv",
-            mime="text/csv",
-        )
+            st.download_button(
+                "Download spending comparison",
+                selected.to_csv(index=False),
+                file_name=f"{strategy}_spending.csv",
+                mime="text/csv",
+            )
+
+
+def decision_summary(bundle: DashboardBundle, strategy: str) -> None:
+    """Standalone composition used by reviews and component tests."""
+    evidence = decision_evidence(bundle)
+    if evidence is not None:
+        summary, tables = evidence
+        decision_banner(summary)
+        spending_sensitivity(summary, tables, strategy)

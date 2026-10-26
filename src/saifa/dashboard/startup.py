@@ -14,5 +14,4 @@ def configure_environment(root: Path) -> None:
 def configure_page() -> None:
     st.set_page_config(page_title="SAIFA · Endowment research", page_icon="◈", layout="wide")
     st.title("SAIFA")
-    st.caption("QUANT EDGE 1.0 · SERENDIB UNIVERSITY ENDOWMENT FUND")
-    st.write("**Preserve capital. Understand the risk. Make a defensible decision.**")
+    st.caption("SERENDIB UNIVERSITY ENDOWMENT FUND · QUANT EDGE 1.0")

@@ -21,15 +21,18 @@ class DashboardSelection:
 def render_sidebar(bundle: DashboardBundle) -> DashboardSelection:
     meta = bundle.metadata["backtest"]
     with st.sidebar:
-        st.header("Research explorer")
+        st.header("SAIFA research")
         page = st.radio(
-            "Page",
+            "Explore",
             ["Portfolio", "Risk comparison", "Backtesting", "Stress analysis", "Assumptions"],
             key="page",
         )
+        st.divider()
         strategy = st.selectbox(
             "Portfolio", list(STRATEGIES), format_func=STRATEGIES.get, key="strategy"
         )
+        st.caption("Portfolio selection changes the detailed evidence, not the committee decision.")
+        st.subheader("Risk settings")
         confidence = st.selectbox(
             "Confidence",
             list(CONFIDENCES),
@@ -39,8 +42,8 @@ def render_sidebar(bundle: DashboardBundle) -> DashboardSelection:
         )
         method = st.selectbox("VaR method", list(METHODS), format_func=METHODS.get, key="method")
         st.caption(
-            "Confidence and method apply to risk, backtesting and available risk contributions. "
-            "Scenario losses do not have an assigned confidence level."
+            "Confidence and method apply to risk and backtesting. Crisis and hypothetical shocks "
+            "have no confidence level."
         )
         low, high = pd.Timestamp(meta["start"]).date(), pd.Timestamp(meta["end"]).date()
         evaluation_start = max(low, pd.Timestamp(meta["validation_end_exclusive"]).date())
@@ -52,10 +55,7 @@ def render_sidebar(bundle: DashboardBundle) -> DashboardSelection:
             format="YYYY-MM-DD",
             key="dates",
         )
-        st.caption(
-            "Date range changes backtesting only. Portfolio performance and crisis windows retain "
-            "their stated periods."
-        )
+        st.caption("Dates change backtesting only.")
         st.divider()
         st.caption(
             f"Snapshot: {bundle.manifest['snapshot_id']}\n\n"

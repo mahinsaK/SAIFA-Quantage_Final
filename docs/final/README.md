@@ -16,3 +16,5 @@ Folders follow the order in which the project was built. Within each phase, `01`
 | 10 Investment decision | [Methodology](10-investment-decision/01-decision-methodology.md) | [Milestone evidence](10-investment-decision/02-decision-milestone.md) | [Manual team review](10-investment-decision/03-manual-decision-check.md) |
 
 The worksheets distinguish completed human checks from pending ones. Generated numerical reports remain under `output/` and can be recreated with the runners in the [project README](../../README.md).
+
+The separate UI comparison branch records its [audit and design approach](09-streamlit-app/04-ui-refresh-audit.md); it does not replace the manual app acceptance worksheet.
