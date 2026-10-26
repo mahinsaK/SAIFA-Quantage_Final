@@ -20,6 +20,7 @@ from src.dashboard.views import (
 )
 from src.data.snapshots import resolve_snapshot
 from src.domain.dashboard import CONFIDENCES, METHODS, STRATEGIES, DashboardDataError
+from src.domain.decision import DecisionError, load_decision
 
 
 @st.cache_data(show_spinner=False, max_entries=3)
@@ -49,6 +50,11 @@ def main(root: Path = ROOT):
         st.caption(
             "If the frozen snapshot is missing, restore the submission snapshot from the repository. The app does not download replacement data or display example results."
         )
+        return
+    try:
+        decision = load_decision(root)
+    except DecisionError as exc:
+        st.error(f"Committee decision record is invalid: {exc}")
         return
     meta = bundle.metadata["backtest"]
     with st.sidebar:
@@ -87,7 +93,7 @@ def main(root: Path = ROOT):
         )
         st.divider()
         st.caption(
-            f"Snapshot: {bundle.manifest['snapshot_id']}\n\nRisk as-of: {bundle.metadata['risk']['as_of']}\n\nProposed allocations · final decision pending"
+            f"Snapshot: {bundle.manifest['snapshot_id']}\n\nRisk as-of: {bundle.metadata['risk']['as_of']}\n\nProposed allocations · {decision.label}"
         )
     if page == "Portfolio":
         portfolio_page(bundle, strategy)
@@ -101,7 +107,7 @@ def main(root: Path = ROOT):
     elif page == "Stress analysis":
         stress_page(bundle, strategy, confidence, method)
     else:
-        assumptions_page(bundle)
+        assumptions_page(bundle, decision)
 
 
 if __name__ == "__main__":

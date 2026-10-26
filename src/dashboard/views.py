@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from src.dashboard.selections import backtest_view, select_risk
 from src.domain.config import UNIVERSE, BacktestConfig
 from src.domain.dashboard import METHODS, STRATEGIES, DashboardBundle, DashboardDataError
+from src.domain.decision import MEANING, Decision
 
 
 def money(value):
@@ -483,12 +484,18 @@ def stress_page(bundle: DashboardBundle, strategy: str, confidence: float, metho
     download(parts, "Download selected shock contributions", f"{strategy}_shock.csv")
 
 
-def assumptions_page(bundle: DashboardBundle):
+def assumptions_page(bundle: DashboardBundle, decision: Decision):
     st.header("Assumptions, limitations and provenance")
     data, risk = bundle.metadata["data"], bundle.metadata["risk"]
     st.write(
-        "The fund's USD 10m mandate balances preservation, income and real growth. The three displayed allocations are research candidates; no final committee recommendation has been approved."
+        "The fund's USD 10m mandate balances preservation, income and real growth. The three displayed allocations are research candidates."
     )
+    st.subheader("Committee decision")
+    st.write(decision.statement)
+    if decision.outcome:
+        st.caption(
+            f"{MEANING[decision.outcome]} Recorded by {', '.join(decision.decided_by)} on {decision.decided_on}."
+        )
     st.subheader("Data and reproducibility")
     st.write(
         f"Frozen snapshot: **{bundle.manifest['snapshot_id']}**. Adjusted ETF prices from Yahoo Finance and lagged FRED DGS3MO rates cover {data['first_return']} to {data['last_return']}. There are {data['returns']:,} aligned daily returns. The recorded data review flags number {data['review_flags']}; flagged market events are not automatically deleted."
