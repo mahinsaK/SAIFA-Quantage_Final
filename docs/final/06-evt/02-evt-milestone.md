@@ -1,5 +1,7 @@
 # EVT implementation milestone
 
+**27 October amendment:** Earlier statements below that equality at the EVT threshold is unsupported describe the previous implementation. The [boundary update](04-boundary-update.md) supports equality, preserves below-boundary/failed cases, and records the reviewer-reported completion of the new boundary worksheet on 27 October 2026. Earlier signed records are unchanged.
+
 Implemented 24 October 2026. Mahinsa Kuruppu completed the manual arithmetic and signed off the 90% threshold as a provisional research choice on 24 October 2026. Forecast coverage validation remains pending.
 
 Default snapshot: `20261023T102523Z-0d40a885`. Settings run: `5feb6a842858`.

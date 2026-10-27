@@ -26,7 +26,7 @@ The fixed diagnostic grid is 80%, 85%, 90%, 92.5%, 95%, 97.5%. The lower levels 
 
 No automatic procedure chooses the threshold with the lowest risk or best final-period backtest. Development diagnostics support review of the prespecified rule; current-window diagnostics describe sensitivity. The team must record its reasoning in the [manual EVT check](03-manual-evt-check.md). The default is a defensible candidate, not an asserted optimal threshold. The actual development shape estimates vary across the grid, particularly for optimized portfolios, so stability is imperfect and must be acknowledged.
 
-At default settings, 90% *forecast confidence* is not supported: it is at the threshold boundary. Return `below_tail_domain` rather than extrapolating the tail model into the body. A future app must show this explanation. A lower threshold can be researched explicitly, but requires its own justification.
+Updated 27 October 2026: confidence at the **effective threshold boundary** is supported, without changing the prespecified 90% threshold rule. With 100 strict exceedances in 1,000 observations, 90% VaR equals `u` and ES uses the fitted tail mean. This VaR is empirical, not GPD extrapolation or independent confirmation of Historical VaR. Confidence below `1-N_u/n` remains `below_tail_domain`; ties can make that boundary higher than the requested threshold percentile. Fit-failure and infinite-mean safeguards still apply. The previous implementation excluded equality as well as below-boundary confidence; that restriction was an implementation policy, not a mathematical necessity. See the [update and reviewer record](04-boundary-update.md).
 
 ## GPD fitting and risk formulas
 
@@ -34,7 +34,7 @@ Excess `Y = L-u` is modelled by a Generalized Pareto Distribution (GPD), with sh
 
 Fit by maximum likelihood using SciPy, with excesses scaled by their mean for numerical conditioning. The optimizer must report convergence, and parameters, support and log densities must be finite. Fits with fewer than three distinct excesses fail explicitly. Estimates with `xi <= -0.5` are withheld as nonregular MLE cases. This conservative guard can suppress a real bounded tail; it does not mean negative shape is always invalid. No optimizer fallback silently substitutes a Normal model.
 
-Let `p_u = N_u/n` be the fraction of strict exceedances and `c > 1-p_u` the forecast confidence. Solving `P(L > VaR_c) = 1-c` gives:
+Let `p_u = N_u/n` be the fraction of strict exceedances and `c >= 1-p_u` the forecast confidence. Solving `P(L > VaR_c) = 1-c` gives:
 
 ```text
 xi != 0: VaR_c = u + beta/xi * ((p_u/(1-c))^xi - 1)
@@ -43,6 +43,8 @@ xi < 1:  ES_c  = (VaR_c + beta - xi*u)/(1-xi)
 xi >= 1: ES_c  has no finite model value
 ```
 
+At equality, `p_u/(1-c)=1`, giving `VaR=u` and `ES=u+beta/(1-xi)` for `xi<1`. This is a direct substitution into the fitted survival model above, not a claim that the reference independently validates this dataset. An absolute `1e-12` confidence tolerance handles floating-point equality, with the increment set to zero; materially lower confidence remains unavailable.
+
 The implementation uses `expm1` for numerical stability and the exponential limit near zero. ES follows by adding the conditional mean GPD excess beyond VaR. A negative shape has a finite endpoint `u-beta/xi`. The theoretical GPD is not bounded by the long-only portfolio's maximum loss; estimates above 100% are flagged rather than clipped. Percent = decimal loss × 100; USD = decimal loss × reference NAV.
 
 ## Uncertainty
@@ -50,6 +52,8 @@ The implementation uses `expm1` for numerical stability and the exponential limi
 Default: 200 circular moving-block bootstrap resamples, blocks of 10 consecutive sessions, PCG64 seed 314159. Resample the entire ordered portfolio-loss series; recompute `u`, exceedance count and fit each time. Circular wraparound is intentional. All allocations use the same resample-index sequence for comparable scenarios. The portfolio weights, threshold quantile rule and other settings remain fixed.
 
 The 2.5th/97.5th percentiles give nominal 95% intervals for VaR, ES, shape and scale. Raw draws and valid counts are saved. More than 10% unavailable VaR draws suppress intervals. Remaining intervals are explicitly conditional on successful fits when any draw fails. If a valid VaR draw has an infinite/nonfinite ES, withhold the ES interval rather than silently discarding that draw. A point estimate must exist to report its interval.
+
+At 90% confidence, bootstrap resampling introduces ties that can move the effective boundary above 90%. Such draws stay invalid; the point estimate can therefore exist while its intervals are withheld. No lower threshold, copied interval or silent rejection sampling is used to fill those gaps.
 
 These intervals measure sampling variability under the chosen resampling assumptions. They are not predictive loss intervals, evidence of calibrated VaR coverage, or uncertainty in the choice of model/weights. Ten-session blocks preserve some short dependence, but do not establish stationarity or cover long regimes. The 200-replicate endpoints are relatively coarse. Use `--block-length 5` and `--block-length 20` for additional uncertainty sensitivity if it becomes material to the recommendation.
 

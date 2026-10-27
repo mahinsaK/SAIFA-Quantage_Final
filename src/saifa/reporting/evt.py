@@ -159,20 +159,24 @@ def render_evt_report(estimates: pd.DataFrame, diagnostics: pd.DataFrame, contex
             "no GARCH filtering or declustering is performed. Tail extrapolation can be unreliable."
         ),
         (
-            "Confidence at/below the empirical threshold CDF is unsupported; 90% confidence "
-            "usually cannot use the default 90% threshold. Do not extrapolate backwards or substitute "
+            "At the effective threshold CDF, VaR equals the empirical cutoff and ES uses the "
+            "fitted GPD tail mean; this VaR is not tail extrapolation. Confidence below the "
+            "effective boundary remains unsupported; ties can raise that boundary. "
+            "Do not extrapolate backwards or substitute "
             "a different method under the EVT label. Shape >= 1 has no finite ES. Nonregular MLE "
             "fits (shape <= -0.5), too few exceedances and failed fits are explicitly withheld."
         ),
         (
             "Blank CSV fields mean unavailable, not zero. Inspect status and warning columns. "
+            "More than 10% invalid VaR bootstrap draws suppress intervals; tied resamples can "
+            "cause this at boundary confidence even when the point estimate is available. "
             "ES intervals are withheld when valid VaR bootstrap fits include an infinite ES; "
             "this avoids reporting intervals based only on the convenient finite draws."
         ),
         (
             "No trading fees, withdrawals or changing holdings are added to one-session scenarios. "
-            "See risk_comparison.csv for all four methods on identical inputs. Coverage tests and "
-            "stress validation remain future milestones."
+            "See risk_comparison.csv for all four methods on identical inputs. Coverage tests "
+            "and stress analysis are separate outputs, not evidence of safety from this fit."
         ),
         "",
     ]

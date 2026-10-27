@@ -24,7 +24,7 @@ Check the **How do the seven ETFs move together?** heatmap. It must say daily **
 
 Check that the Risk comparison bar shows Portfolios, Selected estimate and Methods. Each link should land on its matching heading below the sticky bar. Change the selected portfolio, method and confidence; the labels and figures should update while the same three links remain usable.
 
-Select baseline and Historical. At 99%, VaR should be approximately USD 110,505.04 and ES USD 153,489.10. At 90%, Historical VaR should change to USD 51,173.71. Select Parametric Normal and confirm the highlighted metrics change to that method while the comparison table retains all methods. At 90% EVT, the headline must show Unavailable and explain the threshold boundary; it must not show a number copied from 95% or 99%. Check all methods share the displayed horizon, as-of window and USD basis.
+Select baseline and Historical. At 99%, VaR should be approximately USD 110,505.04 and ES USD 153,489.10. At 90%, Historical VaR should change to USD 51,173.71. Select Parametric Normal and confirm the highlighted metrics change to that method while the comparison table retains all methods. At 90% EVT, compare the headline with the current risk CSV and confirm its boundary explanation: VaR equals the empirical cutoff, while ES is modelled. Use the exact figures in the [boundary review](../06-evt/04-boundary-update.md); neither value should be copied from 95% or 99%. Check all methods share the displayed horizon, as-of window and USD basis.
 
 ## C. Backtesting controls
 
@@ -32,7 +32,7 @@ Check that the Backtesting bar shows Overview, the period sections present in th
 
 Select baseline, Historical, 99%. For 3 January 2022–22 October 2026, verify 11 exceptions / 1,206 sessions and expected 12.06. Change to 24 October 2025–22 October 2026: verify 1 exception / 250 sessions, expected 2.50 and a green latest Basel window. A range shorter than 250 sessions must have no Basel colour. At 95% there must also be no Basel colour. Select a range spanning 2021 and 2022 and confirm validation/evaluation test results remain separate.
 
-Select 90% EVT: the forecast rows remain unavailable, the tests must not pass, and an unavailable exception count must not be interpreted as zero losses. Select an end date before a start date or only one date where the date picker permits it: the app should explain the invalid/incomplete selection. Confirm the sidebar says dates affect backtesting only.
+Select 90% EVT: check the dated forecasts and recomputed statistics against the [boundary review](../06-evt/04-boundary-update.md), then shorten the date range and confirm statistics change. Read coverage/clustering failures; available forecasts do not imply a safe model. Genuine missing forecasts must remain missing, and Basel colours remain restricted to 99%. Select an end date before a start date or only one date where the date picker permits it: the app should explain the invalid/incomplete selection. Confirm the sidebar says dates affect backtesting only.
 
 ## D. Stress
 

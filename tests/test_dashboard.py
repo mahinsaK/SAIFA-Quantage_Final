@@ -52,7 +52,7 @@ def forecasts_fixture():
                             "loss_usd": loss * 10_000_000,
                             "exception": np.nan if unavailable else int(loss > var),
                             "status": "unsupported" if unavailable else "ok",
-                            "warning": "Confidence at threshold"
+                            "warning": "Confidence below effective threshold due to ties"
                             if unavailable
                             else "Sample warning",
                         }
@@ -141,7 +141,9 @@ def prepared(tmp_path, forecasts):
                         var_percent=var * 100,
                         es_percent=var * 120,
                         status="unsupported" if unavailable else "ok",
-                        warning="Threshold boundary" if unavailable else "Sample warning",
+                        warning="Confidence below effective threshold due to ties"
+                        if unavailable
+                        else "Sample warning",
                     )
                 )
     tables["risk"] = {
@@ -430,10 +432,74 @@ def test_missing_day_is_retained_and_equality_is_not_exception(forecasts):
 
 
 def test_90pct_evt_unavailable_without_replacing_forecasts(forecasts):
+    # Deliberate tied/failed-tail fixture: genuine missing results must remain missing.
     view = selected(forecasts, confidence=0.9, method="evt_pot_gpd")
     assert view.forecasts.exception.isna().all()
     assert view.tests.coverage_decision.iloc[0] == "unavailable"
     assert view.lights.status.iloc[0] == "unsupported_confidence"
+
+
+def test_available_boundary_controls_and_date_range_recalculation(prepared):
+    root, _, outputs = prepared
+    path = outputs["risk"] / "risk_comparison.csv"
+    risk = pd.read_csv(path)
+    selected_rows = risk.method.eq("evt_pot_gpd") & risk.confidence.eq(0.9)
+    for column, value in {
+        "var_fraction": 0.01,
+        "es_fraction": 0.015,
+        "var_usd": 100000,
+        "es_usd": 150000,
+        "var_percent": 1,
+        "es_percent": 1.5,
+        "status": "ok",
+        "warning": "Threshold-boundary estimate: empirical VaR; fitted ES",
+        "interval_warning": "Intervals withheld: >10% invalid VaR draws",
+        "var_valid_replicates": 124,
+        "es_valid_replicates": 124,
+    }.items():
+        risk.loc[selected_rows, column] = value
+    risk.to_csv(path, index=False)
+    path = outputs["backtest"] / "forecasts.csv"
+    forecasts = pd.read_csv(path)
+    selected_rows = forecasts.method.eq("evt_pot_gpd") & forecasts.confidence.eq(0.9)
+    forecasts.loc[selected_rows, "var_fraction"] = 0.01
+    forecasts.loc[selected_rows, "var_usd"] = 100000
+    forecasts.loc[selected_rows, "exception"] = (
+        forecasts.loc[selected_rows, "loss_fraction"] > 0.01
+    ).astype(int)
+    forecasts.loc[selected_rows, "status"] = "ok"
+    forecasts.loc[selected_rows, "warning"] = "Threshold-boundary estimate"
+    forecasts.to_csv(path, index=False)
+    publish_bundle(root, root / "data/snapshots/test", outputs)
+
+    full = selected(forecasts, confidence=0.9, method="evt_pot_gpd")
+    short = selected(forecasts, end="2022-03-31", confidence=0.9, method="evt_pot_gpd")
+    assert full.tests.coverage_missing_forecasts.iloc[0] == 0
+    assert full.tests.coverage_observations.iloc[0] > short.tests.coverage_observations.iloc[0]
+    assert full.tests.coverage_p_value.iloc[0] != short.tests.coverage_p_value.iloc[0]
+    assert full.lights.status.iloc[0] == "unsupported_confidence"  # Basel remains 99% only.
+    app = app_test(root)
+    app.radio(key="page").set_value("Risk comparison").run()
+    app.selectbox(key="method").set_value("evt_pot_gpd").run()
+    app.selectbox(key="confidence").set_value(0.9).run()
+    assert not app.exception
+    assert app.metric[0].value == "$100,000.00"
+    assert app.metric[2].value == "$150,000.00"
+    assert any("threshold boundary" in c.value for c in app.caption)
+    assert any("Intervals withheld" in w.value for w in app.warning)
+    assert not any("90% is unavailable" in w.value for w in app.warning)
+    app.selectbox(key="confidence").set_value(0.95).run()
+    assert app.metric[0].value != "$100,000.00"
+    app.selectbox(key="confidence").set_value(0.9).run()
+    app.radio(key="page").set_value("Backtesting").run()
+    assert not app.exception
+    assert app.metric[0].value != "Unavailable"
+    observations = app.metric[2].value
+    app.date_input(key="dates").set_value(
+        (pd.Timestamp("2022-01-01").date(), pd.Timestamp("2022-03-31").date())
+    ).run()
+    assert not app.exception
+    assert app.metric[2].value != observations
 
 
 @pytest.mark.parametrize(

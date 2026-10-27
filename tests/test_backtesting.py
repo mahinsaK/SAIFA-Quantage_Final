@@ -183,7 +183,7 @@ def test_forecast_window_hand_alignment_holiday_and_moments():
 
 def test_forecast_excludes_target_return_and_future_data():
     frame = panel()
-    config = small_config()
+    config = small_config(confidence_levels=(0.90, 0.95, 0.99))
     before = forecast(frame, config)
     changed = frame.copy()
     changed.loc["2019-01-04":] = -0.8
@@ -199,6 +199,20 @@ def test_forecast_excludes_target_return_and_future_data():
     )
     frame.loc["2019-01-10":] = 100
     pd.testing.assert_frame_equal(before, forecast(frame, config))
+
+
+def test_boundary_forecasts_equal_historical_cutoff_with_modelled_es():
+    result = forecast(panel(), small_config(confidence_levels=(0.90, 0.95, 0.99)))
+    evt = result.loc[(result.method == "evt_pot_gpd") & (result.confidence == 0.90)]
+    historical = result.loc[(result.method == "historical") & (result.confidence == 0.90)]
+    assert evt.status.eq("ok").all()
+    np.testing.assert_allclose(evt.var_fraction, historical.var_fraction)
+    np.testing.assert_allclose(evt.var_fraction, evt.evt_threshold)
+    np.testing.assert_allclose(
+        evt.es_fraction, evt.evt_threshold + evt.evt_scale / (1 - evt.evt_shape)
+    )
+    np.testing.assert_array_equal(evt.exception, historical.exception)
+    assert evt.warning.str.contains("Threshold-boundary").all()
 
 
 def test_date_seed_range_invariance_and_named_portfolio_order():

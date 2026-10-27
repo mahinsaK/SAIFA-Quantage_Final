@@ -1,5 +1,7 @@
 # Manual EVT check and threshold review
 
+**27 October amendment:** Earlier statements below that equality at the EVT threshold is unsupported describe the previous implementation. The [boundary update](04-boundary-update.md) supports equality, preserves below-boundary/failed cases, and records the reviewer-reported completion of the new boundary worksheet on 27 October 2026. Earlier signed records are unchanged.
+
 Status: **human arithmetic and provisional threshold review completed by Mahinsa Kuruppu on 24 Oct 2026**. Forecast coverage validation remains pending.
 
 ## A. Count and loss convention

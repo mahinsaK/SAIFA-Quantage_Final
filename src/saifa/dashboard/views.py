@@ -351,9 +351,12 @@ def risk_page(bundle: DashboardBundle, strategy: str, confidence: float, method:
         st.warning(f"{METHODS[method]}: {row.status}. {row.warning}")
     elif pd.notna(row.warning) and str(row.warning):
         st.caption(str(row.warning))
-    if confidence == 0.90:
-        st.warning(
-            "EVT at 90% is unavailable: the selected POT threshold is also 90%, so this confidence lies at the threshold boundary. Historical, Normal and Gaussian Monte Carlo remain available. No higher-confidence value is substituted."
+    evt_row = comparison.set_index("method").loc["evt_pot_gpd"]
+    if "Threshold-boundary" in str(evt_row.warning):
+        st.caption(
+            "EVT at the threshold boundary: VaR equals the empirical loss cutoff; "
+            "ES models the average loss beyond it. This VaR is not tail extrapolation "
+            "or independent confirmation of Historical VaR."
         )
     display = pd.DataFrame(
         {
@@ -405,9 +408,15 @@ def risk_page(bundle: DashboardBundle, strategy: str, confidence: float, method:
                 "scale",
                 "status",
                 "warning",
+                "var_valid_replicates",
+                "es_valid_replicates",
+                "interval_warning",
             )
         ]
         table(estimates[cols])
+        interval_warning = evt_row.get("interval_warning", "")
+        if pd.notna(interval_warning) and str(interval_warning):
+            st.warning(str(interval_warning))
         diagnostics = bundle.tables["risk"]["threshold_diagnostics"]
         table(diagnostics.loc[diagnostics.strategy == strategy])
         sensitivity = bundle.tables["risk"]["threshold_sensitivity"]
@@ -461,8 +470,10 @@ def backtest_page(
         aria_label="Backtesting sections",
     )
     if confidence == 0.90 and method == "evt_pot_gpd":
-        st.warning(
-            "90% EVT forecasts are unavailable at the 90% POT threshold. Missing forecasts are retained, so coverage and independence are unavailable rather than passed."
+        st.caption(
+            "At the effective 90% threshold boundary, EVT VaR equals the empirical cutoff; "
+            "ES uses the fitted tail. These are not extrapolated VaR forecasts. Ties or "
+            "failed fits can still make forecasts unavailable; missing rows remain in the tests."
         )
     st.subheader("Backtest at a glance", anchor="backtest-overview")
     overview = view.tests[
@@ -822,8 +833,9 @@ def assumptions_page(bundle: DashboardBundle):
             "Normal models assume thin tails and do not model volatility clustering. Historical "
             "tails use few extreme observations. Gaussian Monte Carlo adds simulation error, not "
             "protection from a wrong distribution. EVT depends on threshold choice, enough "
-            "exceedances and fit stability; some ES estimates may be undefined. At 90% confidence, "
-            "the current 90% EVT threshold makes that estimate unavailable. A 99% Historical ES "
+            "exceedances and fit stability; some ES estimates may be undefined. At the effective "
+            "threshold boundary, EVT VaR is the empirical cutoff and ES uses the fitted tail. "
+            "Confidence below that boundary (including some tied samples) is unavailable. A 99% Historical ES "
             "based on 1,000 days uses ten observations of tail mass."
         )
         st.write(

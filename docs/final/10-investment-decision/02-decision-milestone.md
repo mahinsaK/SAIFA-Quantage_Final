@@ -1,5 +1,7 @@
 # Phase 10 implementation and verification evidence
 
+**27 October amendment:** Earlier statements below that equality at the EVT threshold is unsupported describe the previous implementation. The [boundary update](../06-evt/04-boundary-update.md) supports equality, preserves below-boundary/failed cases, and records the reviewer-reported completion of the new boundary worksheet on 27 October 2026. Earlier signed records are unchanged.
+
 26 October 2026. Implementation complete; **independent human review and the final investment decision remain pending**. No committee/client policy approval, scenario approval or human worksheet was completed by the agent.
 
 ## Deliverables

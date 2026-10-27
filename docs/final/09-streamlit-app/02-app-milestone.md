@@ -1,5 +1,7 @@
 # Streamlit app milestone
 
+**27 October amendment:** Earlier statements below that equality at the EVT threshold is unsupported describe the previous implementation. The [boundary update](../06-evt/04-boundary-update.md) supports equality, preserves below-boundary/failed cases, and records the reviewer-reported completion of the new boundary worksheet on 27 October 2026. Earlier signed records are unchanged.
+
 25 October 2026: implementation for U01–U07 is complete, with the explicit 90% EVT unsupported state permitted by the task. Final human UI review and the wider competition deliverables remain open.
 
 ## Automated and local verification

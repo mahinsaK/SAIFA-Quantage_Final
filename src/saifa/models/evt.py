@@ -97,21 +97,29 @@ def fit_pot(losses: np.ndarray, quantile: float, minimum_exceedances: int = 50) 
 
 
 def pot_tail(fit: POTFit, confidence: float) -> POTEstimate:
+    """Evaluate the fitted tail, including its empirical threshold boundary.
+
+    At c = 1 - N_u/n, VaR is u and ES is u + beta/(1-xi).
+    This boundary VaR is empirical, not a GPD extrapolation into the body.
+    """
     if not np.isfinite(confidence) or not 0 < confidence < 1:
         raise ValueError("Confidence must be a finite fraction in (0, 1)")
     if fit.status != "ok":
         return POTEstimate(confidence, None, None, fit.status, fit.warning)
     probability = fit.exceedances / fit.observations
-    if confidence <= 1 - probability + 1e-12:
+    boundary = 1 - probability
+    at_boundary = np.isclose(confidence, boundary, rtol=0, atol=1e-12)
+    if confidence < boundary and not at_boundary:
         return POTEstimate(
             confidence,
             None,
             None,
             "below_tail_domain",
-            "Confidence must exceed the empirical CDF at the threshold",
+            "Confidence is below the empirical CDF at the threshold; "
+            "strict exceedance counts include the effect of ties",
         )
     xi, beta, u = fit.shape, fit.scale, fit.threshold
-    log_ratio = np.log(probability / (1 - confidence))
+    log_ratio = 0.0 if at_boundary else np.log(probability / (1 - confidence))
     with np.errstate(over="ignore", invalid="ignore"):
         increment = beta * log_ratio if abs(xi) < 1e-8 else beta * np.expm1(xi * log_ratio) / xi
         var = float(u + increment)
@@ -119,6 +127,11 @@ def pot_tail(fit: POTFit, confidence: float) -> POTEstimate:
     if not np.isfinite(var) or (es is not None and not np.isfinite(es)):
         return POTEstimate(confidence, None, None, "numerical_failure", "Nonfinite tail estimate")
     warning = fit.warning
+    if at_boundary:
+        warning += (
+            "; Threshold-boundary estimate: VaR equals the empirical loss threshold; "
+            "ES uses the fitted GPD tail mean, not extrapolated VaR"
+        )
     if var > 1 or (es is not None and es > 1):
         warning += "; unbounded GPD implies loss above 100%; not clipped"
     return POTEstimate(confidence, var, es, "ok" if es is not None else "infinite_mean", warning)

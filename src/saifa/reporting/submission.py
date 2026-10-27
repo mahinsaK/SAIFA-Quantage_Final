@@ -466,9 +466,11 @@ def write_submission(root: Path, snapshot: Path) -> Path:
     evt = risk[(risk.method == "evt_pot_gpd") & (risk.confidence == 0.99)]
     intervals = ["var_ci_low", "var_ci_high", "es_ci_low", "es_ci_high"]
     report.p(
-        "At 90% confidence the requested EVT estimate is at the 90% threshold boundary and "
-        "is unavailable. The app keeps the unavailable row and reason; 95% or 99% values "
-        "are never relabelled. Fits with insufficient tails or undefined ES are also unavailable."
+        "At the effective threshold boundary (90% for the current fits), EVT VaR equals the "
+        "empirical loss cutoff; ES uses the fitted GPD tail mean. This is not extrapolated VaR "
+        "or independent confirmation of Historical VaR. Below-boundary confidence, insufficient "
+        "tails and undefined ES remain unavailable. Ties can raise the effective boundary. "
+        "Bootstrap intervals are withheld when more than 10% of draws are invalid."
     )
     if intervals:
         report.p(
@@ -773,7 +775,8 @@ def write_submission(root: Path, snapshot: Path) -> Path:
             doc.p(
                 "All candidates breach proposed 15% crisis drawdown in 2008 and 2022; "
                 "1.5x hypothetical losses exceed 10%. Optimised Normal/MC 99% coverage rejects; "
-                "baseline exceptions cluster. EVT 90% is unavailable. No model is certified safe."
+                "baseline exceptions cluster. EVT boundary VaR is empirical, with modelled ES. "
+                "No model is certified safe."
             )
             two = spend[
                 (spend.strategy == "minimum_volatility") & (spend.inflation_assumption == 0.02)

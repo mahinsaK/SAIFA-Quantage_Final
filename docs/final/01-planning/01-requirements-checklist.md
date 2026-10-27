@@ -88,7 +88,7 @@ Record a repository file/output and actual reviewer when marking an item complet
 | [ ] | U01 | Python, Streamlit, free-tier resources (pp. 5-6) | Runnable application and dependency list without paid data/compute dependency. |
 | [ ] | U02 | Sidebar controls (p. 5) | Confidence 90/95/99%, VaR method and backtest date range actually update results; invalid choices explained. |
 | [ ] | U03 | Portfolio panel (p. 5) | Weights, cumulative return and drawdown with period and rebalance convention. |
-| [ ] | U04 | Side-by-side VaR, ES, EVT (p. 5) | Matching selected confidence, horizon and units. Unsupported EVT threshold/confidence combinations explained; resolve usable coverage before sign-off. |
+| [ ] | U04 | Side-by-side VaR, ES, EVT (p. 5) | Matching selected confidence, horizon and units. 90/95/99% available on the frozen snapshot; 90% EVT is explicitly the empirical-threshold VaR with GPD ES. Genuine unavailable cases retained. Reviewer reported completing the new boundary calculation and UI checks on 27 October; see the Phase 06 boundary update. Final team acceptance of the app remains open. |
 | [ ] | U05 | Backtesting panel (p. 5) | Kupiec/Christoffersen results and traffic light with sample/model context. |
 | [ ] | U06 | Stress panel (p. 6) | Portfolio impact for each crisis/scenario, with dates and assumptions. |
 | [ ] | U07 | Assumptions & Limitations page (p. 6) | Plain language; data, model, uncertainty, liquidity, costs and missing client information; consistent with report. |

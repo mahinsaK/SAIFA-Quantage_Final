@@ -35,7 +35,7 @@ Monte Carlo draws 200,000 standard Normal losses per target date, then applies `
 
 The generator is PCG64 with `SeedSequence([42, target_date.toordinal()])`. Changing the selected start date or portfolio order cannot change a given date's draws. Monte Carlo results can differ slightly from analytical Normal results and from the earlier single-as-of risk runner's random realization. Both implementations retain their stated Gaussian assumptions.
 
-EVT refits the numeric 90th-percentile loss threshold and GPD parameters from each historical window, while keeping the quantile-selection rule fixed. Ties use the actual strict-exceedance count. The confidence must be above the fitted tail boundary. Insufficient excesses, unsupported confidence, failed fits and undefined ES retain explicit statuses. A finite VaR remains testable when ES is unavailable because the fitted tail has no finite mean. See [EVT methodology](../06-evt/01-evt-methodology.md).
+EVT refits the numeric 90th-percentile loss threshold and GPD parameters from each historical window, while keeping the quantile-selection rule fixed. Ties use the actual strict-exceedance count. Confidence can equal the effective tail boundary: VaR is then the empirical cutoff and ES uses the fitted tail mean. Confidence below it remains unsupported. This boundary support was added on 27 October; see the [amendment and reviewer record](../06-evt/04-boundary-update.md). Insufficient excesses, unsupported confidence, failed fits and undefined ES retain explicit statuses. A finite VaR remains testable when ES is unavailable because the fitted tail has no finite mean. See [EVT methodology](../06-evt/01-evt-methodology.md).
 
 ## Coverage: Kupiec
 

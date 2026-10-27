@@ -1,5 +1,7 @@
 # UI refresh audit — comparison branch
 
+**27 October amendment:** Earlier statements below that equality at the EVT threshold is unsupported describe the previous implementation. The [boundary update](../06-evt/04-boundary-update.md) supports equality, preserves below-boundary/failed cases, and records the reviewer-reported completion of the new boundary worksheet on 27 October 2026. Earlier signed records are unchanged.
+
 Branch: `feat/committee-ui-refresh`. This is a presentation-only experiment against the same verified frozen outputs. The five-page navigation, controls, financial calculations, limitations, and unavailable states remain in scope.
 
 ## Current architecture

@@ -18,3 +18,5 @@ Folders follow the order in which the project was built. Within each phase, `01`
 The worksheets distinguish completed human checks from pending ones. Generated numerical reports remain under `output/` and can be recreated with the runners in the [project README](../../README.md).
 
 The separate UI comparison branch records its [audit and design approach](09-streamlit-app/04-ui-refresh-audit.md); it does not replace the manual app acceptance worksheet.
+
+The [27 October EVT boundary update and pending review](06-evt/04-boundary-update.md) documents 90% support, its limits and the checks added after the original EVT sign-off.
