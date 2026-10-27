@@ -22,9 +22,13 @@ Check the **How do the seven ETFs move together?** heatmap. It must say daily **
 
 ## B. Risk controls
 
+Check that the Risk comparison bar shows Portfolios, Selected estimate and Methods. Each link should land on its matching heading below the sticky bar. Change the selected portfolio, method and confidence; the labels and figures should update while the same three links remain usable.
+
 Select baseline and Historical. At 99%, VaR should be approximately USD 110,505.04 and ES USD 153,489.10. At 90%, Historical VaR should change to USD 51,173.71. Select Parametric Normal and confirm the highlighted metrics change to that method while the comparison table retains all methods. At 90% EVT, the headline must show Unavailable and explain the threshold boundary; it must not show a number copied from 95% or 99%. Check all methods share the displayed horizon, as-of window and USD basis.
 
 ## C. Backtesting controls
+
+Check that the Backtesting bar shows Overview, the period sections present in the selected dates, and Forecasts. An evaluation-only range should omit Validation; a range crossing the validation/evaluation boundary should show both. Each link should land on its heading below the sticky bar without changing the selected dates or recalculated results.
 
 Select baseline, Historical, 99%. For 3 January 2022–22 October 2026, verify 11 exceptions / 1,206 sessions and expected 12.06. Change to 24 October 2025–22 October 2026: verify 1 exception / 250 sessions, expected 2.50 and a green latest Basel window. A range shorter than 250 sessions must have no Basel colour. At 95% there must also be no Basel colour. Select a range spanning 2021 and 2022 and confirm validation/evaluation test results remain separate.
 
@@ -32,11 +36,15 @@ Select 90% EVT: the forecast rows remain unavailable, the tests must not pass, a
 
 ## D. Stress
 
+Check that the Stress analysis bar shows Crisis replay, Compare portfolios, Joint shock and Risk contributions. Each link should land on its matching heading. Change the crisis and severity controls, then confirm the links remain usable and the values still respond to those controls.
+
 For baseline, view 2008 and 2022. Confirm their dates and paths differ and the 2008 warning says the weights were fitted later. Baseline 2022 should show terminal loss about USD 1,508,312.92 and drawdown about 18.95%, with a breach warning. Confirm actual peak/trough values explain drawdown dollars.
 
 For the baseline hypothetical shock, change severity from 1.0 to 1.5. Loss should change from USD 840,000 (8.4%) to USD 1,260,000 (12.6%) and show the proposed 10% trigger breach. Check contribution sums, signed offsets and input units. Confidence changes must affect attribution but must not imply a probability for a crisis or hypothetical event. Monte Carlo/EVT attribution must be explicitly described as unsupported.
 
 ## E. Readability and evidence
+
+Confirm Assumptions has no section bar.
 
 Read the limitations page. Confirm it includes model failures, retrospective evaluation, proposed risk levels, missing spending information and the distinction between investment approval and software tests. Check labels, table scrolling, chart axes and text at your browser width, including a narrower window. Download one selected risk table and one recalculated backtest table and compare their rows with the current controls. Record the browser used and any corrections needed.
 

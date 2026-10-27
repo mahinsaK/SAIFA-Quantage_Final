@@ -562,6 +562,69 @@ def test_portfolio_section_links_match_rendered_anchors_across_reruns(prepared):
     assert [anchor for anchor, _ in rendered_ids()[1]] == expected
     app.radio(key="page").set_value("Risk comparison").run()
     assert not app.exception
+    assert len(app.get("bidi_component")) == 1
+
+
+def test_analysis_page_section_navigation_tracks_visible_sections(prepared):
+    root, _, _ = prepared
+    app = app_test(root)
+
+    def check_page(page, expected_ids, heading_anchor, aria_label):
+        app.radio(key="page").set_value(page).run()
+        assert not app.exception
+        component = app.get("bidi_component")[0].proto
+        configuration = json.loads(component.json)
+        ids = [section["id"] for section in configuration["sections"]]
+        assert ids == expected_ids
+        assert configuration["pinned_id"] == expected_ids[0]
+        assert configuration["aria_label"] == aria_label
+        assert heading_anchor not in ids
+        assert heading_anchor in {heading.proto.anchor for heading in app.header}
+        anchored = [
+            heading.proto.anchor
+            for heading in app.subheader
+            if heading.proto.anchor in expected_ids
+        ]
+        assert anchored == expected_ids
+
+    check_page(
+        "Risk comparison",
+        ["risk-portfolios", "risk-selected", "risk-methods"],
+        "risk-page",
+        "Risk comparison sections",
+    )
+    app.selectbox(key="method").set_value("parametric_normal").run()
+    assert not app.exception
+    assert any(heading.proto.anchor == "risk-selected" for heading in app.subheader)
+
+    check_page(
+        "Backtesting",
+        ["backtest-overview", "backtest-evaluation", "backtest-forecasts"],
+        "backtest-page",
+        "Backtesting sections",
+    )
+    app.date_input(key="dates").set_value(
+        (pd.Timestamp("2021-12-30").date(), pd.Timestamp("2022-01-07").date())
+    ).run()
+    assert not app.exception
+    configuration = json.loads(app.get("bidi_component")[0].proto.json)
+    assert [section["id"] for section in configuration["sections"]] == [
+        "backtest-overview",
+        "backtest-validation",
+        "backtest-evaluation",
+        "backtest-forecasts",
+    ]
+    check_page(
+        "Stress analysis",
+        ["stress-crisis", "stress-compare", "stress-shock", "stress-contributions"],
+        "stress-page",
+        "Stress analysis sections",
+    )
+    app.select_slider(key="severity").set_value(1.5).run()
+    assert not app.exception
+    assert len(app.get("bidi_component")) == 1
+    app.radio(key="page").set_value("Assumptions").run()
+    assert not app.exception
     assert not app.get("bidi_component")
 
 

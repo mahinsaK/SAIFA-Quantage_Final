@@ -32,7 +32,7 @@ After installation, the packaged equivalents are available from the project
 root: `uv run --locked saifa-dashboard-data`, `uv run --locked saifa-data`,
 and `uv run --locked saifa-risk`.
 
-The five pages cover portfolio performance, side-by-side risk, date-sensitive backtesting, stress analysis and limitations. The Portfolio page has section links for summary, performance, drawdown, efficient frontier and diversification, and shows the saved development-period efficient frontier and a descriptive correlation heatmap for the latest 252 aligned ETF returns; their periods and conventions are labelled separately from realised portfolio performance. The spending sensitivity remains below these sections. Sidebar dates affect backtesting only. The app recomputes tests from the selected dated forecasts and retains missing forecasts. EVT at 90% is explicitly unavailable under the current 90% threshold; no higher-confidence value is substituted. Basel colours require 250 complete sessions at 99% within the selected period.
+The five pages cover portfolio performance, side-by-side risk, date-sensitive backtesting, stress analysis and limitations. Portfolio, Risk comparison, Backtesting and Stress analysis have in-page section navigation; Assumptions has none. The Portfolio page shows the saved development-period efficient frontier and a descriptive correlation heatmap for the latest 252 aligned ETF returns; their periods and conventions are labelled separately from realised portfolio performance. The spending sensitivity remains below these sections. Sidebar dates affect backtesting only. The app recomputes tests from the selected dated forecasts and retains missing forecasts. EVT at 90% is explicitly unavailable under the current 90% threshold; no higher-confidence value is substituted. Basel colours require 250 complete sessions at 99% within the selected period.
 
 If outputs are absent, incomplete or modified, the app explains the issue and shows the preparation command. The one-command launcher prepares those outputs automatically. It follows `data/LATEST`; keep it aligned with the intended frozen submission snapshot. Generated outputs remain ignored by Git, so a fresh checkout rebuilds them.
 
@@ -59,6 +59,8 @@ Run verification:
 uv run --locked pytest -q
 uv run --locked ruff check .
 ```
+
+GitHub Actions runs these checks on pushes, pull requests and manual dispatch using Python 3.11 and the committed `uv.lock`. See [.github/workflows/ci.yml](.github/workflows/ci.yml). CI uses test fixtures and does not run market-data downloads or generate submission outputs; those remain separate, explicit steps.
 
 Read the generated quality_report.md and quality_flags.csv in `output/data/<snapshot-id>/`. `data/LATEST` identifies the last complete acquisition; `status.json` separately records whether preparation succeeded. Raw snapshots are retained; failed acquisitions never replace the latest pointer. A successful build does not mean flagged market events have been reviewed by the team.
 

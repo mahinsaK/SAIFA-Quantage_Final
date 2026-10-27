@@ -48,7 +48,9 @@ def portfolio_page(bundle: DashboardBundle, strategy: str):
         ("portfolio-frontier", "Efficient frontier"),
         ("portfolio-diversification", "Diversification"),
     ]
-    render_section_navigation(sections, pinned_id="portfolio-summary")
+    render_section_navigation(
+        sections, pinned_id="portfolio-summary", aria_label="Portfolio sections"
+    )
     if evidence is not None:
         decision_banner(evidence[0])
     tables, metadata = bundle.tables["portfolio"], bundle.metadata["portfolio"]
@@ -291,7 +293,16 @@ def portfolio_page(bundle: DashboardBundle, strategy: str):
 
 
 def risk_page(bundle: DashboardBundle, strategy: str, confidence: float, method: str):
-    st.header("Risk comparison")
+    st.header("Risk comparison", anchor="risk-page")
+    render_section_navigation(
+        [
+            ("risk-portfolios", "Portfolios"),
+            ("risk-selected", "Selected estimate"),
+            ("risk-methods", "Methods"),
+        ],
+        pinned_id="risk-portfolios",
+        aria_label="Risk comparison sections",
+    )
     meta = bundle.metadata["risk"]
     st.caption(
         "VaR is a loss cutoff. ES is the average loss beyond that cutoff; neither is a worst-case bound."
@@ -301,7 +312,7 @@ def risk_page(bundle: DashboardBundle, strategy: str, confidence: float, method:
         f"{meta['observations']:,} returns from {meta['window_start']} · reference NAV {money(meta['reference_nav'])} · {confidence:.0%} confidence"
     )
     all_risk = bundle.tables["risk"]["risk_comparison"]
-    st.subheader("Three portfolios · selected method")
+    st.subheader("Three portfolios · selected method", anchor="risk-portfolios")
     peers = all_risk.loc[(all_risk.confidence == confidence) & (all_risk.method == method)].copy()
     peer_display = pd.DataFrame(
         {
@@ -330,7 +341,7 @@ def risk_page(bundle: DashboardBundle, strategy: str, confidence: float, method:
     )
     comparison = select_risk(all_risk, strategy, confidence)
     row = comparison.set_index("method").loc[method]
-    st.subheader(f"{STRATEGIES[strategy]} · {METHODS[method]}")
+    st.subheader(f"{STRATEGIES[strategy]} · {METHODS[method]}", anchor="risk-selected")
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("VaR (USD)", money(row.var_usd))
     c2.metric("VaR (% NAV)", percent(row.var_fraction))
@@ -355,7 +366,7 @@ def risk_page(bundle: DashboardBundle, strategy: str, confidence: float, method:
             "Reason / limitation": comparison.warning.fillna(""),
         }
     )
-    st.subheader("Four methods · selected portfolio")
+    st.subheader("Four methods · selected portfolio", anchor="risk-methods")
     table(
         display,
         alt="VaR and expected shortfall estimates from four methods for the selected portfolio",
@@ -416,7 +427,7 @@ def risk_page(bundle: DashboardBundle, strategy: str, confidence: float, method:
 def backtest_page(
     bundle: DashboardBundle, strategy: str, confidence: float, method: str, start, end
 ):
-    st.header("Does forecast risk match realised losses?")
+    st.header("Does forecast risk match realised losses?", anchor="backtest-page")
     st.caption("An exception is a next-session loss above the VaR forecast.")
     meta = bundle.metadata["backtest"]
     raw = dict(meta["config"]["backtest"])
@@ -440,11 +451,20 @@ def backtest_page(
     except DashboardDataError as exc:
         st.warning(str(exc))
         return
+    render_section_navigation(
+        [
+            ("backtest-overview", "Overview"),
+            *[(f"backtest-{period}", period.title()) for period in view.tests.period],
+            ("backtest-forecasts", "Forecasts"),
+        ],
+        pinned_id="backtest-overview",
+        aria_label="Backtesting sections",
+    )
     if confidence == 0.90 and method == "evt_pot_gpd":
         st.warning(
             "90% EVT forecasts are unavailable at the 90% POT threshold. Missing forecasts are retained, so coverage and independence are unavailable rather than passed."
         )
-    st.subheader("Validation at a glance")
+    st.subheader("Backtest at a glance", anchor="backtest-overview")
     overview = view.tests[
         [
             "period",
@@ -488,7 +508,10 @@ def backtest_page(
     else:
         st.caption("A non-rejection or green traffic light does not prove that the model is safe.")
     for _, row in view.tests.iterrows():
-        st.subheader(f"{row.period.title()} · {row.start.date()} to {row.end.date()}")
+        st.subheader(
+            f"{row.period.title()} · {row.start.date()} to {row.end.date()}",
+            anchor=f"backtest-{row.period}",
+        )
         cols = st.columns(4)
         for col, label, value in zip(
             cols,
@@ -521,6 +544,7 @@ def backtest_page(
         "Basel colours apply only to 99% VaR and 250 complete sessions. These exception tests "
         "do not validate ES severity or establish regulatory compliance."
     )
+    st.subheader("Forecasts versus realised losses", anchor="backtest-forecasts")
     plot = view.forecasts
     fig, ax = plt.subplots(figsize=(11, 3.8), layout="constrained")
     ax.plot(
@@ -549,7 +573,7 @@ def backtest_page(
 
 def _risk_contributions(bundle: DashboardBundle, strategy: str, confidence: float, method: str):
     tables = bundle.tables["stress"]
-    st.subheader("Sources of one-session risk")
+    st.subheader("Sources of one-session risk", anchor="stress-contributions")
     attribution = tables["asset_contributions"]
     attribution = attribution.loc[
         (attribution.strategy == strategy) & (attribution.confidence == confidence)
@@ -628,13 +652,23 @@ def _risk_contributions(bundle: DashboardBundle, strategy: str, confidence: floa
 
 
 def stress_page(bundle: DashboardBundle, strategy: str, confidence: float, method: str):
-    st.header("Stress analysis")
+    st.header("Stress analysis", anchor="stress-page")
+    render_section_navigation(
+        [
+            ("stress-crisis", "Crisis replay"),
+            ("stress-compare", "Compare portfolios"),
+            ("stress-shock", "Joint shock"),
+            ("stress-contributions", "Risk contributions"),
+        ],
+        pinned_id="stress-crisis",
+        aria_label="Stress analysis sections",
+    )
     tables, meta = bundle.tables["stress"], bundle.metadata["stress"]
     st.caption(
         f"{STRATEGIES[strategy]} · reference NAV {money(meta['reference_nav'])}. "
         "Crisis and hypothetical losses are scenarios, not probabilities."
     )
-    st.subheader("Historical crisis replay")
+    st.subheader("Historical crisis replay", anchor="stress-crisis")
     summary = tables["historical_summary"]
     scenarios = summary.scenario.drop_duplicates().tolist()
     scenario = st.selectbox("Crisis window", scenarios, key="crisis")
@@ -687,7 +721,7 @@ def stress_page(bundle: DashboardBundle, strategy: str, confidence: float, metho
             f"Maximum percentage drawdown uses the actual peak {money(row.peak_nav)} on {row.peak_date} and trough {money(row.trough_nav)} on {row.trough_date}. Terminal loss is measured from initial capital."
         )
     crisis_comparison = summary.loc[summary.scenario == scenario].copy()
-    st.subheader("Compare portfolios in this crisis")
+    st.subheader("Compare portfolios in this crisis", anchor="stress-compare")
     table(
         pd.DataFrame(
             {
@@ -703,7 +737,7 @@ def stress_page(bundle: DashboardBundle, strategy: str, confidence: float, metho
             "Maximum drawdown (%)": st.column_config.NumberColumn(format="%.2f%%"),
         },
     )
-    st.subheader("Hypothetical joint shock")
+    st.subheader("Hypothetical joint shock", anchor="stress-shock")
     st.caption(meta["shock_narrative"])
     shock_inputs = tables["scenario_shocks"].copy()
     for field in ("base_shock_return", "development_worst_daily_return"):

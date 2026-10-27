@@ -13,25 +13,17 @@ _PAGE_STYLE = """
 .st-key-saifa-section-nav {
     margin-bottom: 0.5rem;
 }
-#portfolio-summary,
-#portfolio-performance,
-#portfolio-drawdown,
-#portfolio-frontier,
-#portfolio-diversification {
+__TARGETS__ {
     scroll-margin-top: 8rem;
 }
 @media (max-width: 640px) {
-    #portfolio-summary,
-    #portfolio-performance,
-    #portfolio-drawdown,
-    #portfolio-frontier,
-    #portfolio-diversification { scroll-margin-top: 7.5rem; }
+    __TARGETS__ { scroll-margin-top: 7.5rem; }
 }
 </style>
 """
 
 _HTML = """
-<nav class="section-nav" aria-label="Portfolio sections">
+<nav class="section-nav" aria-label="Page sections">
   <a class="nav-pinned" hidden></a>
   <div class="nav-links"></div>
 </nav>
@@ -107,6 +99,7 @@ export default function(component) {
     const row = nav?.querySelector(".nav-links");
     const pinnedLink = nav?.querySelector(".nav-pinned");
     if (!nav || !row || !pinnedLink) return;
+    nav.setAttribute("aria-label", data?.aria_label ?? "Page sections");
     const host = parentElement.host ?? parentElement;
     const sections = data?.sections ?? [];
     row.replaceChildren();
@@ -254,8 +247,9 @@ def render_section_navigation(
     sections: Sequence[tuple[str, str]],
     *,
     pinned_id: str | None = None,
+    aria_label: str = "Page sections",
 ) -> None:
-    """Render a compact page-section bar fixed above the Portfolio content."""
+    """Render a compact page-section bar fixed above the page content."""
     if not sections or any(
         not _ID.fullmatch(section_id) or not label for section_id, label in sections
     ):
@@ -264,12 +258,16 @@ def render_section_navigation(
         raise ValueError("Section navigation IDs must be unique")
     if pinned_id is not None and pinned_id not in {section_id for section_id, _ in sections}:
         raise ValueError("Pinned section must be a navigation target")
-    st.html(_PAGE_STYLE)
+    if not aria_label.strip():
+        raise ValueError("Section navigation needs an accessible label")
+    selectors = ",\n".join(f"#{section_id}" for section_id, _ in sections)
+    st.html(_PAGE_STYLE.replace("__TARGETS__", selectors))
     with st.container(key="saifa-section-nav"):
         _NAV(
             key="saifa-section-links",
             data={
                 "sections": [{"id": section_id, "label": label} for section_id, label in sections],
                 "pinned_id": pinned_id,
+                "aria_label": aria_label,
             },
         )
