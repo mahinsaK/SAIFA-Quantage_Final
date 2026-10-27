@@ -44,7 +44,7 @@ TABLES = {
         "scenario_shocks",
         "portfolio_weights",
     ),
-    "data": (),
+    "data": ("simple_returns",),
 }
 
 

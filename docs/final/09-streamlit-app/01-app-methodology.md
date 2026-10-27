@@ -34,6 +34,7 @@ The backtest date control does not alter the performance evaluation period, curr
 ## Preserved financial conventions
 
 - Portfolio performance uses the original costed, monthly-rebalanced evaluation series. Target weights are fitted through 2018; holdings drift between rebalances. Initial USD 10m funding and gross trading both incur 10 bps costs. The opening capital is included in the underlying drawdown calculation. All three comparative paths use identical evaluation dates.
+- The Portfolio page also reads the already-saved development efficient frontier and candidate estimates. Its separate ETF heatmap computes Pearson correlations from the latest 252 aligned daily simple-return rows. `simple_returns.csv` is included in the hash-verified app bundle; the heatmap is a recent descriptive diagnostic, not the optimiser covariance or a future correlation forecast.
 - Risk comparison uses the same 1,000-return as-of window, fixed target exposures, one-session horizon and USD 10m reference NAV for all four methods. The app reads the existing EVT pipeline's comparison, including Normal, Historical and Gaussian Monte Carlo estimates.
 - The preparation command requests all three confidence levels. EVT at 90% remains unavailable under the provisional 90% POT threshold. Both the estimate and its forecasts retain the unavailable status and explanation. No 95%/99% estimate is relabeled and no threshold is retuned to fill the gap.
 - All model/date combinations remain in the prepared forecast dataset, including failed/unsupported fits. Selection reindexes to the complete XNYS calendar, recomputes strict `loss > VaR` exceptions and calls the existing `kupiec_test`, `christoffersen_test` and `basel_traffic_light` functions. A missing day stays missing; no adjacent dates are joined across it.
@@ -52,11 +53,14 @@ The backtest date control does not alter the performance evaluation period, curr
 | `src/saifa/domain/dashboard.py` | Bundle/result types, labels and required output contract |
 | `src/saifa/dashboard/data.py` | Integrity checks, loading and cross-stage validation |
 | `src/saifa/dashboard/selections.py` | Pure selection and date-range statistical recalculation |
+| `src/saifa/dashboard/section_navigation.py` | Portfolio section links, stable anchors and browser-side scroll feedback without a Streamlit rerun |
 | `src/saifa/dashboard/views.py` | Portfolio, risk, backtesting, stress and limitations pages |
 | `.streamlit/config.toml` | Shared light theme and disabled usage telemetry |
 | `tests/test_dashboard.py` | Independent examples, input integrity and Streamlit control tests |
 
 The existing financial model implementations are reused. Streamlit is pinned by `uv.lock`; no paid service is required. The UI uses native charts/tables, explicit units, selected-result downloads and an audit expander for detailed records.
+
+The Portfolio page uses a compact section bar for the user's requested destinations: Summary goes to “Selected portfolio at a glance”; Performance to “Performance and holdings”; Drawdown to the selected-portfolio drawdown; Efficient frontier to the development curve; and Diversification to the ETF correlation heatmap. Summary is pinned outside the horizontally scrolling section-link row, so it remains visible after scrolling to a later section. The committee view remains above Summary and spending sensitivity remains below the chart sections. Each destination is the native Streamlit anchor on its visible subheader, rather than a separate invisible element. The top “Portfolio performance” heading has a distinct `portfolio-page` anchor to prevent a duplicate `portfolio-performance` fragment. A small Streamlit Component v2 keeps the bar fixed to the viewport while it measures its own host width, scrolls to these headings, and listens to the actual scroll container plus section intersections to update the active link. It sends no state back to Python, so link clicks do not rerun the page. The remaining links scroll horizontally on narrow screens, and the bar unmounts when the user leaves Portfolio. Browser visual, fixed-position and smooth-scroll behaviour requires the manual check recorded in the app worksheet; headless AppTest verifies the configured destinations and heading anchors but does not execute the browser component.
 
 ## Practical limits and review
 

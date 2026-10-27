@@ -1,5 +1,6 @@
 """Judge-facing pages. Read verified outputs; never refit models during a widget rerun."""
 
+import altair as alt
 import matplotlib
 import numpy as np
 import pandas as pd
@@ -9,7 +10,13 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 from saifa.dashboard.presentation import LOSS_COLOR, PORTFOLIO_COLORS, RISK_COLOR, money, percent
-from saifa.dashboard.selections import backtest_view, select_risk
+from saifa.dashboard.section_navigation import render_section_navigation
+from saifa.dashboard.selections import (
+    backtest_view,
+    frontier_display_data,
+    recent_return_correlations,
+    select_risk,
+)
 from saifa.domain.config import UNIVERSE, BacktestConfig
 from saifa.domain.dashboard import METHODS, STRATEGIES, DashboardBundle, DashboardDataError
 
@@ -32,8 +39,16 @@ def download(frame, label, name):
 def portfolio_page(bundle: DashboardBundle, strategy: str):
     from saifa.dashboard.decision import decision_banner, decision_evidence, spending_sensitivity
 
-    st.header("Portfolio performance")
+    st.header("Portfolio performance", anchor="portfolio-page")
     evidence = decision_evidence(bundle)
+    sections = [
+        ("portfolio-summary", "Summary"),
+        ("portfolio-performance", "Performance"),
+        ("portfolio-drawdown", "Drawdown"),
+        ("portfolio-frontier", "Efficient frontier"),
+        ("portfolio-diversification", "Diversification"),
+    ]
+    render_section_navigation(sections, pinned_id="portfolio-summary")
     if evidence is not None:
         decision_banner(evidence[0])
     tables, metadata = bundle.tables["portfolio"], bundle.metadata["portfolio"]
@@ -47,7 +62,7 @@ def portfolio_page(bundle: DashboardBundle, strategy: str):
     st.info(
         "Weights were fitted through 2018; performance shown here is the 2022 onward evaluation. This period has already been viewed, so the evaluation is retrospective."
     )
-    st.subheader("Selected portfolio at a glance")
+    st.subheader("Selected portfolio at a glance", anchor="portfolio-summary")
     with st.container(horizontal=True):
         for label, value in zip(
             ["Ending value", "Cumulative return", "Annualised return", "Largest drawdown"],
@@ -82,6 +97,7 @@ def portfolio_page(bundle: DashboardBundle, strategy: str):
         "Same evaluation dates and funded accounting for all three candidates. "
         "The table reports historical outcomes, not a forecast or an approved allocation."
     )
+    st.subheader("Performance and holdings", anchor="portfolio-performance")
     weights = (
         bundle.tables["risk"]["portfolio_weights"]
         .set_index("strategy")
@@ -124,7 +140,7 @@ def portfolio_page(bundle: DashboardBundle, strategy: str):
             "Lines compare all three allocations. Summary figures and the detailed path below follow the selected portfolio. The first plotted value includes initial trading cost."
         )
     selected = daily.loc[daily.strategy == strategy].set_index("Date")
-    st.subheader(f"Drawdown · {STRATEGIES[strategy]}")
+    st.subheader(f"Drawdown · {STRATEGIES[strategy]}", anchor="portfolio-drawdown")
     st.line_chart(
         (-selected.drawdown * 100).rename("Drawdown loss (%)"),
         color=LOSS_COLOR,
@@ -134,6 +150,126 @@ def portfolio_page(bundle: DashboardBundle, strategy: str):
     st.caption(
         "Drawdown is shown as a positive loss. The initial USD 10m is included as the opening peak. Holdings drift between month-end rebalances; distributions are reinvested. These performance paths exclude withdrawals; the separate committee sensitivity below models hypothetical spending."
     )
+    st.subheader("Development-period efficient frontier", anchor="portfolio-frontier")
+    st.caption(
+        f"Daily returns before {config['development_end_exclusive']} were used to fit this curve "
+        "and the two marked candidates. Both axes are annualised estimates before trading costs. "
+        "The 2022 onward performance above is a separate, realised comparison after costs."
+    )
+    try:
+        frontier, candidates = frontier_display_data(
+            tables["efficient_frontier"], tables["candidate_weights"]
+        )
+    except DashboardDataError as exc:
+        st.warning(f"Efficient frontier unavailable: {exc}")
+    else:
+        x = alt.X("Annual volatility (%):Q", scale=alt.Scale(zero=False))
+        y = alt.Y("Expected annual return (%):Q", scale=alt.Scale(zero=False))
+        tooltip = [
+            alt.Tooltip("Annual volatility (%):Q", format=".2f"),
+            alt.Tooltip("Expected annual return (%):Q", format=".2f"),
+        ]
+        curve = (
+            alt.Chart(frontier)
+            .mark_line(color="#8C9BA5", strokeWidth=2)
+            .encode(x=x, y=y, tooltip=tooltip)
+        )
+        points = (
+            alt.Chart(candidates)
+            .mark_point(filled=True, size=160)
+            .encode(
+                x=x,
+                y=y,
+                color=alt.Color(
+                    "Portfolio:N",
+                    scale=alt.Scale(
+                        domain=[STRATEGIES["minimum_volatility"], STRATEGIES["maximum_sharpe"]],
+                        range=[
+                            PORTFOLIO_COLORS["minimum_volatility"],
+                            PORTFOLIO_COLORS["maximum_sharpe"],
+                        ],
+                    ),
+                    title="Candidate",
+                ),
+                tooltip=[alt.Tooltip("Portfolio:N"), *tooltip],
+            )
+        )
+        st.altair_chart(
+            (curve + points).properties(height=340),
+            width="stretch",
+            alt="Development efficient frontier with minimum-volatility and maximum-Sharpe candidates",
+        )
+        st.caption(
+            "Higher expected return usually requires more estimated volatility. The two candidates "
+            "are close together on this scale; use the values below to compare them."
+        )
+        table(
+            candidates,
+            alt="Development expected return and volatility for the two fitted candidates",
+            column_config={
+                "Annual volatility (%)": st.column_config.NumberColumn(format="%.2f%%"),
+                "Expected annual return (%)": st.column_config.NumberColumn(format="%.2f%%"),
+            },
+        )
+    st.subheader("How do the seven ETFs move together?", anchor="portfolio-diversification")
+    try:
+        correlations, first, last = recent_return_correlations(
+            bundle.tables["data"]["simple_returns"]
+        )
+    except DashboardDataError as exc:
+        st.warning(f"ETF correlation unavailable: {exc}")
+    else:
+        st.caption(
+            f"Pearson correlation of daily simple returns · {first.date()} to {last.date()} "
+            "· latest 252 aligned trading sessions in the frozen snapshot. "
+            "This is a recent descriptive window, not the pre-2019 optimiser input."
+        )
+        heatmap = (
+            correlations.rename_axis(index="ETF 1", columns="ETF 2")
+            .stack()
+            .rename("Correlation")
+            .reset_index()
+        )
+        x = alt.X("ETF 1:N", sort=list(UNIVERSE), title="ETF")
+        y = alt.Y("ETF 2:N", sort=list(UNIVERSE), title="ETF")
+        cells = (
+            alt.Chart(heatmap)
+            .mark_rect()
+            .encode(
+                x=x,
+                y=y,
+                color=alt.Color(
+                    "Correlation:Q",
+                    scale=alt.Scale(
+                        domain=[-1, 0, 1],
+                        range=["#B14F43", "#F3F5F6", "#137C73"],
+                    ),
+                    title="Correlation",
+                ),
+                tooltip=["ETF 1:N", "ETF 2:N", alt.Tooltip("Correlation:Q", format=".2f")],
+            )
+        )
+        values = (
+            alt.Chart(heatmap)
+            .mark_text(fontSize=12)
+            .encode(
+                x=x,
+                y=y,
+                text=alt.Text("Correlation:Q", format=".2f"),
+                color=alt.condition(
+                    "abs(datum.Correlation) >= 0.65", alt.value("white"), alt.value("#263238")
+                ),
+            )
+        )
+        st.altair_chart(
+            (cells + values).properties(height=420),
+            width="stretch",
+            alt="Correlation matrix of the seven eligible ETFs over the latest 252 aligned sessions",
+        )
+        st.caption(
+            "+1 means returns moved together, −1 means they moved in opposite directions, "
+            "and 0 means little linear relationship. Correlations can change, especially in a crisis."
+        )
     with st.expander("Performance measures and latest holdings"):
         comparison = metrics.merge(
             tables["performance_ratios"], on="strategy", suffixes=("", "_ratio")

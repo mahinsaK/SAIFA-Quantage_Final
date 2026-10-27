@@ -11,7 +11,12 @@ from streamlit.testing.v1 import AppTest
 
 from saifa.application.dashboard_pipeline import publish_bundle
 from saifa.dashboard.data import load_bundle, verify_bundle
-from saifa.dashboard.selections import backtest_view, select_risk
+from saifa.dashboard.selections import (
+    backtest_view,
+    frontier_display_data,
+    recent_return_correlations,
+    select_risk,
+)
 from saifa.data.snapshots import file_hash
 from saifa.domain.config import UNIVERSE, BacktestConfig, OptimisationConfig, RiskConfig
 from saifa.domain.dashboard import CONFIDENCES, METHODS, STRATEGIES, TABLES, DashboardDataError
@@ -155,9 +160,12 @@ def prepared(tmp_path, forecasts):
         [
             {
                 "strategy": s,
+                "development_volatility": 0.105 + n * 0.015,
+                "development_expected_return": 0.055 + n * 0.005,
+                "solver_success": True,
                 **{f"weight_{t}": weights.set_index("strategy").loc[s, t] for t in UNIVERSE},
             }
-            for s in list(STRATEGIES)[1:]
+            for n, s in enumerate(list(STRATEGIES)[1:])
         ]
     )
     tables["portfolio"]["evaluation_daily"] = pd.DataFrame(
@@ -191,7 +199,15 @@ def prepared(tmp_path, forecasts):
         {"strategy": list(STRATEGIES), "sharpe_ratio": [1.0, 0.9, 0.8]}
     )
     tables["portfolio"]["efficient_frontier"] = pd.DataFrame(
-        {"volatility": [0.1], "expected_return": [0.05]}
+        {"volatility": [0.1, 0.2], "expected_return": [0.05, 0.09]}
+    )
+    sample_dates = pd.bdate_range(end="2022-12-30", periods=252)
+    sample_days = np.arange(len(sample_dates))
+    tables["data"]["simple_returns"] = pd.DataFrame(
+        {
+            "Date": sample_dates.strftime("%Y-%m-%d"),
+            **{ticker: 0.001 * np.sin(sample_days / (n + 3)) for n, ticker in enumerate(UNIVERSE)},
+        }
     )
     tables["backtest"]["forecasts"] = forecasts
     totals, assets, sizing, histories, paths, shock_summaries, shock_parts = (
@@ -495,6 +511,111 @@ def test_app_controls_pages_and_unavailable_results(prepared, monkeypatch):
     assert not app.exception
 
 
+def test_portfolio_section_links_match_rendered_anchors_across_reruns(prepared):
+    root, _, _ = prepared
+    app = app_test(root)
+    assert not app.exception
+    expected = [
+        "portfolio-summary",
+        "portfolio-performance",
+        "portfolio-drawdown",
+        "portfolio-frontier",
+        "portfolio-diversification",
+    ]
+
+    def rendered_ids():
+        component = app.get("bidi_component")[0].proto
+        configuration = json.loads(component.json)
+        links = [entry["id"] for entry in configuration["sections"]]
+        assert configuration["pinned_id"] == "portfolio-summary"
+        page_heading = next(
+            heading for heading in app.header if heading.value == "Portfolio performance"
+        )
+        assert page_heading.proto.anchor == "portfolio-page"
+        assert page_heading.proto.anchor not in links
+        assert component.html_content.index('class="nav-pinned"') < component.html_content.index(
+            'class="nav-links"'
+        )
+        headings = [
+            (heading.proto.anchor, heading.value)
+            for heading in app.subheader
+            if heading.proto.anchor in expected
+        ]
+        return links, headings
+
+    expected_headings = [
+        ("portfolio-summary", "Selected portfolio at a glance"),
+        ("portfolio-performance", "Performance and holdings"),
+        ("portfolio-drawdown", "Drawdown · 40/60 baseline"),
+        ("portfolio-frontier", "Development-period efficient frontier"),
+        ("portfolio-diversification", "How do the seven ETFs move together?"),
+    ]
+    assert rendered_ids() == (expected, expected_headings)
+    headings = [item.value for item in app.subheader]
+    assert "Selected portfolio at a glance" in headings
+    assert "Performance and holdings" in headings
+    assert any(value.startswith("Drawdown ·") for value in headings)
+    assert "Development-period efficient frontier" in headings
+    assert "How do the seven ETFs move together?" in headings
+    app.selectbox(key="strategy").set_value("maximum_sharpe").run()
+    assert not app.exception
+    assert [anchor for anchor, _ in rendered_ids()[1]] == expected
+    app.radio(key="page").set_value("Risk comparison").run()
+    assert not app.exception
+    assert not app.get("bidi_component")
+
+
+def test_frontier_display_uses_saved_development_estimates(prepared):
+    root, path, _ = prepared
+    bundle = load_bundle(root, path)
+    curve, points = frontier_display_data(
+        bundle.tables["portfolio"]["efficient_frontier"],
+        bundle.tables["portfolio"]["candidate_weights"],
+    )
+    assert curve["Annual volatility (%)"].tolist() == pytest.approx([10.0, 20.0])
+    assert points["Annual volatility (%)"].tolist() == pytest.approx([10.5, 12.0])
+    assert points["Expected annual return (%)"].tolist() == pytest.approx([5.5, 6.0])
+    assert points.Portfolio.tolist() == ["Minimum volatility", "Maximum Sharpe"]
+    app = app_test(root)
+    assert not app.exception
+    assert any("Development-period efficient frontier" in item.value for item in app.subheader)
+    assert not any("Efficient frontier unavailable" in item.value for item in app.warning)
+
+
+def test_frontier_display_rejects_unavailable_candidate_estimate(prepared):
+    root, path, _ = prepared
+    bundle = load_bundle(root, path)
+    candidates = bundle.tables["portfolio"]["candidate_weights"].copy()
+    candidates.loc[0, "development_expected_return"] = np.nan
+    with pytest.raises(DashboardDataError, match="unavailable"):
+        frontier_display_data(bundle.tables["portfolio"]["efficient_frontier"], candidates)
+
+
+def test_recent_return_correlations_use_aligned_returns():
+    values = np.array([0.01, -0.02, 0.03, -0.04])
+    frame = pd.DataFrame(
+        {
+            "Date": pd.date_range("2022-01-03", periods=4).strftime("%Y-%m-%d"),
+            **{ticker: np.roll(values, n) for n, ticker in enumerate(UNIVERSE)},
+        }
+    )
+    frame["XLK"] = 2 * values
+    frame["AGG"] = -values
+    matrix, first, last = recent_return_correlations(frame, sessions=4)
+    assert (str(first.date()), str(last.date())) == ("2022-01-03", "2022-01-06")
+    assert matrix.loc["SPY", "XLK"] == pytest.approx(1)
+    assert matrix.loc["SPY", "AGG"] == pytest.approx(-1)
+    assert np.allclose(matrix.to_numpy(), matrix.to_numpy().T)
+    assert np.allclose(np.diag(matrix), 1)
+
+
+def test_recent_return_correlations_do_not_hide_missing_returns():
+    frame = pd.DataFrame({"Date": ["2022-01-03", "2022-01-04"], **dict.fromkeys(UNIVERSE, 0.01)})
+    frame.loc[1, "SPY"] = np.nan
+    with pytest.raises(DashboardDataError, match="missing or invalid"):
+        recent_return_correlations(frame, sessions=2)
+
+
 def test_bundle_rejects_inconsistent_units_even_with_updated_hash(prepared):
     root, path, outputs = prepared
     csv = outputs["risk"] / "risk_comparison.csv"
@@ -528,6 +649,13 @@ def test_cache_cannot_hide_a_changed_output(prepared):
     assert not app.exception
     assert "not ready" in app.error[0].value
     assert not app.metric
+
+
+def test_bundle_rejects_changed_correlation_source(prepared):
+    root, path, outputs = prepared
+    (outputs["data"] / "simple_returns.csv").write_text("changed\n")
+    with pytest.raises(DashboardDataError, match="simple_returns.csv changed"):
+        verify_bundle(root, path)
 
 
 def test_source_snapshot_tampering_is_reported(prepared):
