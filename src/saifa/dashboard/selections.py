@@ -162,3 +162,65 @@ def backtest_view(
             )
         )
     return BacktestView(chosen, pd.DataFrame(summaries), pd.DataFrame(lights))
+
+
+def backtest_comparison(
+    forecasts: pd.DataFrame,
+    confidence: float,
+    start,
+    end,
+    config: BacktestConfig,
+    validation_end_exclusive: str,
+    periods: tuple[str, ...],
+) -> pd.DataFrame:
+    """Recalculate every model from the same dated forecasts and selected range."""
+    rows = []
+    for strategy in STRATEGIES:
+        for method in METHODS:
+            try:
+                tests = backtest_view(
+                    forecasts,
+                    strategy,
+                    method,
+                    confidence,
+                    start,
+                    end,
+                    config,
+                    validation_end_exclusive,
+                ).tests.set_index("period")
+            except DashboardDataError as exc:
+                tests = pd.DataFrame()
+                reason = str(exc)
+            else:
+                reason = ""
+            for period in periods:
+                test = tests.loc[period] if period in tests.index else None
+                for check, prefix in (("Kupiec", "coverage"), ("Christoffersen", "independence")):
+                    if test is None:
+                        reason_text = reason or "No forecast summary for this period"
+                    else:
+                        warning = test[f"{prefix}_warning"]
+                        reason_text = "" if pd.isna(warning) else str(warning)
+                    rows.append(
+                        {
+                            "Period": period,
+                            "Portfolio": STRATEGIES[strategy],
+                            "Method": METHODS[method],
+                            "Check": check,
+                            "Decision": (
+                                str(test[f"{prefix}_decision"])
+                                if test is not None
+                                else "unavailable"
+                            ),
+                            "p-value": (test[f"{prefix}_p_value"] if test is not None else np.nan),
+                            "Sessions": (test.coverage_observations if test is not None else 0),
+                            "Exceptions": (
+                                test.coverage_exceptions if test is not None else np.nan
+                            ),
+                            "Missing forecasts": (
+                                test.coverage_missing_forecasts if test is not None else np.nan
+                            ),
+                            "Reason": reason_text,
+                        }
+                    )
+    return pd.DataFrame(rows)

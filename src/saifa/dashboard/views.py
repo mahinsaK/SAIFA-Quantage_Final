@@ -12,11 +12,13 @@ import matplotlib.pyplot as plt
 from saifa.dashboard.presentation import LOSS_COLOR, PORTFOLIO_COLORS, RISK_COLOR, money, percent
 from saifa.dashboard.section_navigation import render_section_navigation
 from saifa.dashboard.selections import (
+    backtest_comparison,
     backtest_view,
     frontier_display_data,
     recent_return_correlations,
     select_risk,
 )
+from saifa.dashboard.visual_data import crisis_drawdown_chart_data, risk_contribution_chart_data
 from saifa.domain.config import UNIVERSE, BacktestConfig
 from saifa.domain.dashboard import METHODS, STRATEGIES, DashboardBundle, DashboardDataError
 
@@ -47,6 +49,7 @@ def portfolio_page(bundle: DashboardBundle, strategy: str):
         ("portfolio-drawdown", "Drawdown"),
         ("portfolio-frontier", "Efficient frontier"),
         ("portfolio-diversification", "Diversification"),
+        ("portfolio-spending", "Purchasing power"),
     ]
     render_section_navigation(
         sections, pinned_id="portfolio-summary", aria_label="Portfolio sections"
@@ -290,6 +293,11 @@ def portfolio_page(bundle: DashboardBundle, strategy: str):
     )
     if evidence is not None:
         spending_sensitivity(evidence[0], evidence[1], strategy)
+    else:
+        st.subheader("Purchasing power and spending", anchor="portfolio-spending")
+        st.caption(
+            "Verified purchasing-power evidence is unavailable; see the preparation note above."
+        )
 
 
 def risk_page(bundle: DashboardBundle, strategy: str, confidence: float, method: str):
@@ -464,6 +472,7 @@ def backtest_page(
         [
             ("backtest-overview", "Overview"),
             *[(f"backtest-{period}", period.title()) for period in view.tests.period],
+            ("backtest-models", "Compare models"),
             ("backtest-forecasts", "Forecasts"),
         ],
         pinned_id="backtest-overview",
@@ -555,6 +564,76 @@ def backtest_page(
         "Basel colours apply only to 99% VaR and 250 complete sessions. These exception tests "
         "do not validate ES severity or establish regulatory compliance."
     )
+    st.subheader("Compare model checks", anchor="backtest-models")
+    period = st.selectbox(
+        "Period for model comparison", view.tests.period.tolist(), key="model_comparison_period"
+    )
+    comparison = backtest_comparison(
+        bundle.tables["backtest"]["forecasts"],
+        confidence,
+        start,
+        end,
+        config,
+        meta["validation_end_exclusive"],
+        tuple(view.tests.period),
+    )
+    matrix = comparison.loc[comparison.Period == period].copy()
+    matrix["Portfolio and method"] = matrix.Portfolio + " · " + matrix.Method
+    matrix["Result"] = matrix.Decision.map(
+        {"reject": "Reject", "do_not_reject": "Not rejected", "unavailable": "Unavailable"}
+    ).fillna("Unavailable")
+    row_order = [f"{STRATEGIES[s]} · {METHODS[m]}" for s in STRATEGIES for m in METHODS]
+    x = alt.X("Check:N", sort=["Kupiec", "Christoffersen"], title="Statistical check")
+    y = alt.Y("Portfolio and method:N", sort=row_order, title="Portfolio · VaR method")
+    cells = (
+        alt.Chart(matrix)
+        .mark_rect()
+        .encode(
+            x=x,
+            y=y,
+            color=alt.Color(
+                "Decision:N",
+                scale=alt.Scale(
+                    domain=["reject", "do_not_reject", "unavailable"],
+                    range=[LOSS_COLOR, "#375A7F", "#AEBAC3"],
+                ),
+                legend=None,
+            ),
+            tooltip=[
+                "Portfolio:N",
+                "Method:N",
+                "Check:N",
+                "Result:N",
+                alt.Tooltip("p-value:Q", format=".3f"),
+                "Sessions:Q",
+                "Exceptions:Q",
+                "Missing forecasts:Q",
+                "Reason:N",
+            ],
+        )
+    )
+    labels = (
+        alt.Chart(matrix)
+        .mark_text(fontSize=11)
+        .encode(
+            x=x,
+            y=y,
+            text="Result:N",
+            color=alt.condition(
+                "datum.Decision == 'unavailable'", alt.value("#263238"), alt.value("white")
+            ),
+        )
+    )
+    st.altair_chart(
+        (cells + labels).properties(height=390),
+        width="stretch",
+        alt="Kupiec coverage and Christoffersen independence decisions for every portfolio and model in the selected dates",
+    )
+    st.caption(
+        f"{period.title()} only · {start} to {end} (inclusive) · {confidence:.0%} VaR. "
+        "Every cell is recalculated from dated forecasts for this range. "
+        "Not rejected is not proof of safety; unavailable cells retain their reason in the tooltip."
+    )
     st.subheader("Forecasts versus realised losses", anchor="backtest-forecasts")
     plot = view.forecasts
     fig, ax = plt.subplots(figsize=(11, 3.8), layout="constrained")
@@ -644,6 +723,48 @@ def _risk_contributions(bundle: DashboardBundle, strategy: str, confidence: floa
             }
         )
     )
+    if supported:
+        try:
+            chart_data = risk_contribution_chart_data(
+                tables["asset_contributions"],
+                tables["contribution_summary"],
+                strategy,
+                confidence,
+                method,
+            )
+        except DashboardDataError as exc:
+            st.warning(f"Risk contribution chart unavailable: {exc}")
+        else:
+            bars = (
+                alt.Chart(chart_data)
+                .mark_bar()
+                .encode(
+                    x=alt.X(
+                        "Contribution (USD):Q", title="Signed contribution to portfolio risk (USD)"
+                    ),
+                    y=alt.Y("ETF:N", sort=list(UNIVERSE)),
+                    yOffset="Measure:N",
+                    color=alt.Color(
+                        "Measure:N",
+                        scale=alt.Scale(domain=["VAR", "ES"], range=["#375A7F", LOSS_COLOR]),
+                        title="Risk measure",
+                    ),
+                    tooltip=[
+                        "ETF:N",
+                        "Measure:N",
+                        alt.Tooltip("Contribution (USD):Q", format="$,.0f"),
+                    ],
+                )
+            )
+            st.altair_chart(
+                bars.properties(height=280),
+                width="stretch",
+                alt="Signed ETF contributions to the selected supported portfolio risk measures",
+            )
+            st.caption(
+                "Bars are portfolio risk contributions, not standalone ETF risks. Negative values offset "
+                "portfolio loss; supported measures are Normal VaR/ES or Historical ES."
+            )
     with st.expander("Marginal exposure derivatives"):
         table(attribution[["ticker", "method", "measure", "marginal_fraction"]])
     st.caption(
@@ -732,7 +853,50 @@ def stress_page(bundle: DashboardBundle, strategy: str, confidence: float, metho
             f"Maximum percentage drawdown uses the actual peak {money(row.peak_nav)} on {row.peak_date} and trough {money(row.trough_nav)} on {row.trough_date}. Terminal loss is measured from initial capital."
         )
     crisis_comparison = summary.loc[summary.scenario == scenario].copy()
-    st.subheader("Compare portfolios in this crisis", anchor="stress-compare")
+    st.subheader("Compare portfolios across crises", anchor="stress-compare")
+    try:
+        crisis_plot, review_level, omitted = crisis_drawdown_chart_data(summary)
+    except DashboardDataError as exc:
+        st.warning(f"Cross-crisis chart unavailable: {exc}")
+    else:
+        scenario_order = ["2008 GFC", "March 2020", "2022 rate shock"]
+        bars = (
+            alt.Chart(crisis_plot)
+            .mark_bar()
+            .encode(
+                x=alt.X("Crisis:N", sort=scenario_order, title="Historical replay"),
+                xOffset="Portfolio:N",
+                y=alt.Y("Maximum drawdown (%):Q", title="Largest fall from a peak (%)"),
+                color=alt.Color(
+                    "Portfolio:N",
+                    scale=alt.Scale(
+                        domain=list(STRATEGIES.values()), range=list(PORTFOLIO_COLORS.values())
+                    ),
+                ),
+                tooltip=[
+                    "Crisis:N",
+                    "Portfolio:N",
+                    alt.Tooltip("Maximum drawdown (%):Q", format=".2f"),
+                ],
+            )
+        )
+        review = (
+            alt.Chart(pd.DataFrame({"Review level (%)": [review_level]}))
+            .mark_rule(color=LOSS_COLOR, strokeDash=[5, 4], strokeWidth=2)
+            .encode(y="Review level (%):Q")
+        )
+        st.altair_chart(
+            (bars + review).properties(height=300),
+            width="stretch",
+            alt="Maximum drawdown for all three portfolios across the 2008, 2020 and 2022 crisis replays against the proposed review level",
+        )
+        explanation = (
+            f"Dashed line: proposed {review_level:.0f}% drawdown review level, not client-approved. "
+            "2008 is a retrospective replay with allocations fitted later."
+        )
+        if omitted:
+            explanation += f" {omitted} unavailable replay(s) omitted from bars; reasons remain in the table below."
+        st.caption(explanation)
     table(
         pd.DataFrame(
             {

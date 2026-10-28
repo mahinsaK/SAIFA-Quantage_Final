@@ -2,12 +2,15 @@
 
 from pathlib import Path
 
+import altair as alt
 import pandas as pd
 import streamlit as st
 
 from saifa.dashboard.data import inside, read_json, verify_bundle
+from saifa.dashboard.presentation import PORTFOLIO_COLORS
+from saifa.dashboard.visual_data import observed_growth_chart_data
 from saifa.data.snapshots import file_hash
-from saifa.domain.dashboard import DashboardBundle, DashboardDataError
+from saifa.domain.dashboard import STRATEGIES, DashboardBundle, DashboardDataError
 
 DECISION_TABLES = (
     "comparison",
@@ -78,7 +81,7 @@ def spending_sensitivity(summary: dict, tables: dict[str, pd.DataFrame], strateg
     selected = tables["spending_summary"].query("strategy == @strategy").copy()
     example = selected.loc[selected.inflation_assumption == 0.02]
     observed = tables["observed_real"].set_index("strategy").loc[strategy]
-    st.subheader("Purchasing power and spending")
+    st.subheader("Purchasing power and spending", anchor="portfolio-spending")
     with st.container(border=True):
         st.markdown("**Observed purchasing power · before withdrawals**")
         with st.container(horizontal=True):
@@ -96,6 +99,42 @@ def spending_sensitivity(summary: dict, tables: dict[str, pd.DataFrame], strateg
             f"Monthly FRED {summary['cpi_source']['series']} from {observed.cpi_start_month} "
             f"to {observed.cpi_end_month}. This observed period is shorter than the proposed ten years."
         )
+        try:
+            growth, objective = observed_growth_chart_data(tables["observed_real"])
+        except DashboardDataError as exc:
+            st.warning(f"Portfolio real-growth comparison unavailable: {exc}")
+        else:
+            bars = (
+                alt.Chart(growth)
+                .mark_bar()
+                .encode(
+                    x=alt.X("Portfolio:N", sort=list(STRATEGIES.values()), title=None),
+                    y=alt.Y("Real growth (% / year):Q", title="Annual real growth (%)"),
+                    color=alt.Color(
+                        "Portfolio:N",
+                        scale=alt.Scale(
+                            domain=list(STRATEGIES.values()), range=list(PORTFOLIO_COLORS.values())
+                        ),
+                        legend=None,
+                    ),
+                    tooltip=["Portfolio:N", alt.Tooltip("Real growth (% / year):Q", format=".2f")],
+                )
+            )
+            target = (
+                alt.Chart(pd.DataFrame({"Proposed objective (%)": [objective]}))
+                .mark_rule(color="#B14F43", strokeDash=[5, 4], strokeWidth=2)
+                .encode(y="Proposed objective (%):Q")
+            )
+            st.altair_chart(
+                (bars + target).properties(height=230),
+                width="stretch",
+                alt="Observed annual real growth for all three portfolios compared with the proposed objective over the shorter historical period",
+            )
+            st.caption(
+                f"Dashed line: proposed {objective:g}% annual real-growth objective. "
+                "The observed comparison ends with September 2026 CPI and excludes withdrawals; "
+                "it does not establish ten-year success or failure."
+            )
         st.markdown("**Illustrative annual spending · 2% assumed inflation**")
         with st.container(horizontal=True):
             if not example.empty:
