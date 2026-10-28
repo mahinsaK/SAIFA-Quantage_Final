@@ -1,6 +1,6 @@
 # Manual walk-forward backtest check
 
-Status: **Parts A–D calculations and interpretation recorded; Part E selected forecast, evaluation summary and latest Basel rows checked by the reviewer; chart and warning review pending**. Model calibration and final portfolio suitability remain under review.
+Status: **Parts A–D calculations and interpretation recorded; Part E selected rows and evaluation chart checked by the reviewer; warning review and final Part E sign-off pending**. Model calibration and final portfolio suitability remain under review.
 
 ## A. Timing, units and exceptions
 
@@ -127,10 +127,10 @@ Read backtest_report.md and docs/final/07-backtesting/03-manual-backtest-check.m
 All checks passed!
 
 - Plots/table rows inspected:
-  Reviewer reported matching selected forecast, test-summary and latest-Basel rows on 29 Oct 2026. Evaluation chart and warning-column inspection still need explicit confirmation.
+  Reviewer reported matching selected forecast, test-summary and latest-Basel rows on 29 Oct 2026. The reviewer also confirmed that red exceptions appeared close together around June 2022 and April 2025 in the Backtesting evaluation chart. Warning-column inspection still needs explicit confirmation.
 
 - Discrepancies and corrections:
-  No arithmetic discrepancies identified in Parts A–D or the reviewer-confirmed Part E rows. The chart and warning review remains open.
+  No arithmetic discrepancies identified in Parts A–D or the reviewer-confirmed Part E rows and chart. The warning review remains open.
 
 - In your own words:
 Why can correct overall exception frequency coexist with dangerous clustering?

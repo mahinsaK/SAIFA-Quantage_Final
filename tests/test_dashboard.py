@@ -617,6 +617,85 @@ def test_app_controls_pages_and_unavailable_results(prepared, monkeypatch):
     assert not app.exception
 
 
+def test_backtest_chart_zooms_and_lists_exact_exception_dates(prepared):
+    root, _, outputs = prepared
+    forecasts = pd.read_csv(outputs["backtest"] / "forecasts.csv")
+    app = app_test(root)
+    app.radio(key="page").set_value("Backtesting").run()
+    assert not app.exception
+
+    chart = json.loads(app.get("vega_lite_chart")[-1].proto.spec)
+    assert chart["params"][0]["bind"] == "scales"
+    assert chart["params"][0]["select"]["encodings"] == ["x"]
+    tooltip_fields = {item["field"] for item in chart["layer"][-1]["encoding"]["tooltip"]}
+    assert tooltip_fields == {"forecast_date", "var_usd", "loss_usd", "excess_usd"}
+
+    def exception_table():
+        return next(
+            frame.value for frame in app.dataframe if "Above VaR (USD)" in frame.value.columns
+        )
+
+    full = exception_table()
+    assert len(full) == int(selected(forecasts).forecasts.exception.sum())
+    assert (full["Above VaR (USD)"] > 0).all()
+    app.date_input(key="dates").set_value(
+        (pd.Timestamp("2022-01-01").date(), pd.Timestamp("2022-03-31").date())
+    ).run()
+    assert not app.exception
+    short = exception_table()
+    assert len(short) == int(selected(forecasts, end="2022-03-31").forecasts.exception.sum())
+    assert len(short) < len(full)
+
+
+def test_backtest_period_buttons_sync_with_sidebar_and_restore_custom_dates(prepared):
+    root, _, _ = prepared
+    app = app_test(root)
+    app.radio(key="page").set_value("Backtesting").run()
+    assert not app.exception
+    assert app.date_input(key="dates").value == (
+        pd.Timestamp("2022-01-01").date(),
+        pd.Timestamp("2022-12-30").date(),
+    )
+    evaluation_sessions = app.metric[2].value
+
+    app.button(key="backtest_period_validation").click().run()
+    assert not app.exception
+    assert app.date_input(key="dates").value == (
+        pd.Timestamp("2021-11-01").date(),
+        pd.Timestamp("2021-12-31").date(),
+    )
+    assert app.metric[2].value != evaluation_sessions
+    assert any(heading.value.startswith("Validation ·") for heading in app.subheader)
+
+    app.button(key="backtest_period_full_history").click().run()
+    assert not app.exception
+    assert app.date_input(key="dates").value == (
+        pd.Timestamp("2021-11-01").date(),
+        pd.Timestamp("2022-12-30").date(),
+    )
+    assert any(heading.value.startswith("Evaluation ·") for heading in app.subheader)
+
+    app.date_input(key="dates").set_value(
+        (pd.Timestamp("2022-01-01").date(), pd.Timestamp("2022-03-31").date())
+    ).run()
+    assert not app.exception
+    assert any("Showing 2022-01-01 to 2022-03-31" in c.value for c in app.caption)
+    app.button(key="backtest_period_evaluation").click().run()
+    assert not app.exception
+    assert app.date_input(key="dates").value == (
+        pd.Timestamp("2022-01-01").date(),
+        pd.Timestamp("2022-12-30").date(),
+    )
+    assert app.metric[2].value == evaluation_sessions
+
+    app.date_input(key="dates").set_value((pd.Timestamp("2022-03-01").date(),)).run()
+    assert not app.exception
+    assert any("Select both a start and an end date" in message.value for message in app.info)
+    app.button(key="backtest_period_evaluation").click().run()
+    assert not app.exception
+    assert app.metric[2].value == evaluation_sessions
+
+
 def test_portfolio_section_links_match_rendered_anchors_across_reruns(prepared):
     root, _, _ = prepared
     app = app_test(root)

@@ -1,13 +1,9 @@
 """Judge-facing pages. Read verified outputs; never refit models during a widget rerun."""
 
 import altair as alt
-import matplotlib
 import numpy as np
 import pandas as pd
 import streamlit as st
-
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 
 from saifa.dashboard.presentation import LOSS_COLOR, PORTFOLIO_COLORS, RISK_COLOR, money, percent
 from saifa.dashboard.section_navigation import render_section_navigation
@@ -441,17 +437,50 @@ def risk_page(bundle: DashboardBundle, strategy: str, confidence: float, method:
     )
 
 
-def backtest_page(
-    bundle: DashboardBundle, strategy: str, confidence: float, method: str, start, end
-):
+def _set_backtest_dates(start, end) -> None:
+    st.session_state["dates"] = (start, end)
+
+
+def backtest_page(bundle: DashboardBundle, strategy: str, confidence: float, method: str, dates):
     st.header("Does forecast risk match realised losses?", anchor="backtest-page")
     st.caption("An exception is a next-session loss above the VaR forecast.")
     meta = bundle.metadata["backtest"]
     raw = dict(meta["config"]["backtest"])
     raw["confidence_levels"] = tuple(raw["confidence_levels"])
     config = BacktestConfig(**raw)
+    first = pd.Timestamp(meta["start"]).date()
+    last = pd.Timestamp(meta["end"]).date()
+    boundary = pd.Timestamp(meta["validation_end_exclusive"])
+    validation_end = (boundary - pd.Timedelta(days=1)).date()
+    evaluation_start = boundary.date()
+    presets = [
+        ("Validation", first, validation_end),
+        ("Evaluation", evaluation_start, last),
+        ("Full history", first, last),
+    ]
+    st.subheader("Choose a backtest period")
     st.caption(
-        f"{STRATEGIES[strategy]} · {METHODS[method]} · {confidence:.0%} confidence · inclusive dates {start} to {end} · fixed {money(config.reference_nav)} NAV"
+        "These buttons select the dates used by the forecast checks below. "
+        "Use the sidebar date range for a custom period."
+    )
+    with st.container(horizontal=True):
+        for label, preset_start, preset_end in presets:
+            if preset_start > preset_end:
+                continue
+            selected = tuple(dates) == (preset_start, preset_end)
+            st.button(
+                f"{label} · {preset_start.year}–{preset_end.year}",
+                key=f"backtest_period_{label.lower().replace(' ', '_')}",
+                type="primary" if selected else "secondary",
+                on_click=_set_backtest_dates,
+                args=(preset_start, preset_end),
+            )
+    if len(dates) != 2:
+        st.info("Select both a start and an end date in the sidebar, or choose a period above.")
+        return
+    start, end = dates
+    st.caption(
+        f"Showing {start} to {end} (inclusive) · {STRATEGIES[strategy]} · {METHODS[method]} · {confidence:.0%} confidence · fixed {money(config.reference_nav)} NAV"
     )
     st.caption("Tests recalculate for these dates; validation and evaluation stay separate.")
     try:
@@ -636,24 +665,59 @@ def backtest_page(
     )
     st.subheader("Forecasts versus realised losses", anchor="backtest-forecasts")
     plot = view.forecasts
-    fig, ax = plt.subplots(figsize=(11, 3.8), layout="constrained")
-    ax.plot(
-        plot.forecast_date,
-        plot.loss_usd,
-        color="#8C9BA5",
-        linewidth=0.7,
-        label="Realised signed loss",
+    hits = plot.loc[plot.exception == 1].copy()
+    hits["excess_usd"] = hits.loss_usd - hits.var_usd
+    dates = alt.X("forecast_date:T", title="Forecast target date")
+    losses = alt.Y("loss_usd:Q", title="One-session signed loss (USD)")
+    forecast = (
+        alt.Chart(plot)
+        .mark_line(color=RISK_COLOR, strokeWidth=2)
+        .encode(x=dates, y=alt.Y("var_usd:Q", title="One-session signed loss (USD)"))
     )
-    ax.plot(plot.forecast_date, plot.var_usd, color=RISK_COLOR, linewidth=1, label="Forecast VaR")
-    hits = plot.loc[plot.exception == 1]
-    ax.scatter(
-        hits.forecast_date, hits.loss_usd, color=LOSS_COLOR, s=15, label="Exception", zorder=3
+    realised = alt.Chart(plot).mark_line(color="#8C9BA5", strokeWidth=1).encode(x=dates, y=losses)
+    exceptions = (
+        alt.Chart(hits)
+        .mark_circle(color=LOSS_COLOR, size=85)
+        .encode(
+            x=dates,
+            y=losses,
+            tooltip=[
+                alt.Tooltip("forecast_date:T", title="Exception date", format="%Y-%m-%d"),
+                alt.Tooltip("var_usd:Q", title="Forecast VaR (USD)", format="$,.2f"),
+                alt.Tooltip("loss_usd:Q", title="Realised loss (USD)", format="$,.2f"),
+                alt.Tooltip("excess_usd:Q", title="Above VaR (USD)", format="$,.2f"),
+            ],
+        )
     )
-    ax.set(ylabel="One-session loss (USD)", xlabel="Forecast target date")
-    ax.legend(loc="upper left", fontsize=8)
-    ax.grid(alpha=0.15)
-    st.pyplot(fig, width="stretch", alt="Realised daily losses, VaR forecasts and exception dates")
-    plt.close(fig)
+    zoom = alt.selection_interval(bind="scales", encodings=["x"])
+    st.altair_chart(
+        (realised + forecast + exceptions).properties(height=360).add_params(zoom),
+        width="stretch",
+        alt="Realised daily losses, one-day VaR forecasts and exception dates for the selected portfolio and period",
+    )
+    st.caption(
+        "Grey: realised daily loss · blue: prior-close VaR · red: exception. "
+        "Scroll over the chart to zoom the dates, drag to pan, and hover over a red point for its date and dollar amounts."
+    )
+    st.subheader(f"Exact exception dates · {len(hits)}")
+    if hits.empty:
+        st.caption("No VaR exceptions in the selected dates; this does not establish model safety.")
+    else:
+        table(
+            pd.DataFrame(
+                {
+                    "Date": hits.forecast_date.dt.date,
+                    "Forecast VaR (USD)": hits.var_usd,
+                    "Realised loss (USD)": hits.loss_usd,
+                    "Above VaR (USD)": hits.excess_usd,
+                }
+            ),
+            alt="Exact dates and dollar losses for VaR exceptions in the selected period",
+            column_config={
+                name: st.column_config.NumberColumn(format="$%.2f")
+                for name in ("Forecast VaR (USD)", "Realised loss (USD)", "Above VaR (USD)")
+            },
+        )
     with st.expander("Audit forecast rows, transition counts and warnings"):
         table(view.tests)
         table(view.forecasts)

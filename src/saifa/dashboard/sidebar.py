@@ -47,15 +47,18 @@ def render_sidebar(bundle: DashboardBundle) -> DashboardSelection:
         )
         low, high = pd.Timestamp(meta["start"]).date(), pd.Timestamp(meta["end"]).date()
         evaluation_start = max(low, pd.Timestamp(meta["validation_end_exclusive"]).date())
+        if "dates" not in st.session_state:
+            st.session_state["dates"] = (evaluation_start, high)
         dates = st.date_input(
             "Backtest date range (inclusive)",
-            value=(evaluation_start, high),
             min_value=low,
             max_value=high,
             format="YYYY-MM-DD",
             key="dates",
         )
-        st.caption("Dates change backtesting only.")
+        st.caption(
+            "Dates change backtesting only. Use the period buttons at the top of Backtesting for a quick choice, or set a custom range here."
+        )
         st.divider()
         st.caption(
             f"Snapshot: {bundle.manifest['snapshot_id']}\n\n"
