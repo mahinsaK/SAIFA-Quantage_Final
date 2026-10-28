@@ -12,6 +12,7 @@ from streamlit.testing.v1 import AppTest
 from saifa.application.dashboard_pipeline import publish_bundle
 from saifa.dashboard.data import load_bundle, verify_bundle
 from saifa.dashboard.selections import (
+    backtest_comparison,
     backtest_view,
     frontier_display_data,
     recent_return_correlations,
@@ -412,6 +413,45 @@ def test_date_selection_recalculates_counts_and_resets_basel(forecasts):
     assert (cross.lights.status == "insufficient_window").all()
 
 
+def test_model_comparison_recalculates_from_selected_forecast_dates(forecasts):
+    config = replace(BacktestConfig(), start="2021-11-01", end_exclusive="2023-01-01")
+
+    def compare(end, confidence=0.99):
+        return backtest_comparison(
+            forecasts,
+            confidence,
+            "2022-01-01",
+            end,
+            config,
+            "2022-01-01",
+            ("evaluation",),
+        )
+
+    full = compare("2022-12-30")
+    short = compare("2022-03-31")
+    assert len(full) == len(STRATEGIES) * len(METHODS) * 2
+    chosen = full.loc[
+        (full.Portfolio == "40/60 baseline")
+        & (full.Method == "Historical")
+        & (full.Check == "Kupiec")
+    ].iloc[0]
+    assert chosen.Sessions == selected(forecasts).tests.coverage_observations.iloc[0]
+    assert chosen["p-value"] == selected(forecasts).tests.coverage_p_value.iloc[0]
+    assert (
+        short.loc[
+            (short.Portfolio == "40/60 baseline")
+            & (short.Method == "Historical")
+            & (short.Check == "Kupiec"),
+            "Sessions",
+        ].iloc[0]
+        < chosen.Sessions
+    )
+    unavailable = compare("2022-12-30", 0.90)
+    evt = unavailable.loc[unavailable.Method == "EVT · POT/GPD"]
+    assert set(evt.Decision) == {"unavailable"}
+    assert (evt["Missing forecasts"] > 0).all()
+
+
 def test_missing_day_is_retained_and_equality_is_not_exception(forecasts):
     f = forecasts.copy()
     match = (
@@ -587,6 +627,7 @@ def test_portfolio_section_links_match_rendered_anchors_across_reruns(prepared):
         "portfolio-drawdown",
         "portfolio-frontier",
         "portfolio-diversification",
+        "portfolio-spending",
     ]
 
     def rendered_ids():
@@ -615,6 +656,7 @@ def test_portfolio_section_links_match_rendered_anchors_across_reruns(prepared):
         ("portfolio-drawdown", "Drawdown · 40/60 baseline"),
         ("portfolio-frontier", "Development-period efficient frontier"),
         ("portfolio-diversification", "How do the seven ETFs move together?"),
+        ("portfolio-spending", "Purchasing power and spending"),
     ]
     assert rendered_ids() == (expected, expected_headings)
     headings = [item.value for item in app.subheader]
@@ -665,7 +707,7 @@ def test_analysis_page_section_navigation_tracks_visible_sections(prepared):
 
     check_page(
         "Backtesting",
-        ["backtest-overview", "backtest-evaluation", "backtest-forecasts"],
+        ["backtest-overview", "backtest-evaluation", "backtest-models", "backtest-forecasts"],
         "backtest-page",
         "Backtesting sections",
     )
@@ -678,6 +720,7 @@ def test_analysis_page_section_navigation_tracks_visible_sections(prepared):
         "backtest-overview",
         "backtest-validation",
         "backtest-evaluation",
+        "backtest-models",
         "backtest-forecasts",
     ]
     check_page(

@@ -112,6 +112,7 @@ def test_decision_ui_follows_portfolio_and_shows_observed_cpi_growth(monkeypatch
                         for strategy, growth, wealth in [
                             ("baseline_40_60", 0.0068, 10325),
                             ("minimum_volatility", 0.0254, 11263),
+                            ("maximum_sharpe", 0.0271, 11353),
                         ]
                     ]
                 ),
