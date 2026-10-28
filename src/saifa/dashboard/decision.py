@@ -14,6 +14,7 @@ DECISION_TABLES = (
     "backtest_tests",
     "backtest_lights",
     "spending_summary",
+    "observed_real",
     "spending_paths",
     "spending_payments",
 )
@@ -57,7 +58,8 @@ def decision_evidence(bundle: DashboardBundle) -> tuple[dict, dict[str, pd.DataF
     except DashboardDataError as exc:
         st.info(
             "Committee summary unavailable. Prepare it with: "
-            "uv run --locked python commands/run_submission.py"
+            "uv run --locked python commands/run_submission.py "
+            "(or launch with python run_with_pip.py)"
         )
         st.caption(str(exc))
         return None
@@ -75,11 +77,27 @@ def decision_banner(summary: dict) -> None:
 def spending_sensitivity(summary: dict, tables: dict[str, pd.DataFrame], strategy: str) -> None:
     selected = tables["spending_summary"].query("strategy == @strategy").copy()
     example = selected.loc[selected.inflation_assumption == 0.02]
-    st.subheader("Hypothetical spending sensitivity")
+    observed = tables["observed_real"].set_index("strategy").loc[strategy]
+    st.subheader("Purchasing power and spending")
     with st.container(border=True):
+        st.markdown("**Observed purchasing power · before withdrawals**")
+        with st.container(horizontal=True):
+            st.metric(
+                "Observed real growth / year", f"{observed.annualised_real_growth:.2%}", border=True
+            )
+            st.metric(
+                "3% objective in observed period",
+                "Met" if observed.objective_met_in_observed_period else "Below",
+                border=True,
+            )
+            st.metric("Ending real wealth", f"${observed.ending_real_wealth:,.0f}", border=True)
+        st.caption(
+            f"{observed.start_date} to {observed.end_date}; costed NAV, no withdrawals. "
+            f"Monthly FRED {summary['cpi_source']['series']} from {observed.cpi_start_month} "
+            f"to {observed.cpi_end_month}. This observed period is shorter than the proposed ten years."
+        )
         st.markdown("**Illustrative annual spending · 2% assumed inflation**")
         with st.container(horizontal=True):
-            st.metric("Observed real-growth objective", "Not established", border=True)
             if not example.empty:
                 row = example.iloc[0]
                 st.metric(
@@ -94,7 +112,7 @@ def spending_sensitivity(summary: dict, tables: dict[str, pd.DataFrame], strateg
                 )
         st.caption(
             "Spending figures follow the selected portfolio. The inflation rate is an assumption, "
-            "not observed CPI; actual real-growth attainment remains unavailable."
+            "not observed CPI. Actual client spending and ten-year sustainability remain unknown."
         )
         with st.expander("See all spending scenarios, assumptions and decisions required"):
             st.write(summary["inflation_limitation"])
@@ -130,6 +148,12 @@ def spending_sensitivity(summary: dict, tables: dict[str, pd.DataFrame], strateg
             st.write(summary["funding_rule"])
             for condition in summary["conditions"]:
                 st.write("- " + condition)
+            st.download_button(
+                "Download observed real-growth evidence",
+                tables["observed_real"].to_csv(index=False),
+                file_name="observed_real_growth.csv",
+                mime="text/csv",
+            )
             st.download_button(
                 "Download spending comparison",
                 selected.to_csv(index=False),

@@ -184,6 +184,7 @@ def write_submission(root: Path, snapshot: Path) -> Path:
     hypothetical = bundle.tables["stress"]["hypothetical_summary"]
     tests = evidence["backtest_tests"]
     spend = evidence["spending_summary"]
+    observed_real = evidence["observed_real"].set_index("strategy")
     meta = bundle.metadata
     policy = meta["portfolio"]["config"]
     riskmeta = meta["risk"]
@@ -226,7 +227,7 @@ def write_submission(root: Path, snapshot: Path) -> Path:
         "One-day risk estimates below their separate review level do not resolve that conflict. "
         "Coverage failures and exception clustering also challenge confidence in the models."
     )
-    report.p(decision["inflation_limitation"], "The unresolved client question")
+    report.p(decision["inflation_limitation"], "Purchasing power and remaining limits")
     report.p(
         "This draft is ready for independent team review, not unconditional implementation. "
         "The committee must decide whether to change the objective, seek a different portfolio "
@@ -592,6 +593,46 @@ def write_submission(root: Path, snapshot: Path) -> Path:
         "These local sensitivities do not prove that a new allocation would survive every crisis."
     )
 
+    report.page("Observed purchasing power", context)
+    report.p(
+        "The original proposed 3% real-growth objective is before withdrawals. This is a "
+        "retrospective measurement of the same costed monthly portfolio paths, from "
+        f"{decision['observed_real_start']} through {decision['observed_real_end']}. "
+        "CPIAUCSL is monthly: January 2022 and September 2026 price levels are paired with "
+        "the first funding session and the final September trading session. October 2026 "
+        "portfolio returns are excluded because October CPI was not yet released by the risk as-of date."
+    )
+    report.table(
+        ["Candidate", "Costed nominal", "Observed real", "Real growth / yr", "3% test"],
+        [
+            [
+                SHORT[s],
+                usd(r.ending_nominal_wealth),
+                usd(r.ending_real_wealth),
+                pct(r.annualised_real_growth),
+                "Met" if r.objective_met_in_observed_period else "Below",
+            ]
+            for s, r in observed_real.iterrows()
+        ],
+    )
+    report.p(
+        "Observed price-level factor: September 2026 CPI 336.298 / January 2022 CPI "
+        "282.543 = 1.190254. Real wealth equals nominal NAV divided by that factor; "
+        "annualisation uses 365.25 / elapsed calendar days. All three candidates fall below "
+        "3% in this observed period. That period is under five years, so it does not establish "
+        "success or failure over the proposed ten-year horizon."
+    )
+    report.p(
+        "CPI source: FRED CPIAUCSL, retrieved 28 October 2026. FRED lists September 2026 "
+        "as released on 14 October 2026. October 2025 CPI is missing in the source during "
+        "the federal shutdown; no interpolation was made. Endpoint values are observed. "
+        "Monthly CPI averages approximate purchasing power at daily NAV dates, and FRED may revise history."
+    )
+    report.p(
+        "These figures contain no withdrawals. The next page keeps the separately labelled "
+        "0%, 2% and 4% assumed-inflation spending scenarios; those are not observed CPI outcomes."
+    )
+
     report.page("Spending: a conditional sensitivity", context)
     report.p(decision["inflation_limitation"])
     report.p(decision["payment_rule"])
@@ -711,9 +752,9 @@ def write_submission(root: Path, snapshot: Path) -> Path:
     )
     report.p(
         "Data references: Yahoo Finance via yfinance; FRED DGS3MO "
-        "(https://fred.stlouisfed.org/series/DGS3MO). Statistical definitions and source "
-        "references are documented in the risk, EVT and backtesting methodology files. "
-        "No CPI series was acquired or inferred for this submission."
+        "(https://fred.stlouisfed.org/series/DGS3MO); separate frozen FRED CPIAUCSL "
+        "(https://fred.stlouisfed.org/series/CPIAUCSL). Statistical definitions and source "
+        "references are documented in the risk, EVT, backtesting and decision methodology files."
     )
     report.p(
         "Final submission deadline supplied by the team: 31 October 2026. Exact cutoff "
@@ -778,6 +819,14 @@ def write_submission(root: Path, snapshot: Path) -> Path:
                 "baseline exceptions cluster. EVT boundary VaR is empirical, with modelled ES. "
                 "No model is certified safe."
             )
+            doc.p(
+                "Observed CPI real growth before withdrawals, 2022-01-03 to 2026-09-30: "
+                + ", ".join(
+                    f"{SHORT[s]} {pct(observed_real.loc[s, 'annualised_real_growth'])}"
+                    for s in STRATEGIES
+                )
+                + ". All are below the proposed 3% annual target in this shorter historical period."
+            )
             two = spend[
                 (spend.strategy == "minimum_volatility") & (spend.inflation_assumption == 0.02)
             ].iloc[0]
@@ -785,8 +834,8 @@ def write_submission(root: Path, snapshot: Path) -> Path:
                 f"Illustrative 2% inflation + annual spending: minimum-volatility ending nominal "
                 f"wealth {usd(two.ending_nominal_wealth)}, scenario-real wealth "
                 f"{usd(two.ending_scenario_real_wealth)}; real remaining-capital growth "
-                f"{pct(two.annualised_real_remaining_capital_growth)} per year. Actual CPI and "
-                "client spending are missing; no actual real-growth attainment is claimed."
+                f"{pct(two.annualised_real_remaining_capital_growth)} per year. This spending "
+                "result uses assumed inflation; the client's actual spending is unknown."
             )
         else:
             doc.p(
@@ -796,8 +845,8 @@ def write_submission(root: Path, snapshot: Path) -> Path:
                 "The higher realised return of maximum Sharpe does not override the mandate."
             )
             doc.p(
-                "Why defer: crisis review breaches, model coverage/clustering failures, missing "
-                "inflation and actual spending information prevent an unconditional suitability "
+                "Why defer: crisis review breaches, model coverage/clustering failures, observed "
+                "real growth below 3% in the shorter measured period, and unknown client spending prevent an unconditional suitability "
                 "claim. Current daily ES below its separate trigger does not cancel crisis losses. "
                 "2008 is a retrospective replay using later-fitted weights."
             )

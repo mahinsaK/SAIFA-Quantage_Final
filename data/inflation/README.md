@@ -1,0 +1,9 @@
+# Frozen CPI overlay
+
+`CPIAUCSL.csv` contains the 57 monthly rows from January 2022 through September 2026 downloaded on 28 October 2026 from [FRED CPIAUCSL](https://fred.stlouisfed.org/series/CPIAUCSL). The series is the seasonally adjusted all-items CPI for US urban consumers, originally from the U.S. Bureau of Labor Statistics. Its raw FRED CSV endpoint, retrieval timestamp, original download hash, selected-file hash, and source limitations are recorded in `manifest.json`. The app reads this committed local copy and does not contact FRED at launch.
+
+This overlay leaves the original seven-ETF/DGS3MO market snapshot unchanged. The September 2026 CPI observation was listed by FRED as released on 14 October 2026, before the portfolio risk as-of date of 22 October 2026. October 2026 CPI was not yet available, so the observed real-growth comparison stops at the final September trading session. It pairs January 2022 CPI with the first evaluation session. Monthly CPI averages approximate purchasing power on those daily portfolio dates; this is retrospective measurement, not a point-in-time investment signal or future forecast. FRED history can be revised.
+
+**October 2025 is blank in FRED's series.** The [BLS shutdown note](https://www.bls.gov/cpi/additional-resources/2025-federal-government-shutdown-impact-cpi.htm) reports that CPI survey data were not collected then. The file preserves the missing value; no interpolation or substitute series is used. This endpoint-only calculation uses the observed January 2022 and September 2026 values, which are present. It does not claim a fully observed month-by-month real NAV path through the missing month.
+
+Source values in the file are CPI index levels, not percentages. The observed-period deflator is September 2026 index / January 2022 index. The separate 0%, 2%, and 4% spending scenarios remain explicitly hypothetical because the university's actual withdrawal schedule is unknown.

@@ -65,7 +65,7 @@ def test_decision_extension_refuses_invalid_evidence(prepared, failure):
         load_decision(root, bundle)
 
 
-def test_decision_ui_follows_portfolio_and_preserves_missing_cpi(monkeypatch):
+def test_decision_ui_follows_portfolio_and_shows_observed_cpi_growth(monkeypatch):
     summary = {
         "decision": DECISION,
         "inflation_limitation": CPI_LIMITATION,
@@ -74,6 +74,7 @@ def test_decision_ui_follows_portfolio_and_preserves_missing_cpi(monkeypatch):
         "objective_note": "Stricter after-spending test",
         "horizon_note": "Under five years",
         "funding_rule": "Proportional sales",
+        "cpi_source": {"series": "CPIAUCSL"},
     }
     table = pd.DataFrame(
         [
@@ -92,7 +93,30 @@ def test_decision_ui_follows_portfolio_and_preserves_missing_cpi(monkeypatch):
     )
     monkeypatch.setattr(
         "saifa.dashboard.decision.load_decision",
-        lambda *args: (summary, {"spending_summary": table}),
+        lambda *args: (
+            summary,
+            {
+                "spending_summary": table,
+                "observed_real": pd.DataFrame(
+                    [
+                        {
+                            "strategy": strategy,
+                            "start_date": "2022-01-03",
+                            "end_date": "2026-09-30",
+                            "cpi_start_month": "2022-01-01",
+                            "cpi_end_month": "2026-09-01",
+                            "annualised_real_growth": growth,
+                            "objective_met_in_observed_period": False,
+                            "ending_real_wealth": wealth,
+                        }
+                        for strategy, growth, wealth in [
+                            ("baseline_40_60", 0.0068, 10325),
+                            ("minimum_volatility", 0.0254, 11263),
+                        ]
+                    ]
+                ),
+            },
+        ),
     )
 
     def script():
@@ -110,10 +134,12 @@ def test_decision_ui_follows_portfolio_and_preserves_missing_cpi(monkeypatch):
 
     app = AppTest.from_function(script).run()
     assert not app.exception
-    assert app.metric[0].value == "Not established"
+    assert app.metric[0].value == "0.68%"
+    assert app.metric[1].value == "Below"
     assert app.dataframe[0].value["Ending nominal wealth (USD)"].iloc[0] == 1000
     app.selectbox[0].select("minimum_volatility").run()
     assert not app.exception
+    assert app.metric[0].value == "2.54%"
     assert app.dataframe[0].value["Ending nominal wealth (USD)"].iloc[0] == 1200
     assert "Defer implementation" in app.warning[0].value
 

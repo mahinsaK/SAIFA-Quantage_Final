@@ -30,7 +30,7 @@ Run `uv run --locked python commands/run_submission.py` and require complete man
 | Same scenario: real remaining-capital growth | 1.564354% per year; below the stricter 3% after-spending test |
 | Same scenario: total cash paid / withdrawal-sale fees | USD 1,236,525.55 / 1,237.76 |
 | Payment dates | 2023-01-03; 2024-01-03; 2025-01-03; 2026-01-05 |
-| Actual CPI-based real objective attainment | Unavailable, because no CPI series is in the frozen snapshot |
+| Observed CPI real-growth objective, before withdrawals | See the [new CPI worksheet](04-observed-cpi-review.md): 0.6782% / 2.5418% / 2.7133% per year through 2026-09-30, each below 3% in this shorter historical period. Independent human calculation remains pending. |
 | Baseline Historical 99% evaluation exceptions / expected | 11 / 12.06; Kupiec p ~0.7555; independence p ~0.002892 |
 | Minimum-volatility 2022 crisis drawdown | 17.4762%, above the proposed 15% review level |
 
@@ -45,7 +45,7 @@ Answer independently:
 - Why can a smaller one-day ES coexist with a crisis drawdown above the review level?
 - Why is minimum volatility only a conditional discussion candidate rather than an approved allocation?
 - Why do withdrawals require selling more than the cash payment when fees apply?
-- What does the lack of CPI and actual spending information prevent us from claiming?
+- What can the observed CPI comparison show, and why do missing actual spending details and a shorter historical period still prevent a ten-year suitability claim?
 - Do the hypothetical inflation assumptions and payment timing suit the question we want to explore?
 - How should the committee respond to the drawdown and severe-shock breaches? Do not change limits solely to make these results pass.
 - Does the team accept, revise or reject the AI-assisted draft recommendation, and why?

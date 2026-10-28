@@ -806,8 +806,9 @@ def assumptions_page(bundle: DashboardBundle):
         "and the committee has not approved an allocation."
     )
     st.caption(
-        "Observed real growth and spending suitability cannot be established: the frozen snapshot "
-        "has no CPI series or actual client spending schedule."
+        "The original market snapshot has no CPI. A separate frozen CPI overlay supports the "
+        "observed real-growth comparison through September 2026 on the Portfolio page; actual "
+        "client spending and ten-year suitability remain unknown."
     )
     with st.expander("Data sources and reproducibility"):
         st.write(
@@ -855,8 +856,10 @@ def assumptions_page(bundle: DashboardBundle):
             "The proposed ten-year horizon and 3% real-growth objective are not forecasts. Adjusted "
             "total returns reinvest distributions and are not all spendable income. Actual spending, "
             "taxes and management fees are unknown. The spending extension assumes 0%, 2% or 4% "
-            "inflation with annual withdrawals. No CPI is in the frozen data, so observed purchasing "
-            "power and spending sustainability are unestablished. Market impact, bid–ask changes, "
+            "inflation with annual withdrawals. A separate frozen FRED CPI series measures historical "
+            "real growth through September 2026; it cannot prove ten-year spending sustainability. "
+            "The October 2025 CPI observation is missing in the source and is not filled. "
+            "Market impact, bid–ask changes, "
             "forced sales, fractional-share restrictions and intra-day liquidity are unmodelled."
         )
     with st.expander("Human review and build provenance"):

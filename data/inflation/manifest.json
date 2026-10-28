@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "series": "CPIAUCSL",
+  "source_url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPIAUCSL",
+  "source_page": "https://fred.stlouisfed.org/series/CPIAUCSL",
+  "provider": "Federal Reserve Bank of St. Louis (FRED); source U.S. Bureau of Labor Statistics",
+  "retrieved_at_utc": "2026-10-28T06:41:13.750737+00:00",
+  "full_download_sha256": "8556b710094027fa4724641d48be620cc37c04abfa15a0c496378cf1146c1549",
+  "observation_frequency": "monthly",
+  "seasonal_adjustment": "seasonally adjusted",
+  "first_observation": "2022-01-01",
+  "last_observation": "2026-09-01",
+  "latest_observation_release_date": "2026-10-14",
+  "portfolio_as_of_date": "2026-10-22",
+  "observations": 57,
+  "file": "CPIAUCSL.csv",
+  "file_sha256": "3baea6728937e971e2304c3a5e67e647a3906ada476b18f9fd7364ccbb28a9bd",
+  "limitations": [
+    "Monthly price-level averages approximate purchasing power at daily portfolio dates.",
+    "FRED data may be revised; this download is not a full point-in-time vintage archive.",
+    "September 2026 is the latest released CPI observation available by the portfolio as-of date.",
+    "October 2025 CPI is missing; this endpoint-only historical growth calculation does not interpolate it."
+  ],
+  "missing_observations": [
+    "2025-10-01"
+  ],
+  "missing_observation_note": "FRED CPIAUCSL is blank for October 2025; BLS reports no CPI survey data collection that month during the federal shutdown. No interpolation is used.",
+  "missing_observation_source": "https://www.bls.gov/cpi/additional-resources/2025-federal-government-shutdown-impact-cpi.htm"
+}
