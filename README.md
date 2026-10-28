@@ -18,6 +18,23 @@ From a fresh checkout, with `uv` installed, use one command:
 uv run --locked python commands/run_judge_app.py
 ```
 
+If you have **Python 3.11–3.13 and pip but no uv**, run this one command from the project root instead:
+
+```bash
+python run_with_pip.py
+```
+
+If `python` does not select a supported version, use `python3.11 run_with_pip.py` on macOS/Linux or `py -3.11 run_with_pip.py` on Windows. The script creates an isolated `.venv-pip` environment, installs the application using pinned versions from `requirements-pip.txt`, and launches the same judge app. It reuses the environment on later runs. The first installation needs internet access for Python packages; the app's preparation uses the included market snapshot and does not download market data.
+
+If you already manage your own Python virtual environment, the equivalent manual pip steps are:
+
+```bash
+python -m pip install -r requirements-pip.txt -e .
+python commands/run_judge_app.py
+```
+
+The pip requirements are exported from `uv.lock`. After changing dependencies, regenerate them with `uv export --locked --no-dev --no-emit-project --no-hashes --format requirements.txt -o requirements-pip.txt`.
+
 Open the local URL printed by Streamlit. The launcher verifies existing results and prepares anything missing from the included frozen snapshot before opening the app. The first run can take several minutes because it builds all 90/95/99% forecasts, committee evidence and PDFs. Later runs reuse verified results. Dependency installation may require internet access; preparation does **not** download market data.
 
 For separate preparation and launch steps while developing:

@@ -1,5 +1,7 @@
 # Streamlit app milestone
 
+**28 October pip launch update:** `run_with_pip.py` now creates `.venv-pip`, installs `requirements-pip.txt` exported from `uv.lock`, and calls the existing offline judge launcher. On Python 3.11, a real first-run pip installation and app startup succeeded; `pip check` found no broken requirements and the local health endpoint returned `ok`. The second run reused the environment and launched without reinstalling. Two focused launcher tests and the 214-test full suite passed; Ruff passed. The default host Python 3.14 correctly printed the supported-version error. A source-only clean-copy pip run and Windows launch were not performed here.
+
 **27 October amendment:** Earlier statements below that equality at the EVT threshold is unsupported describe the previous implementation. The [boundary update](../06-evt/04-boundary-update.md) supports equality, preserves below-boundary/failed cases, and records the reviewer-reported completion of the new boundary worksheet on 27 October 2026. Earlier signed records are unchanged.
 
 25 October 2026: implementation for U01–U07 is complete, with the explicit 90% EVT unsupported state permitted by the task. Final human UI review and the wider competition deliverables remain open.
