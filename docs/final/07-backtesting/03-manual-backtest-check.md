@@ -1,6 +1,6 @@
 # Manual walk-forward backtest check
 
-Status: **Parts A–D calculations and interpretation recorded; Part E forecast, output and chart inspection pending**. Model calibration and final portfolio suitability remain under review.
+Status: **Parts A–D calculations and interpretation recorded; Part E selected forecast, evaluation summary and latest Basel rows checked by the reviewer; chart and warning review pending**. Model calibration and final portfolio suitability remain under review.
 
 ## A. Timing, units and exceptions
 
@@ -93,7 +93,7 @@ Open the output folder printed by the runner. The current default is `output/bac
   4 = Green, 5–9 = Yellow, 10+ = Red. Incomplete windows and insufficient transitions are unavailable.
 
 - Part E exact snapshot/run folder and selected forecast row:
-  Default: output/backtest/20261023T102523Z-0d40a885/93efaf13a75a/. Actual folder and selected row pending verification.
+  output/backtest/20261023T102523Z-0d40a885/93efaf13a75a/. On 29 Oct 2026, the reviewer reported that the selected baseline Historical 99% evaluation row for 2022-01-03 matched: as-of 2021-12-31, 1,000 observations, VaR USD 145,367.77, realised loss USD 17,863.01 and exception 0. The reviewer also reported that the evaluation summary matched 11 exceptions in 1,206 sessions, Kupiec p 0.7555 and independence p 0.002892; the latest 250-session Basel rows matched baseline 1/green and minimum volatility 6/yellow. This records the reported row comparison, not full Part E sign-off.
 
 - Commands actually run and observed results:
 Forecast sessions: 1/1963
@@ -127,10 +127,10 @@ Read backtest_report.md and docs/final/07-backtesting/03-manual-backtest-check.m
 All checks passed!
 
 - Plots/table rows inspected:
-  Pending actual inspection of forecasts, test summaries and evaluation charts.
+  Reviewer reported matching selected forecast, test-summary and latest-Basel rows on 29 Oct 2026. Evaluation chart and warning-column inspection still need explicit confirmation.
 
 - Discrepancies and corrections:
-  No arithmetic discrepancies identified in Parts A–D. Part E remains unverified.
+  No arithmetic discrepancies identified in Parts A–D or the reviewer-confirmed Part E rows. The chart and warning review remains open.
 
 - In your own words:
 Why can correct overall exception frequency coexist with dangerous clustering?
