@@ -205,7 +205,11 @@ Arithmetic historical means are uncertain forecasts, so neither optimized candid
     except Exception as exc:
         write_json(
             output / "status.json",
-            {"snapshot_id": snapshot.name, "status": "failed", "error": f"{type(exc).__name__}: {exc}"},
+            {
+                "snapshot_id": snapshot.name,
+                "status": "failed",
+                "error": f"{type(exc).__name__}: {exc}",
+            },
         )
         write_output_manifest(output, snapshot.name)
         raise

@@ -15,9 +15,7 @@ from saifa.models.performance import performance_ratios
 
 
 def synthetic_inputs() -> tuple[pd.Series, pd.DataFrame]:
-    means = pd.Series(
-        [0.08, 0.07, 0.09, 0.035, 0.045, 0.075, 0.10], index=UNIVERSE
-    )
+    means = pd.Series([0.08, 0.07, 0.09, 0.035, 0.045, 0.075, 0.10], index=UNIVERSE)
     volatilities = np.array([0.16, 0.18, 0.22, 0.05, 0.12, 0.21, 0.23])
     covariance = pd.DataFrame(np.diag(volatilities**2), index=UNIVERSE, columns=UNIVERSE)
     return means, covariance

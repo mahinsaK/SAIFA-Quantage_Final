@@ -37,7 +37,9 @@ def performance_ratios(
         if market_variance > 0
         else np.nan
     )
-    alpha_daily = float(excess.mean() - beta * market_excess.mean()) if np.isfinite(beta) else np.nan
+    alpha_daily = (
+        float(excess.mean() - beta * market_excess.mean()) if np.isfinite(beta) else np.nan
+    )
     active_risk = float(benchmark_excess.std(ddof=1) * np.sqrt(annual_trading_days))
     wealth = (1 + frame.portfolio).cumprod()
     maximum_drawdown = float((wealth / wealth.cummax() - 1).min())
