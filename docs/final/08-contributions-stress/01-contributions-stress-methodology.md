@@ -42,7 +42,7 @@ Requested periods are calendar 2008, March 2020 and calendar 2022 (end dates exc
 
 Each replay starts at USD 10m on the close immediately preceding its first return. Buy-and-hold asset values compound separately, with portfolio weights drifting. No rebalancing, fees, withdrawals or additional dividend cash flows are added to adjusted-price returns. Initial capital is included in the drawdown path. Terminal loss, worst daily loss, worst loss from initial capital and maximum peak-to-trough drawdown are distinct quantities. Drawdown USD uses the actual peak NAV associated with maximum percentage drawdown, not necessarily USD 10m. Asset terminal-loss components reconcile to terminal portfolio loss; they are not drawdown contributions.
 
-These are retrospective exposure replays, not historical investment track records. In particular, the 2018-fitted allocations were unavailable in 2008; `weights_available_at_start` makes this explicit. The 2022 replay also describes a different convention from the monthly-rebalanced performance backtest after costs.
+These are retrospective exposure replays using historical ETF returns, not investment track records. The baseline 40/60 target is preset; only the minimum-volatility and maximum-Sharpe allocations were fitted through 2018 and therefore unavailable in 2008. The current `weights_available_at_start` field compares the shared 2018 fitting cutoff with the replay start for every portfolio; its `False` value for the preset baseline must not be read as evidence that 40/60 was estimated from 2018 data. The 2022 replay also describes a different convention from the monthly-rebalanced performance backtest after costs.
 
 ## Hypothetical scenario and review levels
 

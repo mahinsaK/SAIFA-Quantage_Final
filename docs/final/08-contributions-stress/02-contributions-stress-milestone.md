@@ -42,7 +42,7 @@ Maximum drawdown in the selected buy-and-hold replay windows:
 | Minimum volatility | 16.319% | 11.750% | 17.476% |
 | Maximum Sharpe | 16.354% | 11.717% | 17.683% |
 
-**All three exceed the proposed 15% review level in 2008 and 2022.** Lower losses than the baseline do not establish that the candidates meet the mandate. Calendar windows are not full-crisis peak-to-trough histories. All 2008 replays use weights estimated later and cannot be presented as an implementable 2008 strategy.
+**All three exceed the proposed 15% review level in 2008 and 2022.** Lower losses than the baseline do not establish that the candidates meet the mandate. Calendar windows are not full-crisis peak-to-trough histories. The 2008 replay uses actual 2008 returns: the baseline 40/60 allocation is preset, while the two optimised allocations were estimated later. None is evidence of an actual 2008 investment track record.
 
 Base hypothetical one-session losses are 8.400% (USD 840,000) for baseline, 7.412% (USD 741,181.57) for minimum volatility and 7.572% (USD 757,191.49) for maximum Sharpe. At 1.5-times severity, all exceed the proposed 10% scenario-loss review level. Severity is an assumption, not an estimated probability.
 

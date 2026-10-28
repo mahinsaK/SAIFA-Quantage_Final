@@ -115,7 +115,7 @@ def render_stress_report(frames: dict[str, pd.DataFrame], context: dict, charts:
         "",
         "## Historical crisis replays",
         "",
-        "Every replay starts with the same USD NAV immediately before its first return. Units are held fixed; asset weights drift. There are no trades, trading costs or withdrawals. Missing calendar sessions withhold the entire replay. The 2008 replay uses allocations fitted later and is explicitly retrospective, not evidence of an implementable 2008 investment strategy. All replays are scenario comparisons, even when weights were already estimable.",
+        "Every replay starts with the same USD NAV immediately before its first return. Units are held fixed; asset weights drift. There are no trades, trading costs or withdrawals. Missing calendar sessions withhold the entire replay. The 2008 replay uses actual 2008 ETF returns. Its 40/60 baseline allocation is preset; the two optimised allocations were fitted later. None is an actual 2008 investment track record. All replays are scenario comparisons, even when weights were already estimable.",
         "Drawdown is a positive loss fraction of the relevant running peak. Its USD amount is peak NAV minus trough NAV at the date of the maximum percentage drawdown; it is not necessarily 10m times that percentage. Terminal gain/loss and drawdown are different. The periods have different lengths and cannot be compared directly to one-day VaR/ES as if horizons matched.",
         "",
         "| Scenario | Portfolio | Sessions observed / required | Terminal loss USD | Maximum drawdown | Drawdown USD | > review level | Status |",

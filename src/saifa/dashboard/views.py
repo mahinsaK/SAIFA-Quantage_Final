@@ -877,7 +877,7 @@ def stress_page(bundle: DashboardBundle, strategy: str, confidence: float, metho
     )
     if scenario == "2008_GFC":
         st.warning(
-            "2008 is a retrospective replay: the candidate weights were fitted through 2018 and were unavailable in 2008. This is not a historical investment track record."
+            "This replay uses actual 2008 ETF returns. The 40/60 baseline is a preset allocation; minimum-volatility and maximum-Sharpe weights were fitted using data through 2018, so those two allocations were unavailable in 2008. None of these fixed-holdings replays is an actual investment track record."
         )
     if row.status != "ok":
         st.warning(f"Replay unavailable: {row.warning}")
@@ -956,7 +956,7 @@ def stress_page(bundle: DashboardBundle, strategy: str, confidence: float, metho
         )
         explanation = (
             f"Dashed line: proposed {review_level:.0f}% drawdown review level, not client-approved. "
-            "2008 is a retrospective replay with allocations fitted later."
+            "2008 uses historical ETF returns; the two optimised allocations were fitted later."
         )
         if omitted:
             explanation += f" {omitted} unavailable replay(s) omitted from bars; reasons remain in the table below."

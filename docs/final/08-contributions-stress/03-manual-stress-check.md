@@ -62,7 +62,7 @@ Use the output folder printed by the runner. The default folder is `output/stres
 2. In `contribution_summary.csv`, expect 18 rows; `asset_contributions.csv` has 126. Choose one portfolio/model/measure/confidence, sum its seven component fractions/USD amounts and match the total. Default baseline 99% Normal VaR is approximately USD 108,131.90; Normal ES USD 124,487.34; Historical ES USD 153,489.10. Tolerance USD 0.05 for these rounded references.
 3. Read negative/zero components and the historical tail-size warning. Explain why standalone asset ES would answer a different question.
 4. In `sizing_checks.csv`, choose a feasible 1 percentage point transfer. Confirm donor decreases, receiver increases, sum remains one, policy is respected, and `after - before = delta`. Compare exact and linear deltas. An infeasible row has a reason and no repriced result; do not select it as a recommendation.
-5. In `historical_summary.csv`, confirm nine available rows: three portfolios × three episodes. Per-portfolio expected sessions are 253 (2008), 22 (March 2020), 251 (2022). All 2008 rows must flag `weights_available_at_start=False`.
+5. In `historical_summary.csv`, confirm nine available rows: three portfolios × three episodes. Per-portfolio expected sessions are 253 (2008), 22 (March 2020), 251 (2022). All 2008 rows currently flag `weights_available_at_start=False` because the field uses the shared 2018 fitting cutoff. The baseline 40/60 weights are preset, not estimated from 2018 data; the flag is a limitation of this metadata field for that row.
 6. Inspect one NAV/drawdown chart and its CSV peak/trough. For baseline 2022, terminal loss is approximately USD 1,508,312.92 and maximum drawdown 18.947%. Explain the different denominators. All three allocations exceed the proposed 15% review level in 2008 and 2022.
 7. In `hypothetical_summary.csv`, base severity loss for baseline is 8.4% / USD 840,000. Its 1.5-times loss is 12.6% / USD 1,260,000 and exceeds the proposed 10% level. Sum the seven asset shock-loss components to verify each selected total.
 8. Read `scenario_shocks.csv` and the narrative in `stress_report.md`. Decide whether the joint shock is coherent for your team's interpretation. The displayed development minima are separate historical days, not proof of the hypothetical joint event's likelihood. Approve or revise the assumptions explicitly; rerun and record any change.
@@ -79,7 +79,7 @@ Use the output folder printed by the runner. The default folder is `output/stres
 - Part C terminal loss versus drawdown calculations: Verified as shown above.
 - Part D signed shock contributions: Verified as shown above.
 
-- Part E exact run folder, selected rows and charts inspected:
+- Part E exact run folder, selected rows and charts inspected: Baseline `2022_rate_shock` replay checked in the Stress analysis page against `historical_summary.csv` on 29 Oct 2026. The reviewer confirmed 251 sessions, USD 1,508,312.92 terminal loss, 18.947% maximum drawdown, an October 2022 trough, and a breach of the proposed 15% drawdown review level. Other Part E checks and team scenario review remain pending.
 - Commands actually run and observed results:
 - Discrepancies and corrections (write “None found” only if true): None found
 

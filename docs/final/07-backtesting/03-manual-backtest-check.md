@@ -1,6 +1,6 @@
 # Manual walk-forward backtest check
 
-Status: **Parts A–D calculations and interpretation recorded; Part E selected rows and evaluation chart checked by the reviewer; warning review and final Part E sign-off pending**. Model calibration and final portfolio suitability remain under review.
+Status: **Parts A–E calculation, selected-output and interpretation review signed off by the reviewer**. This confirms the reviewed evidence and its warnings; model calibration and final portfolio suitability remain under review.
 
 ## A. Timing, units and exceptions
 
@@ -93,7 +93,7 @@ Open the output folder printed by the runner. The current default is `output/bac
   4 = Green, 5–9 = Yellow, 10+ = Red. Incomplete windows and insufficient transitions are unavailable.
 
 - Part E exact snapshot/run folder and selected forecast row:
-  output/backtest/20261023T102523Z-0d40a885/93efaf13a75a/. On 29 Oct 2026, the reviewer reported that the selected baseline Historical 99% evaluation row for 2022-01-03 matched: as-of 2021-12-31, 1,000 observations, VaR USD 145,367.77, realised loss USD 17,863.01 and exception 0. The reviewer also reported that the evaluation summary matched 11 exceptions in 1,206 sessions, Kupiec p 0.7555 and independence p 0.002892; the latest 250-session Basel rows matched baseline 1/green and minimum volatility 6/yellow. This records the reported row comparison, not full Part E sign-off.
+  output/backtest/20261023T102523Z-0d40a885/93efaf13a75a/. On 29 Oct 2026, the reviewer reported that the selected baseline Historical 99% evaluation row for 2022-01-03 matched: as-of 2021-12-31, 1,000 observations, VaR USD 145,367.77, realised loss USD 17,863.01 and exception 0. The reviewer also reported that the evaluation summary matched 11 exceptions in 1,206 sessions, Kupiec p 0.7555 and independence p 0.002892; the latest 250-session Basel rows matched baseline 1/green and minimum volatility 6/yellow.
 
 - Commands actually run and observed results:
 Forecast sessions: 1/1963
@@ -127,10 +127,13 @@ Read backtest_report.md and docs/final/07-backtesting/03-manual-backtest-check.m
 All checks passed!
 
 - Plots/table rows inspected:
-  Reviewer reported matching selected forecast, test-summary and latest-Basel rows on 29 Oct 2026. The reviewer also confirmed that red exceptions appeared close together around June 2022 and April 2025 in the Backtesting evaluation chart. Warning-column inspection still needs explicit confirmation.
+  Reviewer reported matching selected forecast, test-summary and latest-Basel rows on 29 Oct 2026. The reviewer also confirmed that red exceptions appeared close together around June 2022 and April 2025 in the Backtesting evaluation chart. After an explanation, the reviewer explicitly confirmed understanding of both warning columns and signed off Part E in chat on 29 Oct 2026.
+
+- Additional assistant-run artifact checks (not independent human inspection):
+  The frozen rerun reported `complete`, 1,963 forecast sessions and 47,112 rows, split into 757 validation and 1,206 evaluation sessions, with zero unavailable forecasts in this run. `test_summary.csv` has 48 rows. `basel_rolling.csv` includes earlier yellow as well as green baseline Historical 99% evaluation windows; the latest green window is not the entire history.
 
 - Discrepancies and corrections:
-  No arithmetic discrepancies identified in Parts A–D or the reviewer-confirmed Part E rows and chart. The warning review remains open.
+  No arithmetic discrepancies identified in Parts A–D or the reviewer-confirmed Part E rows and chart. The review retains the coverage, clustering and sparse-transition warnings.
 
 - In your own words:
 Why can correct overall exception frequency coexist with dangerous clustering?
@@ -148,5 +151,6 @@ Tomorrow's return is unknown when today's forecast is made. Using it would give 
 I accept the checked calculations as a record of how the backtest behaved, but I do not treat any VaR model as proven safe. I will retain the coverage and clustering warnings, compare them with the historical and hypothetical stress losses, and discuss the drawdown review-level breaches before recommending an allocation.
 
 - Reviewer initials/sign-off (Parts A–D): KAD
+- Reviewer Part E sign-off: Mahinsa Kuruppu explicitly confirmed the warning interpretation and Part E sign-off in chat on 29 Oct 2026. Scope: reviewed calculations, selected output rows, evaluation chart and limitations; not VaR model approval or investment suitability.
 
 Keep human arithmetic completion separate from model approval. It is valid to confirm the implementation's calculations while recording concerns about the model's forecasting performance.

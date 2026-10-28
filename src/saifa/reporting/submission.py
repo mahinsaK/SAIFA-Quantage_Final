@@ -544,8 +544,9 @@ def write_submission(root: Path, snapshot: Path) -> Path:
     report.page("Stress losses and risk budgeting", context)
     report.p(
         "Historical crises replay USD 10m at fixed initial allocations with subsequent weight "
-        "drift, without rebalancing, costs or withdrawals. The 2008 replay is retrospective: "
-        "2018-fitted weights were unavailable then. It is not an investable historical track record."
+        "drift, without rebalancing, costs or withdrawals. The 2008 replay uses actual 2008 "
+        "ETF returns: the 40/60 baseline is preset, while the two optimised allocations were "
+        "fitted through 2018. None is an actual 2008 investment track record."
     )
     report.table(
         ["Candidate / crisis", "Terminal loss USD", "Peak drawdown", "15% review breach"],
@@ -848,7 +849,7 @@ def write_submission(root: Path, snapshot: Path) -> Path:
                 "Why defer: crisis review breaches, model coverage/clustering failures, observed "
                 "real growth below 3% in the shorter measured period, and unknown client spending prevent an unconditional suitability "
                 "claim. Current daily ES below its separate trigger does not cancel crisis losses. "
-                "2008 is a retrospective replay using later-fitted weights."
+                "2008 uses historical returns; only the two optimised weights were fitted later."
             )
             for condition in decision["conditions"]:
                 doc.p(condition)
