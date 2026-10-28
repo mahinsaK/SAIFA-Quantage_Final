@@ -456,7 +456,7 @@ def backtest_page(bundle: DashboardBundle, strategy: str, confidence: float, met
     presets = [
         ("Validation", first, validation_end),
         ("Evaluation", evaluation_start, last),
-        ("Full history", first, last),
+        ("All forecasts", first, last),
     ]
     st.subheader("Choose a backtest period")
     st.caption(

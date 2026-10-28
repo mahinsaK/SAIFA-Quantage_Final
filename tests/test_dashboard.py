@@ -667,7 +667,7 @@ def test_backtest_period_buttons_sync_with_sidebar_and_restore_custom_dates(prep
     assert app.metric[2].value != evaluation_sessions
     assert any(heading.value.startswith("Validation ·") for heading in app.subheader)
 
-    app.button(key="backtest_period_full_history").click().run()
+    app.button(key="backtest_period_all_forecasts").click().run()
     assert not app.exception
     assert app.date_input(key="dates").value == (
         pd.Timestamp("2021-11-01").date(),
