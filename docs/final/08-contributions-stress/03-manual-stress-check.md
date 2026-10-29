@@ -1,6 +1,6 @@
 # Manual contributions and stress check
 
-Status: **Parts A–D manually reviewed and signed off; Part E output inspection and team scenario review pending**. The final investment decision is also pending.
+Status: **Parts A–D manually reviewed and signed off; Part E baseline 2008, March 2020 and 2022 app checks reported complete; remaining output checks and team scenario review pending**. The final investment decision is also pending.
 
 ## A. Normal contributions
 
@@ -79,9 +79,12 @@ Use the output folder printed by the runner. The default folder is `output/stres
 - Part C terminal loss versus drawdown calculations: Verified as shown above.
 - Part D signed shock contributions: Verified as shown above.
 
-- Part E exact run folder, selected rows and charts inspected: Baseline `2022_rate_shock` replay checked in the Stress analysis page against `historical_summary.csv` on 29 Oct 2026. The reviewer confirmed 251 sessions, USD 1,508,312.92 terminal loss, 18.947% maximum drawdown, an October 2022 trough, and a breach of the proposed 15% drawdown review level. Other Part E checks and team scenario review remain pending.
+- Part E exact run folder, selected rows and charts inspected: Baseline `2022_rate_shock` replay checked in the Stress analysis page against `historical_summary.csv` on 29 Oct 2026. The reviewer confirmed 251 sessions, USD 1,508,312.92 terminal loss, 18.947% maximum drawdown, an October 2022 trough, and a breach of the proposed 15% drawdown review level.
+- Part E baseline `2008_GFC` app check: On 29 Oct 2026, the reviewer reported that all requested values and the retrospective warning matched the frozen CSV references: 253 sessions, USD 997,795.78 terminal loss, 21.74% maximum drawdown, USD 2,191,458.25 peak-to-trough loss, a proposed 15% review-level breach, and the displayed 19 May peak / 10 October trough. This is a reviewer-reported app check, not approval of the replay as a historical investment track record.
+- Part E baseline `March_2020` app check: On 29 Oct 2026, the reviewer reported that the requested 22/22 sessions, USD 531,091.29 terminal loss, 14.67% maximum drawdown, USD 1,504,677.35 peak-to-trough loss and absence of a proposed 15% breach warning all matched the frozen CSV references. The replay covers March only, not the whole of 2020.
+- Remaining Part E checks and team scenario approval: pending.
 - Commands actually run and observed results:
-- Discrepancies and corrections (write “None found” only if true): None found
+- Discrepancies and corrections (write “None found” only if true): None found in the completed checks; remaining Part E outputs and assumptions are not yet signed off.
 
 - In your own words: What is a marginal versus a component contribution?
   A marginal contribution measures how risk changes for a tiny increase in an asset's weight. A component contribution is the asset's weight multiplied by its marginal contribution, representing that asset's share of total portfolio risk.
