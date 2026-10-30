@@ -723,6 +723,7 @@ def test_portfolio_section_links_match_rendered_anchors_across_reruns(prepared):
         "portfolio-performance",
         "portfolio-drawdown",
         "portfolio-frontier",
+        "portfolio-annual",
         "portfolio-diversification",
         "portfolio-spending",
     ]
@@ -752,6 +753,7 @@ def test_portfolio_section_links_match_rendered_anchors_across_reruns(prepared):
         ("portfolio-performance", "Performance and holdings"),
         ("portfolio-drawdown", "Drawdown · 40/60 baseline"),
         ("portfolio-frontier", "Development-period efficient frontier"),
+        ("portfolio-annual", "Annual portfolio re-optimisation"),
         ("portfolio-diversification", "How do the seven ETFs move together?"),
         ("portfolio-spending", "Purchasing power and spending"),
     ]

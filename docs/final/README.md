@@ -14,6 +14,7 @@ Folders follow the order in which the project was built. Within each phase, `01`
 | 08 Contributions and stress | [Methodology](08-contributions-stress/01-contributions-stress-methodology.md) | [Milestone evidence](08-contributions-stress/02-contributions-stress-milestone.md) | [Manual stress check](08-contributions-stress/03-manual-stress-check.md) |
 | 09 Streamlit app | [App methodology](09-streamlit-app/01-app-methodology.md) | [App milestone](09-streamlit-app/02-app-milestone.md) | [Manual app check](09-streamlit-app/03-manual-app-check.md) |
 | 10 Investment decision | [Methodology](10-investment-decision/01-decision-methodology.md) | [Milestone evidence](10-investment-decision/02-decision-milestone.md) | [Manual team review](10-investment-decision/03-manual-decision-check.md) |
+| 11 Annual re-optimisation | [Methodology](11-annual-reoptimisation/01-adaptive-methodology.md) | [Milestone evidence](11-annual-reoptimisation/02-adaptive-milestone.md) | [Manual comparison check](11-annual-reoptimisation/03-manual-adaptive-check.md) |
 
 The worksheets distinguish completed human checks from pending ones. Generated numerical reports remain under `output/` and can be recreated with the runners in the [project README](../../README.md).
 
