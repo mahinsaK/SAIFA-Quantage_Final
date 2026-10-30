@@ -242,6 +242,9 @@ def prepared(tmp_path, forecasts):
                         total_usd=200000,
                         status="ok",
                         warning="Sample warning",
+                        effective_tail_observations=(1 - confidence) * 1000
+                        if method == "historical"
+                        else np.nan,
                     )
                 )
                 for ticker in UNIVERSE:
@@ -615,6 +618,21 @@ def test_app_controls_pages_and_unavailable_results(prepared, monkeypatch):
     assert app.metric[-1].value != base
     app.radio(key="page").set_value("Assumptions").run()
     assert not app.exception
+
+
+def test_stress_historical_es_sparse_tail_warning_is_visible(prepared):
+    root, _, _ = prepared
+    app = app_test(root)
+    app.radio(key="page").set_value("Stress analysis").run()
+    assert not app.exception
+    assert any("Only 10 effective worst-tail observations" in w.value for w in app.warning)
+
+    app.selectbox(key="confidence").set_value(0.95).run()
+    assert not any("effective worst-tail observations" in w.value for w in app.warning)
+
+    app.selectbox(key="confidence").set_value(0.99).run()
+    app.selectbox(key="method").set_value("parametric_normal").run()
+    assert not any("effective worst-tail observations" in w.value for w in app.warning)
 
 
 def test_backtest_chart_zooms_and_lists_exact_exception_dates(prepared):

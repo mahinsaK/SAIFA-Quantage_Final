@@ -61,7 +61,7 @@ def portfolio_page(bundle: DashboardBundle, strategy: str):
         f"monthly rebalancing · {config['transaction_cost_bps']:g} bps on gross buys + sells, including initial funding"
     )
     st.info(
-        "Weights were fitted through 2018; performance shown here is the 2022 onward evaluation. This period has already been viewed, so the evaluation is retrospective."
+        "The 40/60 baseline is preset; optimised candidate weights were fitted through 2018. Performance shown here is the 2022 onward evaluation. This period has already been viewed, so the evaluation is retrospective."
     )
     st.subheader("Selected portfolio at a glance", anchor="portfolio-summary")
     with st.container(horizontal=True):
@@ -743,6 +743,12 @@ def _risk_contributions(bundle: DashboardBundle, strategy: str, confidence: floa
     totals = totals.loc[(totals.strategy == strategy) & (totals.confidence == confidence)]
     if supported:
         totals = totals.loc[totals.method == method]
+    if method == "historical":
+        tail_counts = totals.effective_tail_observations.dropna()
+        if not tail_counts.empty and tail_counts.min() < 20:
+            st.warning(
+                f"Only {tail_counts.min():.0f} effective worst-tail observations support the selected {confidence:.0%} Historical ES. Its asset risk contributions can change substantially with the sample; this is not a safety limit."
+            )
     display_totals = totals[
         ["method", "measure", "total_percent", "total_usd", "status", "warning"]
     ].copy()
