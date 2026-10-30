@@ -60,7 +60,7 @@ The final-round app runs independently of the earlier screening project.
 
 The sidebar selects a portfolio, confidence level, VaR method and backtest dates. The five pages are **Portfolio**, **Risk comparison**, **Backtesting**, **Stress analysis** and **Assumptions**.
 
-- **Portfolio:** preset 40% SPY / 60% AGG baseline versus constrained minimum-volatility and maximum-Sharpe candidates, performance, drawdown, efficient frontier, ETF correlations and purchasing power.
+- **Portfolio:** preset 40% SPY / 60% AGG baseline versus constrained minimum-volatility and maximum-Sharpe candidates, performance, drawdown, efficient frontier, ETF correlations and purchasing power. **Annual strategy** adds a separately labelled annual re-optimisation experiment with past-only trailing-five-year fits, yearly target audits and costed validation/evaluation comparisons.
 - **Risk comparison:** one-session VaR and Expected Shortfall at a common USD 10 million reference NAV. Historical, Parametric Normal, Gaussian Monte Carlo and EVT estimates retain their model-specific limitations. The frozen sample supports 90% EVT at its empirical threshold boundary; unavailable cases show a reason.
 - **Backtesting:** dated forecasts, exceptions, Kupiec and Christoffersen checks, and eligible 99% Basel traffic lights. Changing the date range recalculates the displayed statistics.
 - **Stress analysis:** historical crisis replays, a proposed hypothetical joint shock, asset risk contributions and funded-transfer sensitivity.
@@ -69,6 +69,8 @@ The sidebar selects a portfolio, confidence level, VaR method and backtest dates
 The calculations use different horizons and accounting: portfolio performance is **monthly rebalanced after trading costs**; VaR/ES uses **one-session fixed target exposures**; crisis replays hold **fixed initial units without rebalancing, costs or withdrawals**. The two optimised allocations were fitted using data through 2018, so their 2008 replays are retrospective scenarios. The 40/60 baseline is preset.
 
 Some VaR backtests reject and all three portfolios exceed the **proposed** 15% crisis drawdown review level in 2008 and 2022. The committee recommendation is a research draft that defers implementation; it is not a client-approved allocation. The CPI comparison is observed **before withdrawals** through September 2026. Spending illustrations use separate, assumed inflation and payment rules.
+
+The annual experiment is retrospective because those historical periods were already viewed. It uses the same construction limits and trading costs, but changes both estimation history and update frequency. Existing risk, stress, spending and committee outputs still describe the original frozen candidates; they are not adaptive-strategy validation. See the [Phase 11 methodology and manual review](docs/final/11-annual-reoptimisation/01-adaptive-methodology.md).
 
 ## Submission files
 
@@ -93,6 +95,7 @@ The launch commands above are enough to view the app. Use the individual command
 |---|---|
 | Prepare only the verified app data bundle | `uv run --locked python commands/run_app_data.py` |
 | Regenerate committee evidence and PDFs after the bundle exists | `uv run --locked python commands/run_submission.py` |
+| Rebuild only the annual portfolio experiment after the bundle exists | `uv run --locked python commands/run_adaptive.py` |
 | Rebuild one research stage | See [command reference](commands/README.md) for data, portfolio, optimisation, risk, EVT, backtesting and stress runners. |
 | Run automated tests | `uv run --locked pytest -q` |
 | Check lint | `uv run --locked ruff check .` |

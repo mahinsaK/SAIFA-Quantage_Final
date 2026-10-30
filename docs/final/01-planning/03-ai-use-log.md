@@ -2,6 +2,8 @@
 
 This is an evolving record, not a claim of completed human validation.
 
+**30 October 2026 - annual portfolio extension:** OpenAI Codex assisted a retrospective annual trailing-five-year re-optimisation experiment, past-only training audits, monthly target restoration, internally funded trading costs, verified output loading, Portfolio controls and Phase 11 documentation. Tests cover future-data exclusion, failure handling and independent full-rotation cost identities; the latter exposed and corrected the shared solver's high-turnover root bracket. Existing frozen evaluation NAVs reproduced exactly. The experiment changes both estimation history and update cadence, and does not establish adaptive risk calibration or client suitability. See [methodology](../11-annual-reoptimisation/01-adaptive-methodology.md) and [verification evidence](../11-annual-reoptimisation/02-adaptive-milestone.md). Actual human calculation, interpretation, browser acceptance and investment decisions remain pending.
+
 | Date | Tool | Purpose | Material generated components | Automated validation | Human validation |
 |---|---|---|---|---|---|
 | 2026-10-23 | OpenAI Codex | Requirements analysis and draft policy | Checklist, proposed policy assumptions and planning README | Cross-check against provided brief; document link/ID checks | Pending team review; no client approval claimed |
