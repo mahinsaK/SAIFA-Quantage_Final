@@ -1,31 +1,26 @@
-# Project commands
+# Command reference
 
-These scripts are the command-line entry points for rebuilding the project's
-data products and analysis results. Run them from the repository root with
-`uv run --locked python`.
+To **run the app from a fresh clone**, follow the [root README quick start](../README.md#start-here-run-the-app-from-a-fresh-clone). The launcher prepares missing outputs automatically; the commands below are for individual rebuilds and research work.
 
-| Command | Purpose |
-| --- | --- |
-| `commands/run_data.py` | Acquire or rebuild a frozen market-data snapshot |
-| `commands/run_portfolio.py` | Build the baseline portfolio outputs |
-| `commands/run_optimisation.py` | Build constrained optimisation candidates |
-| `commands/run_risk.py` | Build risk comparison outputs |
-| `commands/run_evt.py` | Build extreme-value-theory outputs |
-| `commands/run_backtest.py` | Build rolling backtest outputs |
-| `commands/run_stress.py` | Build stress and contribution outputs |
-| `commands/run_app_data.py` | Prepare the verified data bundle used by Streamlit |
-
-For example:
+Run these commands from the repository root. With `uv`, prefix a Python script with `uv run --locked python`. For example:
 
 ```bash
-uv run --locked python commands/run_app_data.py
+uv run --locked python commands/run_judge_app.py
 ```
 
-The scripts resolve project data and cache paths from their location. Invoke
-them from the repository root so Python can resolve the local `src` package.
+| Script | Purpose |
+|---|---|
+| `run_judge_app.py` | Verify or build the frozen app bundle, committee evidence and PDFs; then launch Streamlit. This is the app quick-start command. |
+| `run_data.py` | Rebuild data preparation from the included frozen snapshot. A new market download requires the explicit `--download` option. |
+| `run_portfolio.py` | Rebuild the 40/60 baseline portfolio outputs. |
+| `run_optimisation.py` | Rebuild constrained Markowitz candidates and performance comparisons. |
+| `run_risk.py` | Rebuild one-session VaR/ES comparisons. |
+| `run_evt.py` | Rebuild EVT estimates and diagnostics. |
+| `run_backtest.py` | Rebuild walk-forward forecasts and coverage/independence checks. |
+| `run_stress.py` | Rebuild crisis replays, hypothetical shocks and risk contributions. |
+| `run_app_data.py` | Prepare only the verified app data bundle. |
+| `run_submission.py` | Prepare committee evidence and submission PDFs from an existing verified app bundle. |
 
-`uv run --locked python commands/run_submission.py` builds committee evidence, spending sensitivity and PDF submission drafts from the already prepared app bundle, offline. See Phase 10 documentation.
+For a pip-only computer, run `python run_with_pip.py` from the repository root. It installs pinned runtime dependencies and calls `run_judge_app.py`. See the [root README](../README.md) for Python version requirements and platform-specific commands.
 
-`uv run --locked python commands/run_judge_app.py` verifies or builds all local outputs from the frozen snapshot and launches Streamlit with one command. First preparation may take several minutes; it does not fetch market data.
-
-For a computer with Python 3.11–3.13 and pip but no uv, run `python run_with_pip.py` from the project root. It installs the pinned app dependencies into `.venv-pip` and starts the same launcher. See the project README for the manual pip commands.
+The numbered [final documentation](../docs/final/README.md) explains each model's settings, outputs, warnings and human checks. Generated outputs are under `output/` and are ignored by Git.

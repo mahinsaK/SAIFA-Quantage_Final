@@ -9,13 +9,14 @@ and a deterministic `manifest.json` listing and hashing the files in that run.
 The Streamlit bundle has its own `bundle.json` manifest covering all stages.
 
 The generated files are intentionally ignored by Git because they can be
-recreated from the frozen input snapshot under `data/snapshots/`. The
-directories may be removed and rebuilt when regenerating results:
+recreated from the tracked frozen input snapshot under `data/snapshots/`.
+From a fresh clone, use the [root README quick start](../README.md#start-here-run-the-app-from-a-fresh-clone)
+to prepare the app, committee evidence and PDFs with one command:
 
 ```bash
-rm -rf output
-uv run --locked saifa-dashboard-data
+uv run --locked python commands/run_judge_app.py
 ```
 
-Do not commit generated output by default. The tracked frozen inputs and
-source code are the reproducible submission artifacts.
+`commands/run_app_data.py` prepares only the app data bundle; it does not
+create the final PDFs. Include the generated PDFs in the actual submission
+package, since Git tracks the frozen inputs and source code but not `output/`.
