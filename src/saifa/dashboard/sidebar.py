@@ -24,14 +24,31 @@ def render_sidebar(bundle: DashboardBundle) -> DashboardSelection:
         st.header("SAIFA research")
         page = st.radio(
             "Explore",
-            ["Portfolio", "Risk comparison", "Backtesting", "Stress analysis", "Assumptions"],
+            [
+                "Portfolio",
+                "Risk comparison",
+                "Backtesting",
+                "Stress analysis",
+                "Research lab",
+                "Assumptions",
+            ],
             key="page",
         )
         st.divider()
+        if page == "Research lab":
+            st.caption(
+                "Research experiments have their own controls on this page. "
+                "The settings below describe the original three portfolios and risk pages."
+            )
         strategy = st.selectbox(
             "Portfolio", list(STRATEGIES), format_func=STRATEGIES.get, key="strategy"
         )
-        st.caption("Portfolio selection changes the detailed evidence, not the committee decision.")
+        if page == "Research lab":
+            st.caption("Use each research panel's own portfolio and model controls.")
+        else:
+            st.caption(
+                "Portfolio selection changes the detailed evidence, not the committee decision."
+            )
         st.subheader("Risk settings")
         confidence = st.selectbox(
             "Confidence",

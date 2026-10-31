@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import pytest
 from streamlit.testing.v1 import AppTest
+from test_dashboard import app_test
 from test_dashboard import forecasts as forecasts  # noqa: PLC0414 - fixture export
 from test_dashboard import prepared as prepared  # noqa: PLC0414 - fixture export
 
@@ -219,6 +220,27 @@ def test_research_loads_matching_verified_bundle(research):
     assert len(result.tables["candidate_metrics"]) == 10
     assert len(result.tables["spending_summary"]) == 18
     assert file_hash(bundle.manifest_path) == before
+
+
+def test_research_is_a_separate_sidebar_page(research):
+    root, _, _ = research
+    app = app_test(root)
+    assert not app.exception
+    assert "Research lab" in app.radio(key="page").options
+    assert not any(heading.value == "Research lab" for heading in app.header)
+    assert len(app.get("bidi_component")) == 1  # Portfolio's own section navigation.
+
+    app.radio(key="page").set_value("Research lab").run()
+    assert not app.exception
+    assert any(heading.value == "Research lab" for heading in app.header)
+    assert app.selectbox(key="lab_topic").value == "Alternative allocations"
+    assert len(app.get("bidi_component")) == 0
+    app.selectbox(key="lab_topic").set_value("Implementation costs").run()
+    assert not app.exception
+    app.radio(key="page").set_value("Portfolio").run()
+    assert not app.exception
+    assert len(app.get("bidi_component")) == 1
+    assert all(heading.value != "Research lab" for heading in app.header)
 
 
 @pytest.mark.parametrize("failure", ["tamper", "source", "stale", "missing", "failed"])

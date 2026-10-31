@@ -4,7 +4,7 @@
 
 ## Implemented evidence
 
-- Five-page app retained; Portfolio section navigation adds **Research lab**. Six panels expose alternative allocations, robustness, volatility/dependence, spending, income and implementation costs. Explanations are collapsed by default.
+- Five original pages retained; a separate **Research lab** sidebar page exposes alternative allocations, robustness, volatility/dependence, spending, income and implementation costs. Explanations are collapsed by default.
 - Two alternative fits use the original development period and policy, then share the same validation/evaluation accounting. Original three evaluation NAVs reproduced with **zero numerical difference** in the frozen-data comparison.
 - Seventy-four robustness rows: seven prespecified variants plus thirty block resamples for each of two objectives. Failures have explicit unavailable rows.
 - Twenty-four annual GARCH parameter fits converged on the snapshot. Dated GARCH Normal/FHS and EWMA forecasts span the original target sessions; parameter-fit and as-of dates are exported. Fifty-four new-model/portfolio/confidence/period checks contain **17 coverage rejections and 3 independence rejections**. Counts are overlapping diagnostics, not a model accuracy score or a direct comparison with a differently sized original-model grid.
@@ -35,6 +35,6 @@ The SPY/AGG baseline constant-exposure distribution proxy is **USD 1,218,710.47*
 
 - Focused model/loader/UI/launcher/navigation tests passed; the full suite is **257 passed**.
 - Ruff lint and formatting pass at handover. Tests include analytical ES bounds, equal-variance ERC, constrained non-equality, future-return perturbation, GARCH recursion and units, no silent forecast fallback, CPI gaps, first-payment indexing, exhaustion, conditional interval boundaries, full-rotation costs, fee homogeneity, prior-only volume, split-unavailable income, manifest integrity and control-dependent recalculation.
-- Real-snapshot AppTest rendered all six panels, Historical-reference selection and the four original non-Portfolio pages without exceptions. Loader validated the real 18-table bundle. No browser automation was used; desktop/mobile appearance and scroll behaviour still need human acceptance.
+- Real-snapshot AppTest rendered all six panels, Historical-reference selection and the four original non-Portfolio pages without exceptions. Loader validated the real 18-table bundle. The later page-routing check verifies navigation into and out of the separate Research lab page. No browser automation was used; desktop/mobile appearance and scroll behaviour still need human acceptance.
 - Existing frozen submission PDFs are separate from this experiment. No new-package or fresh-clone installation test was repeated for the lab; it uses the project's existing locked packages and offline launcher.
 - Final investment judgment, scenario approval, split-unit interpretation, spending suitability and remaining core worksheets stay open. See the [manual worksheet](03-manual-research-check.md).

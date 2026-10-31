@@ -26,5 +26,9 @@ def render_page(bundle: DashboardBundle, selection: DashboardSelection) -> None:
         )
     elif selection.page == "Stress analysis":
         stress_page(bundle, selection.strategy, selection.confidence, selection.method)
+    elif selection.page == "Research lab":
+        from saifa.dashboard.research import research_page
+
+        research_page(bundle)
     else:
         assumptions_page(bundle)

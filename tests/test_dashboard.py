@@ -725,7 +725,6 @@ def test_portfolio_section_links_match_rendered_anchors_across_reruns(prepared):
         "portfolio-frontier",
         "portfolio-diversification",
         "portfolio-spending",
-        "portfolio-research",
     ]
 
     def rendered_ids():
@@ -755,7 +754,6 @@ def test_portfolio_section_links_match_rendered_anchors_across_reruns(prepared):
         ("portfolio-frontier", "Development-period efficient frontier"),
         ("portfolio-diversification", "How do the seven ETFs move together?"),
         ("portfolio-spending", "Purchasing power and spending"),
-        ("portfolio-research", "Portfolio research lab"),
     ]
     assert rendered_ids() == (expected, expected_headings)
     headings = [item.value for item in app.subheader]
@@ -770,6 +768,11 @@ def test_portfolio_section_links_match_rendered_anchors_across_reruns(prepared):
     app.radio(key="page").set_value("Risk comparison").run()
     assert not app.exception
     assert len(app.get("bidi_component")) == 1
+    app.radio(key="page").set_value("Research lab").run()
+    assert not app.exception
+    assert len(app.get("bidi_component")) == 0
+    assert any(heading.value == "Research lab" for heading in app.header)
+    assert all(heading.value != "Portfolio research lab" for heading in app.subheader)
 
 
 def test_analysis_page_section_navigation_tracks_visible_sections(prepared):

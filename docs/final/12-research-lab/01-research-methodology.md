@@ -4,7 +4,7 @@
 
 ## Scope and research coverage
 
-The five original pages and three frozen candidates remain the submission reference. **Portfolio → Research lab** exposes six optional panels with separate controls and collapsed explanations. The main sidebar continues to describe the frozen candidates. Alternative allocations are not silently added to the main VaR/stress/spending selectors or committee recommendation.
+The five original pages and three frozen candidates remain the submission reference. A separate **Research lab** sidebar page exposes six optional panels with their own controls and collapsed explanations. The main sidebar's portfolio/risk selectors continue to describe the frozen candidates. Alternative allocations are not silently added to the main VaR/stress/spending selectors or committee recommendation.
 
 | Requested direction | Implemented here | What is not established |
 |---|---|---|

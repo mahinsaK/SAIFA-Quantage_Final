@@ -61,15 +61,16 @@ The final-round app runs independently of the earlier screening project.
 
 ## What the app contains
 
-The sidebar selects a portfolio, confidence level, VaR method and backtest dates. The five pages are **Portfolio**, **Risk comparison**, **Backtesting**, **Stress analysis** and **Assumptions**.
+The sidebar selects a portfolio, confidence level, VaR method and backtest dates. It has the five original pages—**Portfolio**, **Risk comparison**, **Backtesting**, **Stress analysis** and **Assumptions**—plus a separate **Research lab** page.
 
 - **Portfolio:** preset 40% SPY / 60% AGG baseline versus constrained minimum-volatility and maximum-Sharpe candidates, performance, drawdown, efficient frontier, ETF correlations and purchasing power.
 - **Risk comparison:** one-session VaR and Expected Shortfall at a common USD 10 million reference NAV. Historical, Parametric Normal, Gaussian Monte Carlo and EVT estimates retain their model-specific limitations. The frozen sample supports 90% EVT at its empirical threshold boundary; unavailable cases show a reason.
 - **Backtesting:** dated forecasts, exceptions, Kupiec and Christoffersen checks, and eligible 99% Basel traffic lights. Changing the date range recalculates the displayed statistics.
 - **Stress analysis:** historical crisis replays, a proposed hypothetical joint shock, asset risk contributions and funded-transfer sensitivity.
+- **Research lab:** six retrospective experiments with their own controls and source evidence.
 - **Assumptions:** data coverage, costs, model failures and information still needed before an investment decision.
 
-**Portfolio → Research lab** adds six panels: alternative allocations, allocation robustness, volatility/dependence, long-horizon spending, distribution-income proxies and cost sensitivity. Each has separate controls, verified outputs and collapsible explanations. These retrospective experiments retain failed checks and missing-input reasons. The main risk selectors and committee materials continue to describe the original three frozen candidates. See the [research methodology, measured findings and manual review](docs/final/12-research-lab/01-research-methodology.md).
+The **Research lab** page has six panels: alternative allocations, allocation robustness, volatility/dependence, long-horizon spending, distribution-income proxies and cost sensitivity. Each has separate controls, verified outputs and collapsible explanations. These retrospective experiments retain failed checks and missing-input reasons. The main risk selectors and committee materials continue to describe the original three frozen candidates. See the [research methodology, measured findings and manual review](docs/final/12-research-lab/01-research-methodology.md).
 
 The calculations use different horizons and accounting: portfolio performance is **monthly rebalanced after trading costs**; VaR/ES uses **one-session fixed target exposures**; crisis replays hold **fixed initial units without rebalancing, costs or withdrawals**. The two optimised allocations were fitted using data through 2018, so their 2008 replays are retrospective scenarios. The 40/60 baseline is preset.
 

@@ -496,8 +496,8 @@ def render_research(evidence: ResearchEvidence, original_forecasts: pd.DataFrame
         panels[topic](evidence)
 
 
-def research_lab_section(bundle: DashboardBundle):
-    st.subheader("Portfolio research lab", anchor="portfolio-research")
+def research_page(bundle: DashboardBundle):
+    st.header("Research lab", anchor="research-page")
     try:
         evidence = load_research(bundle.manifest_path.resolve().parents[3], bundle)
     except (DashboardDataError, OSError, ValueError) as exc:
