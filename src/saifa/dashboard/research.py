@@ -643,11 +643,45 @@ def costs(evidence: ResearchEvidence):
         ),
         "Same-target trading and additional administrative fee sensitivity",
     )
-    st.line_chart(
-        frame.set_index("trade_cost_bps").ending_value,
-        x_label="Assumed gross-trade cost (bps)",
-        y_label="Ending wealth (USD)",
-        alt="Ending wealth under selected portfolio, period and assumed additional admin fee",
+    chart_data = frame[["trade_cost_bps", "ending_value"]].sort_values("trade_cost_bps")
+    lower = min(float(chart_data.ending_value.min()), float(reference.ending_value))
+    upper = max(float(chart_data.ending_value.max()), float(reference.ending_value))
+    padding = max((upper - lower) * 0.1, 1_000.0)
+    wealth_line = (
+        alt.Chart(chart_data)
+        .mark_line(point=True)
+        .encode(
+            x=alt.X(
+                "trade_cost_bps:Q",
+                title="Assumed gross-trade cost (bps)",
+                axis=alt.Axis(values=[0, 10, 25]),
+            ),
+            y=alt.Y(
+                "ending_value:Q",
+                title="Ending wealth (USD)",
+                scale=alt.Scale(domain=[lower - padding, upper + padding], zero=False),
+                axis=alt.Axis(format="$,.0f"),
+            ),
+            tooltip=[
+                alt.Tooltip("trade_cost_bps:Q", title="Trade cost (bps)", format=".0f"),
+                alt.Tooltip("ending_value:Q", title="Ending wealth", format="$,.2f"),
+            ],
+        )
+    )
+    reference_line = (
+        alt.Chart(pd.DataFrame({"reference_wealth": [float(reference.ending_value)]}))
+        .mark_rule(color="#708394", strokeDash=[5, 4])
+        .encode(y="reference_wealth:Q")
+    )
+    st.altair_chart(
+        (wealth_line + reference_line).properties(height=300),
+        width="stretch",
+        alt="Ending wealth for the selected portfolio, period and admin fee at three trading-cost assumptions; dashed line marks the 10-bps, no-admin-fee reference",
+    )
+    st.caption(
+        "The vertical axis is zoomed to show cost differences; it does not start at zero. "
+        "Dashed line: 10 bps trading cost with no additional admin fee. "
+        "Use the table for exact USD values and comparisons across settings."
     )
     liquidity = evidence.tables["liquidity"].query("strategy == @strategy and period == @period")
     with st.expander("Read cost assumptions and lagged-volume liquidity evidence"):
