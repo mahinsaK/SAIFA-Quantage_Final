@@ -165,13 +165,15 @@ def research(prepared):
             {
                 "strategy": s,
                 "variant": v,
-                "kind": "prespecified" if v == "full" else "block_resample",
+                "kind": "prespecified"
+                if v in ("full_development", "trailing_5_years")
+                else "block_resample",
                 "status": "ok",
-                "one_way_weight_distance": 0.01,
+                "one_way_weight_distance": 0 if v == "full_development" else 0.095,
                 **dict(zip(UNIVERSE, [0.4, 0, 0, 0.6, 0, 0, 0])),
             }
             for s in ("minimum_volatility", "maximum_sharpe")
-            for v in ("full", "block_0", "block_1")
+            for v in ("full_development", "trailing_5_years", "block_1")
         ]
     )
     tables["income_ledger"] = pd.DataFrame(
@@ -229,18 +231,38 @@ def test_research_is_a_separate_sidebar_page(research):
     assert "Research lab" in app.radio(key="page").options
     assert not any(heading.value == "Research lab" for heading in app.header)
     assert len(app.get("bidi_component")) == 1  # Portfolio's own section navigation.
+    app.selectbox(key="strategy").set_value("maximum_sharpe").run()
+    app.selectbox(key="confidence").set_value(0.95).run()
+    app.selectbox(key="method").set_value("parametric_normal").run()
+    chosen_dates = (pd.Timestamp("2022-02-01").date(), pd.Timestamp("2022-04-29").date())
+    app.date_input(key="dates").set_value(chosen_dates).run()
 
     app.radio(key="page").set_value("Research lab").run()
     assert not app.exception
     assert any(heading.value == "Research lab" for heading in app.header)
-    assert app.selectbox(key="lab_topic").value == "Alternative allocations"
+    assert app.segmented_control(key="lab_topic").value == "Allocations"
+    assert app.segmented_control(key="lab_topic").options == [
+        "Allocations",
+        "Stability",
+        "Changing risk",
+        "Spending",
+        "Income",
+        "Costs",
+    ]
     assert len(app.get("bidi_component")) == 0
-    app.selectbox(key="lab_topic").set_value("Implementation costs").run()
+    assert all(widget.key not in {"strategy", "confidence", "method"} for widget in app.selectbox)
+    assert all(widget.key != "dates" for widget in app.date_input)
+    assert not any(heading.value == "Risk settings" for heading in app.subheader)
+    app.segmented_control(key="lab_topic").set_value("Costs").run()
     assert not app.exception
     app.radio(key="page").set_value("Portfolio").run()
     assert not app.exception
     assert len(app.get("bidi_component")) == 1
     assert all(heading.value != "Research lab" for heading in app.header)
+    assert app.selectbox(key="strategy").value == "maximum_sharpe"
+    assert app.selectbox(key="confidence").value == 0.95
+    assert app.selectbox(key="method").value == "parametric_normal"
+    assert app.date_input(key="dates").value == chosen_dates
 
 
 @pytest.mark.parametrize("failure", ["tamper", "source", "stale", "missing", "failed"])
@@ -290,32 +312,53 @@ def test_research_controls_change_actual_tables_and_recalculate_dated_tests(rese
         script, args=(evidence, bundle.tables["backtest"]["forecasts"])
     ).run(timeout=20)
     assert not app.exception
+    assert any("Same-period comparison" in item.value for item in app.markdown)
     initial = app.dataframe[1].value.copy()  # Scope table is first.
     app.selectbox(key="lab_allocation_period").set_value("validation").run()
     assert not app.exception and not app.dataframe[1].value.equals(initial)
-    app.selectbox(key="lab_topic").set_value("Allocation robustness").run()
+    app.segmented_control(key="lab_topic").set_value("Stability").run()
     assert not app.exception
-    app.selectbox(key="lab_topic").set_value("Volatility and dependence").run()
+    assert "Last 5 development years" in app.dataframe[1].value.variant.values
+    app.segmented_control(key="lab_topic").set_value("Changing risk").run()
     assert not app.exception
     observations = app.dataframe[1].value.coverage_observations.iloc[0]
+    comparisons = app.dataframe[3].value
+    assert set(comparisons.Method) == set(VOLATILITY_METHODS.values()) | {
+        "Historical reference",
+        "Static Normal reference",
+    }
+    assert comparisons.Forecasts.nunique() == 1
     app.date_input(key="lab_vol_dates").set_value(
         (pd.Timestamp("2022-01-03").date(), pd.Timestamp("2022-01-31").date())
     ).run()
     assert not app.exception
     assert app.dataframe[1].value.coverage_observations.iloc[0] < observations
+    assert app.dataframe[3].value.Forecasts.max() < comparisons.Forecasts.max()
     app.selectbox(key="lab_vol_method").set_value("historical").run()
     assert not app.exception
-    app.selectbox(key="lab_topic").set_value("Spending sustainability").run()
+    app.segmented_control(key="lab_topic").set_value("Spending").run()
     assert not app.exception
-    wealth = app.metric[1].value
+    assert [(item.label, item.value) for item in app.metric[:3]] == [
+        ("Paths with no spending shortfall", "95.00%"),
+        ("Paths preserving initial real capital", "50.00%"),
+        ("Paths reaching 3% real growth after spending", "30.00%"),
+    ]
+    wealth = app.metric[3].value
     app.selectbox(key="lab_spending_rate").set_value(0.04).run()
-    assert not app.exception and app.metric[1].value != wealth
-    app.selectbox(key="lab_topic").set_value("Distribution income").run()
+    assert not app.exception and app.metric[3].value != wealth
+    app.segmented_control(key="lab_topic").set_value("Income").run()
     assert not app.exception
+    assert len(app.dataframe[1].value) == len(RESEARCH_PORTFOLIOS)
+    assert app.dataframe[1].value.Availability.tolist().count("Unavailable") == 4
     app.selectbox(key="lab_income").set_value("minimum_es").run()
     assert not app.exception and any("review" in w.value for w in app.warning)
-    app.selectbox(key="lab_topic").set_value("Implementation costs").run()
+    app.segmented_control(key="lab_topic").set_value("Costs").run()
     assert not app.exception
     before = app.dataframe[1].value.copy()
+    assert "Change vs reference (USD)" in before
+    assert (
+        before.loc[before["Gross-trade cost (bps)"] == 10, "Change vs reference (USD)"].iloc[0]
+        == "+0.00"
+    )
     app.selectbox(key="lab_admin_fee").set_value(50.0).run()
     assert not app.exception and not app.dataframe[1].value.equals(before)

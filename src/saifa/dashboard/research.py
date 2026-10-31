@@ -11,14 +11,34 @@ from saifa.domain.config import UNIVERSE, BacktestConfig
 from saifa.domain.dashboard import STRATEGIES, DashboardBundle, DashboardDataError
 from saifa.domain.research import RESEARCH_PORTFOLIOS, VOLATILITY_METHODS, ResearchEvidence
 
+RESEARCH_QUESTIONS = {
+    "Allocations": "Do tail-loss or risk-balanced weights change the historical trade-off?",
+    "Stability": "How much do suggested weights move when development inputs change?",
+    "Changing risk": "How do changing-volatility models compare on the same dated checks?",
+    "Spending": "Can the simulated portfolios fund withdrawals and preserve real capital?",
+    "Income": "Which distribution-income estimates are supported by the available data?",
+    "Costs": "How much does ending wealth change under other trading and admin costs?",
+}
+
+ROBUSTNESS_LABELS = {
+    "full_development": "Full development (reference)",
+    "trailing_5_years": "Last 5 development years",
+    "trailing_10_years": "Last 10 development years",
+    "end_one_year_earlier": "Training ends one year earlier",
+    "SPY_mean_-2%": "SPY expected return −2 pp/year",
+    "SPY_mean_+2%": "SPY expected return +2 pp/year",
+    "25pct_diagonal_shrinkage": "25% diagonal covariance shrinkage",
+}
+
 
 def show(frame: pd.DataFrame, label: str, **kwargs):
+    st.markdown(f"**{label}**")
     st.dataframe(frame, hide_index=True, width="stretch", alt=label, **kwargs)
 
 
-def download(frame: pd.DataFrame, filename: str):
+def download(frame: pd.DataFrame, filename: str, label: str):
     st.download_button(
-        "Download displayed research evidence",
+        label,
         frame.to_csv(index=False),
         file_name=filename,
         mime="text/csv",
@@ -61,6 +81,11 @@ def allocations(evidence: ResearchEvidence):
         f"{metrics.start_date.iloc[0]} to {metrics.end_date.iloc[0]}; costed monthly-rebalanced portfolios, no withdrawals."
     )
     show(_metrics(metrics), "Same-period comparison of original and alternative allocations")
+    st.caption(
+        "The alternative weights are retrospective research candidates. Their own crisis-replay "
+        "and risk-forecast validation have not been prepared; the original candidates' checks "
+        "do not validate these new allocations."
+    )
     weights = evidence.tables["allocation_weights"].set_index("strategy").loc[selected]
     display = pd.DataFrame(
         {
@@ -104,7 +129,7 @@ def allocations(evidence: ResearchEvidence):
             "Minimum historical ES minimises the empirical 95% loss tail on development-only returns using a linear programme. Risk parity minimises squared gaps from equal variance-risk shares subject to the same policy. Constraints can prevent exact equality. Both were added after evaluation was viewed; neither is an approved allocation or prospectively validated risk model."
         )
         show(diagnostics, "Alternative development objective and solver evidence")
-    download(metrics, f"{period}_alternative_allocations.csv")
+    download(metrics, f"{period}_alternative_allocations.csv", "Download candidate comparison CSV")
 
 
 def robustness(evidence: ResearchEvidence):
@@ -119,7 +144,15 @@ def robustness(evidence: ResearchEvidence):
     st.caption(
         f"Development data only · {len(frame) - failed} successful fits · {failed} unavailable fits. These are sensitivity experiments, not confidence guarantees."
     )
-    variants = frame.loc[(frame.kind == "prespecified") & (frame.status == "ok")]
+    variants = frame.loc[(frame.kind == "prespecified") & (frame.status == "ok")].copy()
+    variants["variant"] = variants.variant.map(ROBUSTNESS_LABELS).fillna(variants.variant)
+    changed = variants.loc[variants.one_way_weight_distance > 1e-8]
+    if not changed.empty:
+        largest = changed.loc[changed.one_way_weight_distance.idxmax()]
+        st.caption(
+            f"Largest prespecified one-way target change: {largest.one_way_weight_distance:.1%} "
+            f"under {largest.variant}. This measures changed weights, not improved returns."
+        )
     st.bar_chart(
         variants.set_index("variant").one_way_weight_distance * 100,
         y_label="One-way target-weight change (percentage points)",
@@ -147,7 +180,80 @@ def robustness(evidence: ResearchEvidence):
             f"Windows, SPY mean shifts of ±2 annual percentage points, 25% diagonal covariance shrinkage and geometric blocks averaging {evidence.summary['config']['robustness_block']} sessions all use development data. Shrinkage intensity is fixed, not estimated as optimal Ledoit-Wolf shrinkage. Resampling weight percentiles describe sensitivity, not calibrated parameter confidence intervals. No evaluation return selects a variant."
         )
         show(frame.loc[frame.status != "ok"], "Failed robustness fits with explicit reasons")
-    download(frame, f"{strategy}_robustness.csv")
+    download(frame, f"{strategy}_robustness.csv", "Download all robustness variants CSV")
+
+
+def _check_result(decision: str, p_value: float) -> str:
+    label = {
+        "reject": "Reject",
+        "do_not_reject": "Not rejected",
+        "unavailable": "Unavailable",
+    }.get(decision, str(decision).replace("_", " ").capitalize())
+    return f"{label} · p={p_value:.3g}" if pd.notna(p_value) else label
+
+
+def model_check_comparison(
+    pool: pd.DataFrame,
+    strategy: str,
+    confidence: float,
+    dates: tuple,
+    config: BacktestConfig,
+    validation_end_exclusive: str,
+    methods: dict[str, str],
+) -> pd.DataFrame:
+    """Put every method through the same existing dated backtest calculation."""
+    rows = []
+    for method, label in methods.items():
+        try:
+            checks = backtest_view(
+                pool,
+                strategy,
+                method,
+                confidence,
+                *dates,
+                config,
+                validation_end_exclusive,
+            ).tests
+        except DashboardDataError as exc:
+            rows.append(
+                {
+                    "Period": "Selected range",
+                    "Method": label,
+                    "Forecasts": 0,
+                    "Exceptions": pd.NA,
+                    "Missing": pd.NA,
+                    "Kupiec coverage": "Unavailable",
+                    "Christoffersen independence": "Unavailable",
+                    "Reason": str(exc),
+                }
+            )
+            continue
+        for check in checks.itertuples(index=False):
+            reasons = [
+                str(warning)
+                for decision, warning in (
+                    (check.coverage_decision, check.coverage_warning),
+                    (check.independence_decision, check.independence_warning),
+                )
+                if decision == "unavailable" and pd.notna(warning)
+            ]
+            rows.append(
+                {
+                    "Period": check.period.capitalize(),
+                    "Method": label,
+                    "Forecasts": check.coverage_valid_forecasts,
+                    "Exceptions": check.coverage_exceptions,
+                    "Missing": check.coverage_missing_forecasts,
+                    "Kupiec coverage": _check_result(
+                        check.coverage_decision, check.coverage_p_value
+                    ),
+                    "Christoffersen independence": _check_result(
+                        check.independence_decision, check.independence_p_value
+                    ),
+                    "Reason": " ".join(dict.fromkeys(reasons)),
+                }
+            )
+    return pd.DataFrame(rows)
 
 
 def volatility(evidence: ResearchEvidence, original_forecasts: pd.DataFrame | None):
@@ -258,6 +364,22 @@ def volatility(evidence: ResearchEvidence, original_forecasts: pd.DataFrame | No
         view.tests, "Recalculated coverage and independence tests for the selected dated forecasts"
     )
     show(view.lights, "Latest eligible Basel diagnostic within each selected period")
+    show(
+        model_check_comparison(
+            pool,
+            strategy,
+            confidence,
+            dates,
+            config,
+            evidence.summary["portfolio_config"]["validation_end_exclusive"],
+            methods,
+        ),
+        "All models compared on the same portfolio, confidence and selected dates",
+    )
+    st.caption(
+        "Each row uses one-session fixed target exposures. These are overlapping retrospective "
+        "tests; fewer rejections or a non-rejection does not establish a winning model."
+    )
     rejected = (
         view.tests.coverage_decision.eq("reject").any()
         or view.tests.independence_decision.eq("reject").any()
@@ -308,7 +430,11 @@ def volatility(evidence: ResearchEvidence, original_forecasts: pd.DataFrame | No
             evidence.tables["volatility_fits"].query("strategy == @strategy"),
             "Annual GARCH parameter fits and failures",
         )
-    download(view.forecasts, f"{strategy}_{method}_{confidence:.0%}_research_forecasts.csv")
+    download(
+        view.forecasts,
+        f"{strategy}_{method}_{confidence:.0%}_research_forecasts.csv",
+        "Download selected dated forecasts CSV",
+    )
 
 
 def spending(evidence: ResearchEvidence):
@@ -344,6 +470,22 @@ def spending(evidence: ResearchEvidence):
         st.metric(
             "Paths with no spending shortfall", percent(row.no_shortfall_fraction), border=True
         )
+        st.metric(
+            "Paths preserving initial real capital",
+            percent(row.preserved_real_capital_fraction),
+            border=True,
+        )
+        st.metric(
+            "Paths reaching 3% real growth after spending",
+            percent(row.after_spending_3pct_growth_fraction),
+            border=True,
+        )
+    st.caption(
+        "No shortfall means scheduled withdrawals were paid; it does not mean the original "
+        "purchasing power survived. The after-spending 3% test is stricter than the proposed "
+        "before-spending objective."
+    )
+    with st.container(horizontal=True):
         st.metric("Median ending real wealth", money(row.ending_real_median), border=True)
         st.metric("5th percentile ending real wealth", money(row.ending_real_p05), border=True)
     st.caption(
@@ -380,7 +522,11 @@ def spending(evidence: ResearchEvidence):
             evidence.tables["spending_inputs"],
             "Complete monthly joint return/inflation inputs; missing CPI ratios are not fabricated",
         )
-    download(selected, f"{strategy}_{rate:.0%}_{uplift:.0%}_spending_research.csv")
+    download(
+        selected,
+        f"{strategy}_{rate:.0%}_{uplift:.0%}_spending_research.csv",
+        "Download selected spending scenario CSV",
+    )
 
 
 def income(evidence: ResearchEvidence):
@@ -390,13 +536,27 @@ def income(evidence: ResearchEvidence):
         format_func=RESEARCH_PORTFOLIOS.get,
         key="lab_income",
     )
-    selected = evidence.tables["income_summary"].query("strategy == @strategy")
+    income_summary = evidence.tables["income_summary"]
+    selected = income_summary.query("strategy == @strategy")
     row = selected.iloc[0]
     st.caption(
         f"{row.start_date} to {row.end_date}; constant target exposure at {money(row.reference_nav)} reference NAV."
     )
     st.info(
         "Ex-date distribution proxy only. Actual payment-date cash receipts and tax treatment remain unavailable."
+    )
+    show(
+        pd.DataFrame(
+            {
+                "Portfolio": income_summary.strategy.map(RESEARCH_PORTFOLIOS),
+                "Availability": income_summary.status.map(
+                    {"proxy_only": "Proxy only", "unavailable": "Unavailable"}
+                ),
+                "Gross proxy total (USD)": income_summary.distribution_proxy_usd.map(money),
+                "Reason / limitation": income_summary.reason,
+            }
+        ),
+        "Income evidence availability across all five candidates",
     )
     if row.status == "unavailable":
         st.warning(row.reason)
@@ -410,7 +570,13 @@ def income(evidence: ResearchEvidence):
         )
         show(selected, "Income proxy availability and explicit missing-input reasons")
         show(ledger, "Partial ex-date observations for eligible non-split exposures")
-    download(ledger, f"{strategy}_income_proxy_ledger.csv")
+    download(
+        ledger,
+        f"{strategy}_income_proxy_ledger.csv",
+        "Download partial ex-date evidence CSV"
+        if row.status == "unavailable"
+        else "Download ex-date proxy ledger CSV",
+    )
 
 
 def costs(evidence: ResearchEvidence):
@@ -424,14 +590,33 @@ def costs(evidence: ResearchEvidence):
     fee = st.selectbox(
         "Assumed additional annual admin fee (bps)", [0.0, 25.0, 50.0], key="lab_admin_fee"
     )
+    st.caption(
+        "1 basis point (bp) = 0.01%; 10 bps = 0.10%; 25 bps = 0.25%. "
+        "The admin fee is an additional annual assumption."
+    )
     frame = evidence.tables["cost_metrics"].query(
         "period == @period and strategy == @strategy and additional_annual_fee_bps == @fee"
+    )
+    reference = (
+        evidence.tables["cost_metrics"]
+        .query(
+            "period == @period and strategy == @strategy and trade_cost_bps == 10 "
+            "and additional_annual_fee_bps == 0"
+        )
+        .iloc[0]
+    )
+    st.caption(
+        f"Reference: 10 bps gross-trade cost, no additional admin fee; "
+        f"ending wealth {money(reference.ending_value)}."
     )
     show(
         pd.DataFrame(
             {
                 "Gross-trade cost (bps)": frame.trade_cost_bps,
                 "Ending value (USD)": frame.ending_value.map(money),
+                "Change vs reference (USD)": (frame.ending_value - reference.ending_value).map(
+                    lambda value: f"{value:+,.2f}"
+                ),
                 "Annual return": frame.annualised_return.map(percent),
                 "Trading costs (USD)": frame.total_transaction_cost.map(money),
                 "Additional admin fees (USD)": frame.total_additional_fees.map(money),
@@ -456,7 +641,11 @@ def costs(evidence: ResearchEvidence):
             "Policy-cost trades relative to strictly prior daily volume; not an execution guarantee",
             column_config={"participation_proxy": st.column_config.NumberColumn(format="percent")},
         )
-    download(frame, f"{period}_{strategy}_{fee:g}bps_cost_sensitivity.csv")
+    download(
+        frame,
+        f"{period}_{strategy}_{fee:g}bps_cost_sensitivity.csv",
+        "Download selected cost sensitivity CSV",
+    )
 
 
 def render_research(evidence: ResearchEvidence, original_forecasts: pd.DataFrame | None = None):
@@ -466,31 +655,29 @@ def render_research(evidence: ResearchEvidence, original_forecasts: pd.DataFrame
     with st.expander("Read research scope, sources and remaining gaps"):
         st.write(evidence.summary["design_status"])
         st.write(
-            "Use the research controls below; the sidebar continues to describe the original frozen portfolios. These experiments do not replace final submission evidence or approve an allocation."
+            "Use the research controls below. The portfolio and risk selectors on the original pages describe the three frozen candidates. These experiments do not replace final submission evidence or approve an allocation."
         )
         show(evidence.tables["availability"], "Research coverage and inputs still required")
         for source in evidence.summary["sources"]:
             st.markdown(f"[Methodology source]({source})")
-    topic = st.selectbox(
+    topic = st.segmented_control(
         "Research question",
-        [
-            "Alternative allocations",
-            "Allocation robustness",
-            "Volatility and dependence",
-            "Spending sustainability",
-            "Distribution income",
-            "Implementation costs",
-        ],
+        list(RESEARCH_QUESTIONS),
+        default="Allocations",
+        required=True,
+        wrap=True,
         key="lab_topic",
     )
+    st.subheader(topic)
+    st.caption(RESEARCH_QUESTIONS[topic])
     panels = {
-        "Alternative allocations": allocations,
-        "Allocation robustness": robustness,
-        "Spending sustainability": spending,
-        "Distribution income": income,
-        "Implementation costs": costs,
+        "Allocations": allocations,
+        "Stability": robustness,
+        "Spending": spending,
+        "Income": income,
+        "Costs": costs,
     }
-    if topic == "Volatility and dependence":
+    if topic == "Changing risk":
         volatility(evidence, original_forecasts)
     else:
         panels[topic](evidence)

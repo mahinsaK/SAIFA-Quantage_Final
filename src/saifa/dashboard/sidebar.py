@@ -20,6 +20,8 @@ class DashboardSelection:
 
 def render_sidebar(bundle: DashboardBundle) -> DashboardSelection:
     meta = bundle.metadata["backtest"]
+    low, high = pd.Timestamp(meta["start"]).date(), pd.Timestamp(meta["end"]).date()
+    evaluation_start = max(low, pd.Timestamp(meta["validation_end_exclusive"]).date())
     with st.sidebar:
         st.header("SAIFA research")
         page = st.radio(
@@ -37,18 +39,28 @@ def render_sidebar(bundle: DashboardBundle) -> DashboardSelection:
         st.divider()
         if page == "Research lab":
             st.caption(
-                "Research experiments have their own controls on this page. "
-                "The settings below describe the original three portfolios and risk pages."
+                "Choose a research question and adjust its controls in the main area. "
+                "Your selections on the original pages are remembered."
+            )
+            st.caption(
+                f"Snapshot: {bundle.manifest['snapshot_id']}\n\n"
+                "Retrospective research · human validation pending"
+            )
+            return DashboardSelection(
+                page,
+                st.session_state.get("strategy", next(iter(STRATEGIES))),
+                st.session_state.get("confidence", CONFIDENCES[-1]),
+                st.session_state.get("method", next(iter(METHODS))),
+                tuple(st.session_state.get("dates", (evaluation_start, high))),
             )
         strategy = st.selectbox(
-            "Portfolio", list(STRATEGIES), format_func=STRATEGIES.get, key="strategy"
+            "Portfolio",
+            list(STRATEGIES),
+            format_func=STRATEGIES.get,
+            key="strategy",
+            persist_state="session",
         )
-        if page == "Research lab":
-            st.caption("Use each research panel's own portfolio and model controls.")
-        else:
-            st.caption(
-                "Portfolio selection changes the detailed evidence, not the committee decision."
-            )
+        st.caption("Portfolio selection changes the detailed evidence, not the committee decision.")
         st.subheader("Risk settings")
         confidence = st.selectbox(
             "Confidence",
@@ -56,14 +68,19 @@ def render_sidebar(bundle: DashboardBundle) -> DashboardSelection:
             index=2,
             format_func=lambda value: f"{value:.0%}",
             key="confidence",
+            persist_state="session",
         )
-        method = st.selectbox("VaR method", list(METHODS), format_func=METHODS.get, key="method")
+        method = st.selectbox(
+            "VaR method",
+            list(METHODS),
+            format_func=METHODS.get,
+            key="method",
+            persist_state="session",
+        )
         st.caption(
             "Confidence and method apply to risk and backtesting. Crisis and hypothetical shocks "
             "have no confidence level."
         )
-        low, high = pd.Timestamp(meta["start"]).date(), pd.Timestamp(meta["end"]).date()
-        evaluation_start = max(low, pd.Timestamp(meta["validation_end_exclusive"]).date())
         if "dates" not in st.session_state:
             st.session_state["dates"] = (evaluation_start, high)
         dates = st.date_input(
@@ -72,6 +89,7 @@ def render_sidebar(bundle: DashboardBundle) -> DashboardSelection:
             max_value=high,
             format="YYYY-MM-DD",
             key="dates",
+            persist_state="session",
         )
         st.caption(
             "Dates change backtesting only. Use the period buttons at the top of Backtesting for a quick choice, or set a custom range here."
