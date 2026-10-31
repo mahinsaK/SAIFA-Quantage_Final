@@ -33,8 +33,8 @@ The SPY/AGG baseline constant-exposure distribution proxy is **USD 1,218,710.47*
 
 ## Verification and limitations
 
-- Focused model/loader/UI/launcher/navigation tests passed; the full suite is **257 passed**.
-- Ruff lint and formatting pass at handover. Tests include analytical ES bounds, equal-variance ERC, constrained non-equality, future-return perturbation, GARCH recursion and units, no silent forecast fallback, CPI gaps, first-payment indexing, exhaustion, conditional interval boundaries, full-rotation costs, fee homogeneity, prior-only volume, split-unavailable income, manifest integrity and control-dependent recalculation.
+- Focused model/loader/UI/launcher/navigation tests passed; after merging the Phase 11 annual experiment from current main, the combined full suite is **278 passed**. Ruff lint and format checks also pass.
+- Tests include analytical ES bounds, equal-variance ERC, constrained non-equality, future-return perturbation, GARCH recursion and units, no silent forecast fallback, CPI gaps, first-payment indexing, exhaustion, conditional interval boundaries, full-rotation costs, fee homogeneity, prior-only volume, split-unavailable income, manifest integrity and control-dependent recalculation.
 - Real-snapshot AppTest rendered all six panels, Historical-reference selection and the four original non-Portfolio pages without exceptions. Loader validated the real 18-table bundle. The later page-routing check verifies navigation into and out of the separate Research lab page. No browser automation was used; desktop/mobile appearance and scroll behaviour still need human acceptance.
-- Existing frozen submission PDFs are separate from this experiment. No new-package or fresh-clone installation test was repeated for the lab; it uses the project's existing locked packages and offline launcher.
+- The combined frozen-snapshot launcher preparation rebuilt stale decision, PDF, annual and research artifacts successfully. Existing frozen submission PDFs are separate from this experiment. No new-package or fresh-clone installation test was repeated for the lab; it uses the project's existing locked packages and offline launcher.
 - Final investment judgment, scenario approval, split-unit interpretation, spending suitability and remaining core worksheets stay open. See the [manual worksheet](03-manual-research-check.md).

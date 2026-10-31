@@ -13,9 +13,11 @@ ROOT = Path(__file__).resolve().parents[1]
 os.environ.setdefault("MPLCONFIGDIR", str(ROOT / ".cache/matplotlib"))
 os.environ.setdefault("XDG_CACHE_HOME", str(ROOT / ".cache"))
 
+from saifa.application.adaptive_pipeline import build_adaptive
 from saifa.application.dashboard_pipeline import build_dashboard
 from saifa.application.decision_pipeline import build_decision
 from saifa.application.research_pipeline import build_research
+from saifa.dashboard.adaptive import load_adaptive
 from saifa.dashboard.data import load_bundle
 from saifa.dashboard.decision import load_decision
 from saifa.dashboard.research_data import load_research
@@ -79,6 +81,12 @@ def prepare(root: Path, progress=print) -> Path:
     if not ready:
         progress("Preparing report and one-page documents from verified evidence...")
         write_submission(root, snapshot)
+    try:
+        load_adaptive(root, bundle)
+        progress("Verified annual portfolio experiment.")
+    except (DashboardDataError, OSError, ValueError) as exc:
+        progress(f"Preparing annual portfolio experiment: {exc}")
+        build_adaptive(root, snapshot)
     try:
         load_research(root, bundle)
         progress("Verified optional portfolio research lab.")

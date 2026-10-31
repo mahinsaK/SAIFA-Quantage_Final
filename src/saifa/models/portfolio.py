@@ -48,7 +48,8 @@ def rebalance(pre_values: np.ndarray, weights: np.ndarray, cost_rate: float) -> 
         nav_after = nav_before
     else:
         # Unique self-financing root of x + c*sum(|w*x-v|) = pre-trade NAV.
-        # Complete rotations sell old holdings and buy new ones; gross can exceed NAV.
+        # A full rotation sells the old NAV and buys the new NAV. Its root is
+        # NAV*(1-c)/(1+c); using NAV/(1+c) misses high-turnover solutions.
         low, high = nav_before * (1 - cost_rate) / (1 + cost_rate), nav_before
         for _ in range(100):
             mid = (low + high) / 2
@@ -83,6 +84,8 @@ def simulate_portfolio(
     cost_rate: float,
     rebalance_dates: Collection[pd.Timestamp],
     strategy: str,
+    *,
+    target_schedule: pd.DataFrame | None = None,
 ) -> PortfolioRun:
     """Value holdings at each close, then execute any scheduled close trade."""
     if len(prices) < 2 or prices.index.has_duplicates or not prices.index.is_monotonic_increasing:
@@ -95,6 +98,26 @@ def simulate_portfolio(
     if unknown:
         raise ValueError("Rebalance dates must be observed after the initial date")
     scheduled = set(pd.DatetimeIndex(rebalance_dates))
+    target_updates = set()
+    if target_schedule is not None:
+        if (
+            target_schedule.empty
+            or not isinstance(target_schedule.index, pd.DatetimeIndex)
+            or target_schedule.index.has_duplicates
+            or not target_schedule.index.is_monotonic_increasing
+            or target_schedule.index.hasnans
+            or target_schedule.index[0] != dates[0]
+            or not set(target_schedule.index).issubset(dates)
+        ):
+            raise ValueError(
+                "Target schedule must start at allocation and use unique ordered observed dates"
+            )
+        for _, row in target_schedule.iterrows():
+            _validated_weights(row, prices.columns)
+        if not np.allclose(target, target_schedule.iloc[0].reindex(prices.columns)):
+            raise ValueError("Initial weights differ from the target schedule")
+        target_updates = set(target_schedule.index[1:])
+        scheduled |= target_updates
     allocation = initial_allocation(initial_capital, target, cost_rate)
     holdings = np.asarray(allocation.values)
     previous_nav = initial_capital
@@ -125,10 +148,13 @@ def simulate_portfolio(
         is_rebalance = date in scheduled
         cost = gross = 0.0
         if is_rebalance:
+            if date in target_updates:
+                target = _validated_weights(target_schedule.loc[date], prices.columns)
             result = rebalance(holdings, target, cost_rate)
             holdings = np.asarray(result.values)
             cost, gross = result.cost, result.gross_traded
-            record_transaction(date, "scheduled_rebalance", result)
+            event = "annual_reoptimisation" if date in target_updates else "scheduled_rebalance"
+            record_transaction(date, event, result)
         nav = float(holdings.sum())
         daily_return = nav / previous_nav - 1
         high_water = max(high_water, nav)
@@ -148,6 +174,8 @@ def simulate_portfolio(
         row.update(
             {f"{ticker}_weight": value / nav for ticker, value in zip(prices.columns, holdings)}
         )
+        if target_schedule is not None:
+            row.update({f"{ticker}_target": value for ticker, value in zip(prices.columns, target)})
         rows.append(row)
         previous_nav = nav
     return PortfolioRun(

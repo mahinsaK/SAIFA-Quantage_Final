@@ -53,6 +53,8 @@ def test_prepare_reuses_verified_outputs_without_recalculation(tmp_path, monkeyp
     monkeypatch.setattr(
         run_judge_app, "build_research", lambda *args, **kwargs: pytest.fail("rebuild")
     )
+    monkeypatch.setattr(run_judge_app, "load_adaptive", lambda root, bundle: None)
+    monkeypatch.setattr(run_judge_app, "build_adaptive", lambda *args: pytest.fail("rebuild"))
     monkeypatch.setattr(run_judge_app, "submission_ready", lambda root, sid: True)
     monkeypatch.setattr(
         run_judge_app, "build_dashboard", lambda *args, **kwargs: pytest.fail("rebuild")
@@ -92,6 +94,14 @@ def test_prepare_rebuilds_missing_stages_in_order(tmp_path, monkeypatch):
         run_judge_app, "build_research", lambda *args, **kwargs: events.append("build research")
     )
     monkeypatch.setattr(
+        run_judge_app,
+        "load_adaptive",
+        lambda *args: (_ for _ in ()).throw(DashboardDataError("annual absent")),
+    )
+    monkeypatch.setattr(
+        run_judge_app, "build_adaptive", lambda *args: events.append("build annual")
+    )
+    monkeypatch.setattr(
         run_judge_app, "build_dashboard", lambda *args, **kwargs: events.append("build app")
     )
     monkeypatch.setattr(
@@ -109,6 +119,7 @@ def test_prepare_rebuilds_missing_stages_in_order(tmp_path, monkeypatch):
         "load decision",
         "build decision",
         "build PDFs",
+        "build annual",
         "build research",
     ]
 
@@ -129,6 +140,7 @@ def test_optional_research_failure_does_not_prevent_core_app(tmp_path, monkeypat
 
     monkeypatch.setattr(run_judge_app, "load_research", missing)
     monkeypatch.setattr(run_judge_app, "build_research", failed)
+    monkeypatch.setattr(run_judge_app, "load_adaptive", lambda root, bundle: None)
     messages = []
     assert (
         run_judge_app.prepare(tmp_path, progress=messages.append)

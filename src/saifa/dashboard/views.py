@@ -35,6 +35,7 @@ def download(frame, label, name):
 
 
 def portfolio_page(bundle: DashboardBundle, strategy: str):
+    from saifa.dashboard.adaptive import annual_strategy_section
     from saifa.dashboard.decision import decision_banner, decision_evidence, spending_sensitivity
 
     st.header("Portfolio performance", anchor="portfolio-page")
@@ -44,6 +45,7 @@ def portfolio_page(bundle: DashboardBundle, strategy: str):
         ("portfolio-performance", "Performance"),
         ("portfolio-drawdown", "Drawdown"),
         ("portfolio-frontier", "Efficient frontier"),
+        ("portfolio-annual", "Annual strategy"),
         ("portfolio-diversification", "Diversification"),
         ("portfolio-spending", "Purchasing power"),
     ]
@@ -212,6 +214,7 @@ def portfolio_page(bundle: DashboardBundle, strategy: str):
                 "Expected annual return (%)": st.column_config.NumberColumn(format="%.2f%%"),
             },
         )
+    annual_strategy_section(bundle)
     st.subheader("How do the seven ETFs move together?", anchor="portfolio-diversification")
     try:
         correlations, first, last = recent_return_correlations(

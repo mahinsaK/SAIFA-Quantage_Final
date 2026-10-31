@@ -8,7 +8,7 @@ The five original pages and three frozen candidates remain the submission refere
 
 | Requested direction | Implemented here | What is not established |
 |---|---|---|
-| Rolling weight re-optimisation | Already committed separately as `9c327c1`, in the annual-strategy PR | This independent main-based branch does not duplicate that PR. Merge/review it separately. Annual GARCH parameter refitting below does not change portfolio weights. |
+| Rolling weight re-optimisation | Phase 11 was merged into main in PR #2 and is available under Portfolio → Annual strategy | Annual GARCH parameter refitting below does not change portfolio weights. The Phase 11 results remain a separate experiment from this lab. |
 | Alternative allocations | Minimum empirical 95% ES; policy-constrained variance-risk balancing | No future superiority, global risk-parity optimality, alternative-candidate crisis/forecast calibration or client suitability. |
 | Robustness | Earlier/trailing training windows, expected-return shocks, fixed covariance shrinkage and block resampling | No optimal shrinkage estimate, exhaustive perturbation search or calibrated weight confidence intervals. |
 | Changing volatility/dependence | GARCH Normal/FHS forecasts, EWMA covariance, dated tests and prior-volatility diagnostics | No fitted Markov-switching model, DCC or copula. Regime labels are descriptive. |

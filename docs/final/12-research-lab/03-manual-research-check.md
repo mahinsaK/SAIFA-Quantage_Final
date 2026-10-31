@@ -4,7 +4,7 @@ Status: **pending actual human calculation, output review and interpretation**. 
 
 ## Start
 
-Run the usual app command from README, then select **Research lab** in the sidebar. The research-question selector opens six panels. Read the scope expander before interpreting results; the main sidebar's portfolio/risk selectors and the Portfolio page's committee view still refer to the original frozen candidates. The annual-weight experiment is in its separate PR.
+Run the usual app command from README, then select **Research lab** in the sidebar. The research-question selector opens six panels. Read the scope expander before interpreting results; the main sidebar's portfolio/risk selectors and the Portfolio page's committee view still refer to the original frozen candidates. The annual-weight experiment is under Portfolio → Annual strategy and has its own Phase 11 worksheet.
 
 ## A. Alternative allocations
 
