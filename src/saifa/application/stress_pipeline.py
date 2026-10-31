@@ -264,7 +264,7 @@ def build_stress(
                 git=_git_state(source_root),
                 review_record="docs/final/08-contributions-stress/03-manual-stress-check.md",
                 human_validation="pending",
-                scenario_approval="proposed; team interpretation pending",
+                scenario_approval="team research scenario accepted 2026-10-31; client approval pending",
                 replay_basis="fixed initial allocation, buy and hold, no fees or withdrawals; retrospective replay",
                 marginal_basis="unconstrained exposure derivative; funded transfers explicitly repriced",
                 risk_horizon_sessions=1,

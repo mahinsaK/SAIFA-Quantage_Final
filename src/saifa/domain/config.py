@@ -34,7 +34,9 @@ class StressConfig:
         "Illustrative one-session inflation and liquidity squeeze: real yields and credit spreads "
         "rise, stocks sell off as growth expectations weaken, and forced selling affects bonds "
         "and gold. Energy equities suffer the assumed demand shock. ETF shocks are direct total "
-        "return assumptions, not a calibrated macro model or assigned probability. Team review pending."
+        "return assumptions, not a calibrated macro model or assigned probability. "
+        "The team accepted this illustrative research scenario on 31 October 2026; "
+        "client investment approval remains open."
     )
     shocks: tuple[tuple[str, float], ...] = (
         ("SPY", -0.12),

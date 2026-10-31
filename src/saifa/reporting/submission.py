@@ -230,8 +230,8 @@ def write_submission(root: Path, snapshot: Path) -> Path:
     report.p(decision["inflation_limitation"], "Purchasing power and remaining limits")
     report.p(
         "The team's stated position concerns these three tested allocations, not rejection of "
-        "the university's investment mandate itself. Independent calculation checks and "
-        "client/committee approval remain open. Any revised objective or portfolio design "
+        "the university's investment mandate itself. Mahinsa Kuruppu reported independent research "
+        "checks on 31 October; client/committee approval remains open. Any revised objective or portfolio design "
         "needs fresh validation; numerical limits must not be raised solely to pass observed tests."
     )
 
@@ -585,7 +585,8 @@ def write_submission(root: Path, snapshot: Path) -> Path:
     shocks = meta["stress"]["config"]["stress"]["shocks"]
     report.p(
         "Base ETF shocks: " + ", ".join(f"{t} {pct(v)}" for t, v in shocks) + ". "
-        "Multipliers are severities, not event probabilities. Team scenario approval remains pending."
+        "Multipliers are severities, not event probabilities. The team accepted this "
+        "illustrative research scenario on 31 October 2026; client approval remains open."
     )
     report.p(
         "Component Normal VaR/ES and Historical ES reconcile to portfolio totals and include "
@@ -678,10 +679,10 @@ def write_submission(root: Path, snapshot: Path) -> Path:
     report.page("Decision, conditions and review triggers", context)
     report.p(decision["decision"])
     report.p(
-        "Team perspectives supplied on 31 October 2026: Mahinsa favours minimum volatility "
-        "only for further preservation research; Lumith highlights clustered VaR exceptions; "
-        "Janith highlights crisis and joint-shock breaches; Rayan distinguishes observed "
-        "before-withdrawal real growth from unverified spending suitability; Sandanu rejects "
+        "Team perspectives supplied on 31 October 2026: Mahinsa Kuruppu favours minimum volatility "
+        "only for further preservation research; Lumith Manujaya highlights clustered VaR exceptions; "
+        "Janith Nishen highlights crisis and joint-shock breaches; Rayan Sankalapa distinguishes observed "
+        "before-withdrawal real growth from unverified spending suitability; Sandanu Liyanage rejects "
         "immediate implementation pending client needs and a response to model failures. "
         "These positions do not constitute individual calculation sign-offs or client approval."
     )
@@ -742,11 +743,12 @@ def write_submission(root: Path, snapshot: Path) -> Path:
     report.p(
         "OpenAI Codex assisted code, tests, spending assumptions, dashboard text and report "
         "composition. The five named team perspectives and final recommendation were supplied "
-        "by the team through Mahinsa on 31 October 2026. Earlier material includes AI-assisted "
-        "portfolio, risk, EVT, backtesting and stress implementation. This report is not a "
-        "claim that every calculation or scenario received independent human approval. Members "
-        "must substantiate the figures, explain the methods and record actual reviews in the "
-        "phase worksheets and AI-use log."
+        "by the team through Mahinsa Kuruppu on 31 October 2026. Earlier material includes AI-assisted "
+        "portfolio, risk, EVT, backtesting and stress implementation. On 31 October, Mahinsa Kuruppu "
+        "reported independent app, PDF, CPI and spending-example checks without discrepancies, "
+        "and team acceptance of the illustrative research shock. The named scope and missing "
+        "detailed workings are recorded in the phase worksheets and AI-use log. Client "
+        "investment approval is not claimed."
     )
     report.p(
         "Automated tests check examples, cash-flow identities, scaling, missing evidence, "
@@ -767,10 +769,10 @@ def write_submission(root: Path, snapshot: Path) -> Path:
         "references are documented in the risk, EVT, backtesting and decision methodology files."
     )
     report.p(
-        "Final submission deadline supplied by the team: 31 October 2026. Exact cutoff "
-        "time, submission route, repository access and individual roster confirmation remain open. "
-        "The final-five presentation is separate from this report. Pending reviews are "
-        "visible limitations, not completed sign-offs."
+        "Final submission deadline supplied by the team: 31 October 2026 at 11:59 PM; "
+        "the timezone, submission route and judge repository access require confirmation. "
+        "The final-five presentation is separate from this report. Client policy and "
+        "allocation approval are outside this competition research."
     )
     pages = {"investment-report.pdf": report.save(output / "investment-report.pdf")}
     if not 7 <= pages["investment-report.pdf"] <= 15:
@@ -863,8 +865,12 @@ def write_submission(root: Path, snapshot: Path) -> Path:
             for condition in decision["conditions"]:
                 doc.p(condition)
         doc.p(
-            "Team recommendation supplied 31 October 2026; AI-assisted document preparation. "
-            "Independent checks, scenario review and client policy/allocation approval remain open."
+            "Team recommendation, human checks and research-scenario acceptance reported "
+            "31 October 2026; AI-assisted document preparation. Client investment approval remains open."
+        )
+        doc.p(
+            "SAIFA research team: Mahinsa Kuruppu, Lumith Manujaya, Janith Nishen, "
+            "Rayan Sankalapa and Sandanu Liyanage."
         )
         pages[filename] = doc.save(output / filename)
         if pages[filename] != 1:

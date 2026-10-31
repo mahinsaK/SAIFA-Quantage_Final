@@ -1,6 +1,6 @@
 # Observed CPI real-growth review — 28 October 2026
 
-Status: **automated calculation and artifact checks complete; independent human review pending**. This worksheet does not approve an allocation or the proposed 3% objective.
+Status: **automated checks complete; Mahinsa Kuruppu (KAD) reported independent source and calculation review on 31 October 2026 with no discrepancy**. This worksheet does not approve an allocation or the proposed 3% objective.
 
 ## Data and timing to check
 
@@ -32,12 +32,12 @@ The existing 0%, 2% and 4% withdrawal scenarios still use assumed inflation and 
 
 ## Reviewer record — complete only after checking
 
-- Reviewer name/date:
-- CPI source, latest-release timing and October 2025 missing row checked:
-- Starting/ending CPI and dates matched:
-- Independent deflator, real USD and annualised growth calculation:
-- App, CSV, report and tear sheet figures matched:
-- Explanation of observed period versus ten-year objective:
-- Explanation of observed CPI versus hypothetical spending inflation:
-- Discrepancies/corrections:
-- Sign-off scope and initials:
+- Reviewer name/date: Mahinsa Kuruppu (KAD), 31 October 2026, as reported by the reviewer.
+- CPI source, latest-release timing and October 2025 missing row checked: Reported checked; the October 2025 source gap remains missing and was not interpolated.
+- Starting/ending CPI and dates matched: Reported checked: January 2022 282.543 and September 2026 336.298; 3 January 2022 to 30 September 2026.
+- Independent deflator, real USD and annualised growth calculation: Mahinsa Kuruppu reported independently checking the factor 1.19025422679 and one portfolio's annual real growth against the worksheet; calculator workings were not supplied.
+- App, CSV, report and tear sheet figures matched: Mahinsa Kuruppu reported checking all three PDFs, app and CPI source values with no discrepancy. KAD reopened the final regenerated report, tear sheet and memo after the team-name/status update and reported their layout and wording correct; individual comparison rows were not supplied.
+- Explanation of observed period versus ten-year objective: The under-five-year observed period cannot establish ten-year future attainment; Mahinsa Kuruppu reported reviewing this distinction.
+- Explanation of observed CPI versus hypothetical spending inflation: CPI supports the before-withdrawal historical comparison; 0%, 2% and 4% spending inflation cases remain assumptions. Mahinsa Kuruppu reported reviewing this distinction.
+- Discrepancies/corrections: None reported by Mahinsa Kuruppu on 31 October 2026.
+- Sign-off scope and initials: KAD, reported 31 October 2026, for source values, one independent CPI calculation and cross-artifact review; not client policy approval.

@@ -1,6 +1,6 @@
 # Manual contributions and stress check
 
-Status: **Parts A–D manually reviewed and signed off; selected Part E crisis, shock, Normal risk-contribution and funded-transfer app checks reported complete; remaining output checks and team scenario review pending**. The final investment decision is also pending.
+Status: **Parts A–D signed off; Mahinsa Kuruppu (KAD) reported completing the remaining Part E output-file checks on 31 October 2026; the five-member team accepted the illustrative research scenario**. Client investment approval remains open.
 
 ## A. Normal contributions
 
@@ -56,7 +56,7 @@ uv run --locked python commands/run_stress.py
 uv run --locked pytest tests/test_stress.py -q
 ```
 
-Use the output folder printed by the runner. The default folder is `output/stress/20261023T102523Z-0d40a885/200356ee3cbe/`.
+Use the output folder printed by the runner. After the 31 October scenario-status update, the default folder is `output/stress/20261023T102523Z-0d40a885/7850adac5c53/`. The earlier `200356ee3cbe` run remains historical evidence with the same shock percentages but an older pending-review label.
 
 1. Confirm `status.json` says `complete`. Check snapshot, as-of, next forecast session, input window, NAV and weights cutoff in `summary.json`.
 2. In `contribution_summary.csv`, expect 18 rows; `asset_contributions.csv` has 126. Choose one portfolio/model/measure/confidence, sum its seven component fractions/USD amounts and match the total. Default baseline 99% Normal VaR is approximately USD 108,131.90; Normal ES USD 124,487.34; Historical ES USD 153,489.10. Tolerance USD 0.05 for these rounded references.
@@ -86,8 +86,8 @@ Use the output folder printed by the runner. The default folder is `output/stres
 - Part E baseline hypothetical joint-shock app check: On 29 Oct 2026, after the one-session scenario and severity multiplier were explained, the reviewer reported that the displayed values matched the frozen output. At severity 1.0, SPY USD 480,000 plus AGG USD 360,000 gave USD 840,000 / 8.4%, without a proposed 10% breach. At severity 1.5, SPY USD 720,000 plus AGG USD 540,000 gave USD 1,260,000 / 12.6%, with a breach warning. The five zero-weight ETF components were zero. This confirms displayed arithmetic and controls, not the team-designed scenario assumptions or their probability.
 - Part E baseline 99% Parametric Normal attribution app check: On 29 Oct 2026, the reviewer reported that SPY and AGG VaR components were USD 77,374.28 and 30,757.63 against the USD 108,131.90 total; ES components were USD 89,106.19 and 35,381.15 against the USD 124,487.34 total. The unrounded source components reconcile exactly; individually rounded VaR cents sum to USD 108,131.91, one cent above the rounded total. The other five zero-weight ETFs contributed zero. This is a selected one-session model attribution check, not validation of its forecasts.
 - Part E feasible funded-transfer app check: On 29 Oct 2026, the reviewer reported that transferring one percentage point from SPY to EFA at 95% Parametric Normal VaR preserved full investment (39% SPY, 1% EFA, 60% AGG) and matched USD 75,239.47 before, USD 75,047.08 after, exact delta −USD 192.39 and linear approximation −USD 199.47. This is a risk sensitivity, not a trade recommendation.
-- Remaining Part E checks and team scenario approval: pending.
-- Commands actually run and observed results:
+- Remaining Part E checks and team scenario approval: Mahinsa Kuruppu (KAD) reported checking the status/summary files, 18/126 contribution rows, ten-observation warning, sizing CSV, nine crisis rows and component sums on 31 October 2026, along with the app A–E checks, with no discrepancy. The five-member team acceptance was reported separately on the same date. Detailed row-by-row workings were not supplied.
+- Commands actually run and observed results: Mahinsa Kuruppu reported completing the checks on 31 October 2026; the exact human command log was not supplied. Codex's separate automated audit below passed.
 - Discrepancies and corrections (write “None found” only if true): None found in the completed checks; remaining Part E outputs and assumptions are not yet signed off.
 
 - In your own words: What is a marginal versus a component contribution?
@@ -100,9 +100,17 @@ Use the output folder printed by the runner. The default folder is `output/stres
   A replay applies today's model or portfolio structure to historical market data. It is a stress experiment, not evidence that the strategy actually existed and traded during that period.
 
 - Scenario decision: accept as a research assumption / revise (give reasons):
-  Pending review of actual scenario assumptions and output files.
+
+  Accepted by the team as an illustrative, severe one-session research scenario. We reviewed the seven ETF shocks and the inflation/liquidity-squeeze narrative. The shocks are simultaneous assumptions, not a historically observed joint day, a calibrated probability, or a forecast. We retain the 0.5×, 1× and 1.5× results to show sensitivity; the 1.5× case breaches our proposed 10% review level for all three portfolios. This acceptance does not approve an investment allocation or client risk limit.
+
+  Mahinsa Kuruppu reported acceptance by Mahinsa Kuruppu, Lumith Manujaya, Janith Nishen, Sandanu Liyanage and Rayan Sankalapa on 31 October 2026. This is a team-reported decision; individual signatures were not supplied.
+
 - Response to breached review levels and backtesting limitations:
   Drawdown breaches and backtesting failures should be treated as risk warnings requiring investigation. Passing one risk measure does not prove safety.
 - Reviewer initials/sign-off (Parts A–D): KAD
 
 Arithmetic sign-off, scenario approval and final portfolio recommendation are separate decisions. Record concerns even when all calculations match.
+
+### Automated audit on 31 October 2026 (not scenario approval)
+
+Codex ran the focused dashboard, decision, spending and stress tests: **85 passed**. The frozen app bundle and committee evidence loaded successfully, and the generated PDF manifest passed `submission_ready`. The stress run's scenario inputs remain SPY −12%, EFA −15%, EEM −18%, AGG −6%, GLD −4%, XLE −20% and XLK −18%; the base baseline shock remains 8.4% / USD 840,000 and its 1.5× sensitivity 12.6% / USD 1,260,000. The team's subsequent acceptance is recorded above; this automated audit did not constitute that decision.

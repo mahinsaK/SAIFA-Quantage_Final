@@ -1,6 +1,6 @@
 # Contributions and stress milestone
 
-Implementation and automated verification: **complete, 25 October 2026**. Human calculation, scenario approval and final investment interpretation: **pending** in the [manual worksheet](03-manual-stress-check.md).
+Implementation and automated verification: **complete, 25 October 2026**. **31 October update:** Mahinsa Kuruppu reported completing the human stress checks and named team acceptance of the illustrative scenario in the [manual worksheet](03-manual-stress-check.md). Client investment approval remains open.
 
 ## Reproduce
 

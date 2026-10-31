@@ -20,7 +20,8 @@ def main() -> int:
         output = write_submission(ROOT, snapshot)
         print(f"Report, tear sheet and committee memo: {output}")
         print(
-            "Team recommendation recorded; independent reviews, scenario and client approval remain pending."
+            "Team recommendation and reported human research checks recorded; "
+            "client investment approval remains open."
         )
         return 0
     except Exception as exc:  # noqa: BLE001 - CLI boundary

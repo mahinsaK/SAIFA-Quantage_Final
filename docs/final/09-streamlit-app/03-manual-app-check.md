@@ -1,6 +1,6 @@
 # Manual Streamlit app check
 
-Status: **frontier and heatmap checks reported complete on 27 October 2026; remaining browser checks and reviewer sign-off pending**. Automated evidence is recorded separately in the milestone. Expected values for other checks are not a record that they were performed.
+Status: **Mahinsa Kuruppu (KAD) reported completing all A–E browser checks on 31 October 2026 with no discrepancy and rechecked the rebuilt Stress page after the team-acceptance wording change**. Frontier and heatmap observations from 27 October remain documented below. Browser/device and value-by-value notes for the 31 October review were not supplied; this is a reviewer-reported sign-off, separate from automated evidence.
 
 ## Start and inspect
 
@@ -67,24 +67,30 @@ Read the limitations page. Confirm it includes model failures, retrospective eva
 
 ## Reviewer record
 
-- Reviewer name:
-- Review date:
-- Browser/device/window size:
-- Snapshot and bundle reviewed:
-- Commands actually run and observed results:
-- Part A selections and results checked:
+- Reviewer name: Mahinsa Kuruppu (KAD), as reported by the reviewer.
+- Review date: 31 October 2026.
+- Browser/device/window size: Not supplied by the reviewer; A–E checks, including narrow-width checks, were reported complete.
+- Snapshot and bundle reviewed: The team reported checking the current frozen app; bundle ID `20261023T102523Z-0d40a885` was separately verified by the automated audit below.
+- Commands actually run and observed results: A–E browser checks reported complete by Mahinsa Kuruppu; exact human command log was not supplied. See the separate automated audit below.
+- Part A selections and results checked: Reported complete by Mahinsa Kuruppu on 31 October; individual selections were not transcribed.
 - Part A section navigation and narrow-width behaviour checked: On 27 October 2026, the user reported that Frontier click navigation, persistent visibility during scrolling and automatic active-underline updates worked. Decision and Overview links were unclear and did not land as expected. Summary was pinned outside the horizontally scrolling row, and the user then specified five exact heading destinations for Summary, Performance, Drawdown, Efficient frontier and Diversification. The user subsequently reported that Performance went to “Portfolio performance” instead of “Performance and holdings”. Inspection found that Streamlit automatically assigned `portfolio-performance` to the top heading while the lower heading explicitly used the same anchor. The top heading now uses `portfolio-page` and the Performance link is restored. This correction and narrow-width layout still need browser recheck.
-- Part A frontier axes, period and candidate values checked: On 27 October 2026, the user visually checked the graph and its table against the approximate values given in chat, then confirmed that the `candidate_weights.csv` values matched the displayed values. The user also confirmed the displayed annual-volatility and expected-annual-return axes and the caption: "Daily returns before 2019-01-01 were used to fit this curve and the two marked candidates. Both axes are annualised estimates before trading costs. The 2022 onward performance above is a separate, realised comparison after costs." The rest of Part A remains pending.
+- Part A frontier axes, period and candidate values checked: On 27 October 2026, the user visually checked the graph and its table against the approximate values given in chat, then confirmed that the `candidate_weights.csv` values matched the displayed values. The user also confirmed the displayed annual-volatility and expected-annual-return axes and the caption: "Daily returns before 2019-01-01 were used to fit this curve and the two marked candidates. Both axes are annualised estimates before trading costs. The 2022 onward performance above is a separate, realised comparison after costs." Mahinsa Kuruppu reported completing the remaining Part A checks on 31 October.
 - Part A heatmap period, axes and spot values checked: On 27 October 2026, the user reported that the requested heatmap checks looked fine in the app. A separate source-data check confirmed a 7×7 symmetric matrix, diagonal 1.00, 22 October 2025–22 October 2026 window, SPY/XLK 0.8508 and SPY/AGG 0.4055. Browser/device details and a narrow-width readability check were not reported.
-- Part A observed CPI and separate spending illustration checked:
-- Part A purchasing-power navigation and target chart checked:
-- Part B confidence/method results checked:
-- Part C dates, exceptions and unavailable states checked:
-- Part C model-comparison matrix and date-range response checked:
-- Part D scenarios, severity and contributions checked:
-- Part D cross-crisis and risk-contribution charts checked:
-- Part E readability, limitations and downloaded rows checked:
-- Discrepancies and corrections:
-- Reviewer initials/sign-off:
+- Part A observed CPI and separate spending illustration checked: Reported complete by Mahinsa Kuruppu on 31 October.
+- Part A purchasing-power navigation and target chart checked: Reported complete by Mahinsa Kuruppu on 31 October.
+- Part B confidence/method results checked: Reported complete by Mahinsa Kuruppu on 31 October.
+- Part C dates, exceptions and unavailable states checked: Reported complete by Mahinsa Kuruppu on 31 October.
+- Part C model-comparison matrix and date-range response checked: Reported complete by Mahinsa Kuruppu on 31 October.
+- Part D scenarios, severity and contributions checked: Reported complete by Mahinsa Kuruppu on 31 October. KAD subsequently rechecked the rebuilt Stress page's “team accepted” wording, figures and controls and reported that they were correct.
+- Part D cross-crisis and risk-contribution charts checked: Reported complete by Mahinsa Kuruppu on 31 October.
+- Part E readability, limitations and downloaded rows checked: Reported complete by Mahinsa Kuruppu on 31 October.
+- Discrepancies and corrections: Mahinsa Kuruppu reported no discrepancy across the 31 October app/PDF/CPI review; no itemised correction log was supplied.
+- Reviewer initials/sign-off: KAD, reported 31 October 2026, scope A–E.
+
+### Automated audit on 31 October 2026 (not browser sign-off)
+
+Codex ran `tests/test_dashboard.py`, `tests/test_dashboard_visual_data.py`, `tests/test_decision.py`, `tests/test_spending.py` and `tests/test_stress.py`: **85 passed**. `load_bundle` verified the frozen app bundle for snapshot `20261023T102523Z-0d40a885`; `load_decision` read the matching committee evidence; and `submission_ready` verified the generated PDF manifest, file hashes and required page counts. These checks do not test sticky navigation, narrow-screen layout, interactive chart tooltips or a judge's browser experience.
+
+**Post-review text follow-up:** The Stress analysis → Hypothetical joint shock section now shows the five full team names beside the research-scenario acceptance. A real-snapshot Streamlit AppTest rendered the page without an exception and found all five names and the client-approval distinction. KAD's earlier browser sign-off preceded this text-only addition; a human browser recheck of this new line has not been reported.
 
 This worksheet reviews the app's behaviour. It does not approve a portfolio, client policy or team hypothetical scenario.

@@ -42,8 +42,7 @@ CONDITIONS = (
     ),
     "Review failed coverage/clustering tests, sparse tail evidence and independent model validation.",
     (
-        "Record independent checks of the team-provided recommendation, review and approve the "
-        "hypothetical scenario, complete reviewer records and obtain client/committee policy "
-        "approval before implementation."
+        "Retain the dated team scenario and reviewer records with the research. Obtain "
+        "client/committee policy and allocation approval before any implementation."
     ),
 )

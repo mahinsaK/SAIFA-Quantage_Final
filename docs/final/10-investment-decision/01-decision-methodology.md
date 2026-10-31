@@ -1,6 +1,6 @@
 # Committee evidence and spending methodology
 
-Implemented 26 October 2026. On 31 October, Mahinsa supplied perspectives attributed to five team members and a common recommendation. That records the team's stated position, while individual calculation sign-offs, scenario approval and client policy approval remain separate.
+Implemented 26 October 2026. On 31 October, Mahinsa Kuruppu supplied perspectives attributed to five team members and a common recommendation. KAD subsequently reported completing the named calculations and app/PDF/CPI checks, and the five-member team accepted the illustrative research scenario. Those records remain separate from client policy and allocation approval.
 
 ## Evidence and decision
 

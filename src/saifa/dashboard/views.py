@@ -987,6 +987,11 @@ def stress_page(bundle: DashboardBundle, strategy: str, confidence: float, metho
     )
     st.subheader("Hypothetical joint shock", anchor="stress-shock")
     st.caption(meta["shock_narrative"])
+    st.caption(
+        "Team research review · 31 October 2026: Mahinsa Kuruppu, Lumith Manujaya, "
+        "Janith Nishen, Rayan Sankalapa and Sandanu Liyanage accepted this scenario "
+        "for research. Client investment approval remains open."
+    )
     shock_inputs = tables["scenario_shocks"].copy()
     for field in ("base_shock_return", "development_worst_daily_return"):
         if field in shock_inputs:
@@ -1029,7 +1034,7 @@ def stress_page(bundle: DashboardBundle, strategy: str, confidence: float, metho
         table(parts, alt="Selected hypothetical shock contribution detail")
     st.caption(
         "All shocks occur together over one session. Severity is not probability. "
-        "Team scenario review is pending; a non-breach is not proof of safety."
+        "A non-breach is not proof of safety or client approval."
     )
     download(parts, "Download selected shock contributions", f"{strategy}_shock.csv")
     _risk_contributions(bundle, strategy, confidence, method)

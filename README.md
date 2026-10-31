@@ -2,6 +2,8 @@
 
 Research dashboard and investment committee materials for a proposed USD 10 million conservative university endowment portfolio.
 
+SAIFA research team: Mahinsa Kuruppu, Lumith Manujaya, Janith Nishen, Rayan Sankalapa and Sandanu Liyanage.
+
 ## Start here: run the app from a fresh clone
 
 **Run commands from the repository root** (the folder containing `app.py` and `data/LATEST`). You need Python **3.11, 3.12 or 3.13**. Choose **one** launch method below; the individual research commands later in this README are not needed to open the app.
@@ -91,7 +93,7 @@ The launcher creates these files under `output/pdf/<snapshot-id>/`:
 
 `data/LATEST` identifies the snapshot used by the app and report. The generated `output/` folder is **not tracked by Git**, so a new clone rebuilds it. Include the final PDFs in the actual submission package or upload them separately; repository source alone does not include those generated PDFs.
 
-Before submission, the team must verify the final numbers and PDFs, approve or revise the proposed stress scenario, confirm the recorded recommendation and individual member attributions, record actual human review, check judge access to the GitHub repository and confirm the submission route and cutoff time. The supplied deadline date is **31 October 2026**; its exact time and timezone have not been confirmed here.
+On 31 October 2026, Mahinsa Kuruppu (KAD) reported completing the app A–E, final PDF, CPI and spending-example checks without discrepancy, then rechecked the regenerated PDFs and rebuilt Stress page after the final wording/name updates. Mahinsa Kuruppu also reported that the five-member team accepted the hypothetical joint shock as an illustrative research scenario; the named scope and missing detailed working sheets are recorded in the [stress](docs/final/08-contributions-stress/03-manual-stress-check.md) and [decision](docs/final/10-investment-decision/03-manual-decision-check.md) worksheets. Before submission, still check judge access to GitHub and the submission route. The team supplied **31 October 2026, 11:59 PM** as the deadline; its timezone has not been confirmed here. No university/client policy or allocation approval is claimed.
 
 ## Developer and reproduction commands
 

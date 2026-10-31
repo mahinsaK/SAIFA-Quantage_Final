@@ -1,6 +1,6 @@
 # Portfolio risk contributions and stress methodology
 
-Implemented 25 October 2026. Human arithmetic, scenario approval and investment interpretation remain pending in the [manual worksheet](03-manual-stress-check.md).
+Implemented 25 October 2026. **31 October update:** Mahinsa Kuruppu reported completing the remaining checks and the five-member team accepted the illustrative research scenario in the [manual worksheet](03-manual-stress-check.md). Client policy and allocation approval remain open.
 
 ## Scope and comparable inputs
 
@@ -46,7 +46,7 @@ These are retrospective exposure replays using historical ETF returns, not inves
 
 ## Hypothetical scenario and review levels
 
-The proposed one-session inflation/liquidity squeeze assumes rising real yields/credit spreads, equity weakness, forced selling in bonds/gold and an energy-demand shock. Direct ETF total-return shocks are SPY -12%, EFA -15%, EEM -18%, AGG -6%, GLD -4%, XLE -20%, XLK -18%. This is an AI-assisted draft for team review, not an already approved team scenario or calibrated macro-factor model. Development-period worst daily ETF returns are supplied as scale context, not jointly observed shocks or a calibration claim.
+The one-session inflation/liquidity squeeze assumes rising real yields/credit spreads, equity weakness, forced selling in bonds/gold and an energy-demand shock. Direct ETF total-return shocks are SPY -12%, EFA -15%, EEM -18%, AGG -6%, GLD -4%, XLE -20%, XLK -18%. This AI-assisted draft was reported accepted by the five-member team on 31 October as an illustrative research scenario, not a calibrated macro-factor model or client-approved policy. Development-period worst daily ETF returns are supplied as scale context, not jointly observed shocks or a calibration claim.
 
 Portfolio loss is `-sum(weight × shock)`; signed asset losses sum exactly to it. Half/base/1.5-times shocks test severity sensitivity, not likelihood or confidence. Scaled returns below -100% are rejected.
 
