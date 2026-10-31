@@ -10,7 +10,7 @@ uv run --locked python commands/run_judge_app.py
 
 | Script | Purpose |
 |---|---|
-| `run_judge_app.py` | Verify or build the frozen app bundle, committee evidence and PDFs; then launch Streamlit. This is the app quick-start command. |
+| `run_judge_app.py` | Verify or build the frozen app bundle, committee evidence and PDFs; attempt optional research-lab preparation; then launch Streamlit. This is the app quick-start command. |
 | `run_data.py` | Rebuild data preparation from the included frozen snapshot. A new market download requires the explicit `--download` option. |
 | `run_portfolio.py` | Rebuild the 40/60 baseline portfolio outputs. |
 | `run_optimisation.py` | Rebuild constrained Markowitz candidates and performance comparisons. |
@@ -20,6 +20,7 @@ uv run --locked python commands/run_judge_app.py
 | `run_stress.py` | Rebuild crisis replays, hypothetical shocks and risk contributions. |
 | `run_app_data.py` | Prepare only the verified app data bundle. |
 | `run_submission.py` | Prepare committee evidence and submission PDFs from an existing verified app bundle. |
+| `run_research.py` | Build optional alternative allocations, robustness, dynamic risk, conditional spending, income proxies and cost sensitivity from the verified frozen bundle. |
 
 For a pip-only computer, run `python run_with_pip.py` from the repository root. It installs pinned runtime dependencies and calls `run_judge_app.py`. See the [root README](../README.md) for Python version requirements and platform-specific commands.
 

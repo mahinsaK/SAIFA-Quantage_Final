@@ -725,6 +725,7 @@ def test_portfolio_section_links_match_rendered_anchors_across_reruns(prepared):
         "portfolio-frontier",
         "portfolio-diversification",
         "portfolio-spending",
+        "portfolio-research",
     ]
 
     def rendered_ids():
@@ -754,6 +755,7 @@ def test_portfolio_section_links_match_rendered_anchors_across_reruns(prepared):
         ("portfolio-frontier", "Development-period efficient frontier"),
         ("portfolio-diversification", "How do the seven ETFs move together?"),
         ("portfolio-spending", "Purchasing power and spending"),
+        ("portfolio-research", "Portfolio research lab"),
     ]
     assert rendered_ids() == (expected, expected_headings)
     headings = [item.value for item in app.subheader]

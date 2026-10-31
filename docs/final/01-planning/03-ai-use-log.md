@@ -2,6 +2,8 @@
 
 This is an evolving record, not a claim of completed human validation.
 
+**31 October 2026 - research lab:** OpenAI Codex researched primary CVaR, risk-parity, volatility-forecasting, block-bootstrap and provider-adjustment references, then assisted development of the optional [Phase 12 lab](../12-research-lab/01-research-methodology.md). Material generated components include sparse empirical-ES optimisation, constrained risk balancing, development-only robustness, restricted Gaussian GARCH QMLE/FHS, EWMA dependence, dated recalculation, conditional joint return/CPI spending simulations, explicitly limited income/liquidity proxies, admin/trading-cost sensitivity, loaders, UI, tests and documentation. Full automated suite: 257 passed, with real-snapshot AppTest panel checks. [Measured findings](../12-research-lab/02-research-milestone.md) retain failures and limitations. No market data was downloaded; no existing human record, scenario approval or investment decision was completed on the team's behalf.
+
 | Date | Tool | Purpose | Material generated components | Automated validation | Human validation |
 |---|---|---|---|---|---|
 | 2026-10-23 | OpenAI Codex | Requirements analysis and draft policy | Checklist, proposed policy assumptions and planning README | Cross-check against provided brief; document link/ID checks | Pending team review; no client approval claimed |

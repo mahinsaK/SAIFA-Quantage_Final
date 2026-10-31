@@ -15,8 +15,10 @@ os.environ.setdefault("XDG_CACHE_HOME", str(ROOT / ".cache"))
 
 from saifa.application.dashboard_pipeline import build_dashboard
 from saifa.application.decision_pipeline import build_decision
+from saifa.application.research_pipeline import build_research
 from saifa.dashboard.data import load_bundle
 from saifa.dashboard.decision import load_decision
+from saifa.dashboard.research_data import load_research
 from saifa.data.snapshots import file_hash, resolve_snapshot
 from saifa.domain.dashboard import DashboardDataError
 from saifa.reporting.submission import write_submission
@@ -77,6 +79,17 @@ def prepare(root: Path, progress=print) -> Path:
     if not ready:
         progress("Preparing report and one-page documents from verified evidence...")
         write_submission(root, snapshot)
+    try:
+        load_research(root, bundle)
+        progress("Verified optional portfolio research lab.")
+    except (DashboardDataError, OSError, ValueError) as exc:
+        progress(f"Preparing optional research lab: {exc}")
+        try:
+            build_research(root, snapshot, progress=progress)
+        except Exception as research_error:  # noqa: BLE001 - optional experimental stage must not hide the core app.
+            progress(
+                f"Research lab unavailable: {research_error}. Core frozen app remains available."
+            )
     progress("Offline research outputs are ready. Opening the app...")
     return bundle_path
 

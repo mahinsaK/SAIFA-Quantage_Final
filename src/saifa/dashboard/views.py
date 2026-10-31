@@ -36,6 +36,7 @@ def download(frame, label, name):
 
 def portfolio_page(bundle: DashboardBundle, strategy: str):
     from saifa.dashboard.decision import decision_banner, decision_evidence, spending_sensitivity
+    from saifa.dashboard.research import research_lab_section
 
     st.header("Portfolio performance", anchor="portfolio-page")
     evidence = decision_evidence(bundle)
@@ -46,6 +47,7 @@ def portfolio_page(bundle: DashboardBundle, strategy: str):
         ("portfolio-frontier", "Efficient frontier"),
         ("portfolio-diversification", "Diversification"),
         ("portfolio-spending", "Purchasing power"),
+        ("portfolio-research", "Research lab"),
     ]
     render_section_navigation(
         sections, pinned_id="portfolio-summary", aria_label="Portfolio sections"
@@ -294,6 +296,7 @@ def portfolio_page(bundle: DashboardBundle, strategy: str):
         st.caption(
             "Verified purchasing-power evidence is unavailable; see the preparation note above."
         )
+    research_lab_section(bundle)
 
 
 def risk_page(bundle: DashboardBundle, strategy: str, confidence: float, method: str):

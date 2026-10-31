@@ -49,6 +49,10 @@ def test_prepare_reuses_verified_outputs_without_recalculation(tmp_path, monkeyp
     snapshot.mkdir(parents=True)
     monkeypatch.setattr(run_judge_app, "load_bundle", lambda root, path: SimpleNamespace())
     monkeypatch.setattr(run_judge_app, "load_decision", lambda root, bundle: ({}, {}))
+    monkeypatch.setattr(run_judge_app, "load_research", lambda root, bundle: None)
+    monkeypatch.setattr(
+        run_judge_app, "build_research", lambda *args, **kwargs: pytest.fail("rebuild")
+    )
     monkeypatch.setattr(run_judge_app, "submission_ready", lambda root, sid: True)
     monkeypatch.setattr(
         run_judge_app, "build_dashboard", lambda *args, **kwargs: pytest.fail("rebuild")
@@ -79,6 +83,14 @@ def test_prepare_rebuilds_missing_stages_in_order(tmp_path, monkeypatch):
     monkeypatch.setattr(run_judge_app, "resolve_snapshot", lambda root: snapshot)
     monkeypatch.setattr(run_judge_app, "load_bundle", load_bundle)
     monkeypatch.setattr(run_judge_app, "load_decision", load_decision)
+
+    def missing_research(*args):
+        raise DashboardDataError("research absent")
+
+    monkeypatch.setattr(run_judge_app, "load_research", missing_research)
+    monkeypatch.setattr(
+        run_judge_app, "build_research", lambda *args, **kwargs: events.append("build research")
+    )
     monkeypatch.setattr(
         run_judge_app, "build_dashboard", lambda *args, **kwargs: events.append("build app")
     )
@@ -97,4 +109,29 @@ def test_prepare_rebuilds_missing_stages_in_order(tmp_path, monkeypatch):
         "load decision",
         "build decision",
         "build PDFs",
+        "build research",
     ]
+
+
+def test_optional_research_failure_does_not_prevent_core_app(tmp_path, monkeypatch):
+    snapshot = tmp_path / "data/snapshots/frozen"
+    snapshot.mkdir(parents=True)
+    monkeypatch.setattr(run_judge_app, "resolve_snapshot", lambda root: snapshot)
+    monkeypatch.setattr(run_judge_app, "load_bundle", lambda *args: SimpleNamespace())
+    monkeypatch.setattr(run_judge_app, "load_decision", lambda *args: ({}, {}))
+    monkeypatch.setattr(run_judge_app, "submission_ready", lambda *args: True)
+
+    def missing(*args):
+        raise DashboardDataError("research absent")
+
+    def failed(*args, **kwargs):
+        raise RuntimeError("research solver failed")
+
+    monkeypatch.setattr(run_judge_app, "load_research", missing)
+    monkeypatch.setattr(run_judge_app, "build_research", failed)
+    messages = []
+    assert (
+        run_judge_app.prepare(tmp_path, progress=messages.append)
+        == tmp_path / "output/app/frozen/bundle.json"
+    )
+    assert any("Research lab unavailable" in m for m in messages)

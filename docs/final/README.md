@@ -14,6 +14,9 @@ Folders follow the order in which the project was built. Within each phase, `01`
 | 08 Contributions and stress | [Methodology](08-contributions-stress/01-contributions-stress-methodology.md) | [Milestone evidence](08-contributions-stress/02-contributions-stress-milestone.md) | [Manual stress check](08-contributions-stress/03-manual-stress-check.md) |
 | 09 Streamlit app | [App methodology](09-streamlit-app/01-app-methodology.md) | [App milestone](09-streamlit-app/02-app-milestone.md) | [Manual app check](09-streamlit-app/03-manual-app-check.md) |
 | 10 Investment decision | [Methodology](10-investment-decision/01-decision-methodology.md) | [Milestone evidence](10-investment-decision/02-decision-milestone.md) | [Manual team review](10-investment-decision/03-manual-decision-check.md) |
+| 12 Research lab | [Methodology](12-research-lab/01-research-methodology.md) | [Measured findings](12-research-lab/02-research-milestone.md) | [Manual research review](12-research-lab/03-manual-research-check.md) |
+
+Phase 11 annual portfolio re-optimisation is in a separate PR (`9c327c1`). This Phase 12 branch starts independently from main and does not duplicate that work.
 
 The worksheets distinguish completed human checks from pending ones. Generated numerical reports remain under `output/` and can be recreated with the runners in the [project README](../../README.md).
 

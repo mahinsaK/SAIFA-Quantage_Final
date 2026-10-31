@@ -48,7 +48,8 @@ def rebalance(pre_values: np.ndarray, weights: np.ndarray, cost_rate: float) -> 
         nav_after = nav_before
     else:
         # Unique self-financing root of x + c*sum(|w*x-v|) = pre-trade NAV.
-        low, high = nav_before / (1 + cost_rate), nav_before
+        # Complete rotations sell old holdings and buy new ones; gross can exceed NAV.
+        low, high = nav_before * (1 - cost_rate) / (1 + cost_rate), nav_before
         for _ in range(100):
             mid = (low + high) / 2
             equation = mid + cost_rate * np.abs(weights * mid - values).sum() - nav_before
