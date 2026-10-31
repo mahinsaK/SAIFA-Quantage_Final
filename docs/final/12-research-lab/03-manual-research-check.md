@@ -4,7 +4,7 @@ Status: **pending actual human calculation, output review and interpretation**. 
 
 ## Start
 
-Run the usual app command from README, then select **Research lab** in the sidebar. All six topic buttons—Allocations, Stability, Changing risk, Spending, Income and Costs—should be visible; each should show its question and relevant controls when selected. The original portfolio/risk/date selectors should be hidden here and their values restored when you return to an original page. Read the scope expander before interpreting results; the Portfolio page's committee view still refers to the original frozen candidates. The annual-weight experiment is under Portfolio → Annual strategy and has its own Phase 11 worksheet.
+Run the usual app command from README, then select **Research lab** in the sidebar. All six topic buttons—Allocations, Stability, Changing risk, Spending, Income and Costs—should be visible; each should show its question and relevant controls when selected. The original portfolio/risk/date selectors should be hidden here and their values restored when you return to an original page. Open **Research scope and evidence limits**: it should show readable text rather than a canvas table, identify Portfolio → Annual strategy as implemented, and distinguish unresolved evidence from app setup steps. The Portfolio page's committee view still refers to the original frozen candidates. The annual-weight experiment has its own Phase 11 worksheet.
 
 ## A. Alternative allocations
 

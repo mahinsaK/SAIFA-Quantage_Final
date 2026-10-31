@@ -652,12 +652,23 @@ def render_research(evidence: ResearchEvidence, original_forecasts: pd.DataFrame
     st.caption(
         "Retrospective research · human validation pending · separate from the committee recommendation."
     )
-    with st.expander("Read research scope, sources and remaining gaps"):
+    with st.expander("Research scope and evidence limits"):
         st.write(evidence.summary["design_status"])
         st.write(
-            "Use the research controls below. The portfolio and risk selectors on the original pages describe the three frozen candidates. These experiments do not replace final submission evidence or approve an allocation."
+            "These experiments already run on the frozen data. The limits below explain what "
+            "their results cannot establish; they are not setup steps for opening the app. "
+            "The portfolio and risk selectors on the original pages describe the three frozen "
+            "candidates. Research results do not approve an allocation."
         )
-        show(evidence.tables["availability"], "Research coverage and inputs still required")
+        st.markdown("**What is available and what remains uncertain**")
+        for row in evidence.tables["availability"].itertuples(index=False):
+            st.markdown(f"- **{row.Topic} · {row.Status}:** {row.Scope}")
+        st.caption(
+            "Actual university spending and risk tolerance, payment-date income and tax data, "
+            "split-unit review, and executable trading-cost evidence still need human or external "
+            "inputs. Additional model families are optional research, not requirements to run "
+            "this app."
+        )
         for source in evidence.summary["sources"]:
             st.markdown(f"[Methodology source]({source})")
     topic = st.segmented_control(

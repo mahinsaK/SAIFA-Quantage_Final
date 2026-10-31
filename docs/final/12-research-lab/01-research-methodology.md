@@ -4,7 +4,7 @@
 
 ## Scope and research coverage
 
-The five original pages and three frozen candidates remain the submission reference. A separate **Research lab** sidebar page exposes six optional panels with their own controls and collapsed explanations. The original portfolio/risk sidebar selectors are hidden on Research lab and retain their session choices when the user returns to those pages. Alternative allocations are not silently added to the main VaR/stress/spending selectors or committee recommendation.
+The five original pages and three frozen candidates remain the submission reference. A separate **Research lab** sidebar page exposes six optional panels with their own controls and collapsed explanations. Its scope expander uses readable text for the completed experiments and their limits; it is not an app setup checklist. The original portfolio/risk sidebar selectors are hidden on Research lab and retain their session choices when the user returns to those pages. Alternative allocations are not silently added to the main VaR/stress/spending selectors or committee recommendation.
 
 | Requested direction | Implemented here | What is not established |
 |---|---|---|

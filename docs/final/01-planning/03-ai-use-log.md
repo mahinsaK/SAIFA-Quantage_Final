@@ -8,6 +8,8 @@ This is an evolving record, not a claim of completed human validation.
 
 **31 October 2026 - research-lab UI interpretation follow-up:** OpenAI Codex hid unrelated original sidebar controls on the lab page while retaining choices on return, exposed six topic buttons and plain-language questions, placed distinct spending outcomes together, added same-range model-check comparisons and visible table/download labels, and clarified income availability and cost deltas. The combined suite passed 278 tests; real-snapshot AppTest checked all six topics and selected control responses. This is a presentation/recalculation view over existing verified outputs, not new market data or human investment approval. Browser visual acceptance remains pending.
 
+**31 October 2026 - research-scope display correction:** OpenAI Codex replaced the Research lab coverage data grid with readable scope/limit text and corrected the outdated annual-strategy PR status to the implemented Portfolio section. The frozen research output was rebuilt offline; 278 tests, lint, format and real-snapshot AppTest passed. Browser visual acceptance and the research worksheet remain pending.
+
 | Date | Tool | Purpose | Material generated components | Automated validation | Human validation |
 |---|---|---|---|---|---|
 | 2026-10-23 | OpenAI Codex | Requirements analysis and draft policy | Checklist, proposed policy assumptions and planning README | Cross-check against provided brief; document link/ID checks | Pending team review; no client approval claimed |

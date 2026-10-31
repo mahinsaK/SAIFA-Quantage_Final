@@ -221,8 +221,8 @@ def build_research(
             [
                 {
                     "Topic": "Rolling re-optimisation",
-                    "Status": "Separate annual-strategy PR",
-                    "Scope": "Committed in 9c327c1; not duplicated into this independent main-based branch.",
+                    "Status": "Implemented in Portfolio",
+                    "Scope": "Portfolio → Annual strategy shows past-only yearly weight refits and costed validation/evaluation comparisons. It remains separate from these six lab topics.",
                 },
                 {
                     "Topic": "Alternative allocations",

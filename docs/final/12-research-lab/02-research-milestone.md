@@ -4,6 +4,7 @@
 
 ## Implemented evidence
 
+- The Research lab scope expander now lists coverage and limits as text instead of a canvas-rendered data grid. Its rolling re-optimisation entry points to the implemented Portfolio → Annual strategy section; the former separate-PR label was stale. Missing client, payment-date, split-unit and execution inputs remain labelled as such.
 - Five original pages retained; a separate **Research lab** sidebar page exposes six visible topics—allocations, stability, changing risk, spending, income and costs—with plain-language questions. The original sidebar's financial controls are hidden on this page and restored on return. Methodology expanders remain collapsed by default; table titles and CSV download labels describe their contents.
 - Two alternative fits use the original development period and policy, then share the same validation/evaluation accounting. Original three evaluation NAVs reproduced with **zero numerical difference** in the frozen-data comparison.
 - Seventy-four robustness rows: seven prespecified variants plus thirty block resamples for each of two objectives. Failures have explicit unavailable rows.
