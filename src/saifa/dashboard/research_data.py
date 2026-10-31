@@ -113,6 +113,26 @@ def validate_research(evidence: ResearchEvidence, bundle: DashboardBundle) -> No
         raise DashboardDataError(
             "Unavailable income must retain its reason without a substitute total"
         )
+    covered = income.covered_target_weight
+    partial = income.partial_eligible_proxy_usd
+    complete = income.status.eq("proxy_only")
+    if (
+        not covered.between(0, 1 + 1e-8).all()
+        or income.loc[covered > 1e-10, "partial_eligible_proxy_usd"].isna().any()
+        or income.loc[covered <= 1e-10, "partial_eligible_proxy_usd"].notna().any()
+        or not np.allclose(covered.loc[complete], 1, atol=1e-8)
+        or not np.allclose(income.loc[complete, "distribution_proxy_usd"], partial.loc[complete])
+    ):
+        raise DashboardDataError("Income coverage or complete proxy is inconsistent")
+    ledger_totals = (
+        tables["income_ledger"]
+        .groupby("strategy")
+        .fixed_notional_distribution_proxy_usd.sum()
+        .reindex(income.strategy, fill_value=0)
+        .to_numpy()
+    )
+    if not np.allclose(partial.fillna(0), ledger_totals, atol=1e-5):
+        raise DashboardDataError("Partial income proxy differs from its dated ledger")
 
 
 @st.cache_data(max_entries=2, show_spinner=False)

@@ -545,21 +545,40 @@ def income(evidence: ResearchEvidence):
     st.info(
         "Ex-date distribution proxy only. Actual payment-date cash receipts and tax treatment remain unavailable."
     )
+    st.caption(
+        "A complete proxy is available only when every holding passes the distribution-unit "
+        "check. Partial figures use covered holdings only; they are not portfolio income totals."
+    )
     show(
         pd.DataFrame(
             {
                 "Portfolio": income_summary.strategy.map(RESEARCH_PORTFOLIOS),
-                "Availability": income_summary.status.map(
-                    {"proxy_only": "Proxy only", "unavailable": "Unavailable"}
+                "Complete proxy (USD)": income_summary.distribution_proxy_usd.map(
+                    lambda value: "Not established" if pd.isna(value) else money(value)
                 ),
-                "Gross proxy total (USD)": income_summary.distribution_proxy_usd.map(money),
-                "Reason / limitation": income_summary.reason,
+                "Covered holdings proxy (USD)": income_summary.partial_eligible_proxy_usd.map(
+                    money
+                ),
+                "Covered target weight": income_summary.covered_target_weight.map(percent),
+                "Covered ETFs": income_summary.covered_assets,
+                "Why complete income is unavailable": income_summary.reason.where(
+                    income_summary.status.eq("unavailable"), ""
+                ),
             }
         ),
-        "Income evidence availability across all five candidates",
+        "Income proxy coverage across all five candidates",
     )
     if row.status == "unavailable":
         st.warning(row.reason)
+        if pd.notna(row.partial_eligible_proxy_usd):
+            st.metric(
+                "Covered-holdings proxy only",
+                money(row.partial_eligible_proxy_usd),
+            )
+            st.caption(
+                f"This covers {percent(row.covered_target_weight)} of target capital "
+                f"({row.covered_assets}). Income from excluded holdings is not estimated."
+            )
     else:
         st.metric("Constant-exposure gross distribution proxy", money(row.distribution_proxy_usd))
     ledger = evidence.tables["income_ledger"].query("strategy == @strategy")

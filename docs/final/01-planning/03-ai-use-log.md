@@ -10,6 +10,8 @@ This is an evolving record, not a claim of completed human validation.
 
 **31 October 2026 - research-scope display correction:** OpenAI Codex replaced the Research lab coverage data grid with readable scope/limit text and corrected the outdated annual-strategy PR status to the implemented Portfolio section. The frozen research output was rebuilt offline; 278 tests, lint, format and real-snapshot AppTest passed. Browser visual acceptance and the research worksheet remain pending.
 
+**31 October 2026 - income coverage display:** OpenAI Codex added covered-holdings proxy values, target-weight coverage and dated-ledger reconciliation for Research lab income rows whose complete totals are withheld for split-unit review. The app still labels complete totals unavailable, and no actual payment-date income or tax estimate is claimed. Human split-unit and income interpretation review remain pending.
+
 | Date | Tool | Purpose | Material generated components | Automated validation | Human validation |
 |---|---|---|---|---|---|
 | 2026-10-23 | OpenAI Codex | Requirements analysis and draft policy | Checklist, proposed policy assumptions and planning README | Cross-check against provided brief; document link/ID checks | Pending team review; no client approval claimed |

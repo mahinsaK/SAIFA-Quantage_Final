@@ -59,6 +59,9 @@ def research(prepared):
                 "end_date": "2022-12-30",
                 "reference_nav": 1e7,
                 "distribution_proxy_usd": 1000 if i == 0 else np.nan,
+                "partial_eligible_proxy_usd": 1000 if i == 0 else 600,
+                "covered_target_weight": 1.0 if i == 0 else 0.6,
+                "covered_assets": "SPY, AGG" if i == 0 else "AGG",
                 "status": "proxy_only" if i == 0 else "unavailable",
                 "reason": "split-unit review pending",
             }
@@ -178,9 +181,10 @@ def research(prepared):
     )
     tables["income_ledger"] = pd.DataFrame(
         {
-            "strategy": ["baseline_40_60"],
-            "ex_date": ["2022-01-04"],
-            "fixed_notional_distribution_proxy_usd": [1000.0],
+            "strategy": list(RESEARCH_PORTFOLIOS),
+            "ex_date": ["2022-01-04"] * len(RESEARCH_PORTFOLIOS),
+            "fixed_notional_distribution_proxy_usd": [1000.0]
+            + [600.0] * (len(RESEARCH_PORTFOLIOS) - 1),
         }
     )
     tables["liquidity"] = pd.DataFrame(
@@ -310,6 +314,19 @@ def test_invalid_published_frequencies_are_unavailable(research):
         load_research(root, bundle)
 
 
+def test_partial_income_must_reconcile_to_dated_ledger(research):
+    root, bundle, folder = research
+    path = folder / "income_summary.csv"
+    frame = pd.read_csv(path, float_precision="round_trip")
+    frame.loc[frame.strategy == "minimum_es", "partial_eligible_proxy_usd"] += 100
+    frame.to_csv(path, index=False)
+    manifest = json.loads((folder / "manifest.json").read_text())
+    manifest["files"][path.name] = file_hash(path)
+    write_json(folder / "manifest.json", manifest)
+    with pytest.raises(DashboardDataError, match="dated ledger"):
+        load_research(root, bundle)
+
+
 def test_research_controls_change_actual_tables_and_recalculate_dated_tests(research):
     root, bundle, _ = research
     evidence = load_research(root, bundle)
@@ -359,10 +376,17 @@ def test_research_controls_change_actual_tables_and_recalculate_dated_tests(rese
     assert not app.exception and app.metric[3].value != wealth
     app.segmented_control(key="lab_topic").set_value("Income").run()
     assert not app.exception
-    assert len(app.dataframe[0].value) == len(RESEARCH_PORTFOLIOS)
-    assert app.dataframe[0].value.Availability.tolist().count("Unavailable") == 4
+    income_table = app.dataframe[0].value
+    assert len(income_table) == len(RESEARCH_PORTFOLIOS)
+    assert income_table["Complete proxy (USD)"].tolist().count("Not established") == 4
+    assert income_table["Covered holdings proxy (USD)"].iloc[1] == "$600.00"
+    assert income_table["Covered target weight"].iloc[1] == "60.00%"
     app.selectbox(key="lab_income").set_value("minimum_es").run()
     assert not app.exception and any("review" in w.value for w in app.warning)
+    assert any(
+        item.label == "Covered-holdings proxy only" and item.value == "$600.00"
+        for item in app.metric
+    )
     app.segmented_control(key="lab_topic").set_value("Costs").run()
     assert not app.exception
     before = app.dataframe[0].value.copy()

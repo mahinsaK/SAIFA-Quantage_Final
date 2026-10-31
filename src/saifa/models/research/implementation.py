@@ -83,6 +83,8 @@ def income_proxy(
     summaries, ledger = [], []
     for strategy, weights in portfolios.iterrows():
         total = 0.0
+        covered_weight = 0.0
+        covered_assets = []
         reasons = []
         for ticker, weight in weights.items():
             if weight <= 1e-10:
@@ -111,6 +113,8 @@ def income_proxy(
                 continue
             proxy = capital * weight * distributions / prior
             total += float(proxy.sum())
+            covered_weight += float(weight)
+            covered_assets.append(ticker)
             for date in sample.index[distributions > 0]:
                 ledger.append(
                     {
@@ -130,6 +134,9 @@ def income_proxy(
                 "end_date": end,
                 "reference_nav": capital,
                 "distribution_proxy_usd": total if not reasons else np.nan,
+                "partial_eligible_proxy_usd": total if covered_assets else np.nan,
+                "covered_target_weight": covered_weight,
+                "covered_assets": ", ".join(covered_assets),
                 "status": "proxy_only" if not reasons else "unavailable",
                 "reason": "; ".join(reasons)
                 if reasons

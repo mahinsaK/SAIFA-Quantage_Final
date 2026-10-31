@@ -86,6 +86,8 @@ def test_income_proxy_uses_prior_close_and_excludes_allocation_day():
         {"A": raw}, weights, str(dates[0].date()), str(dates[-1].date()), 1000
     )
     assert summary.distribution_proxy_usd.iloc[0] == 10
+    assert summary.partial_eligible_proxy_usd.iloc[0] == 10
+    assert summary.covered_target_weight.iloc[0] == 1
     assert summary.status.iloc[0] == "proxy_only"
     assert ledger.ex_date.iloc[0] == str(dates[1].date())
     raw.loc[dates[-1], "Stock Splits"] = 2
@@ -94,4 +96,36 @@ def test_income_proxy_uses_prior_close_and_excludes_allocation_day():
     )
     assert unavailable.status.iloc[0] == "unavailable"
     assert np.isnan(unavailable.distribution_proxy_usd.iloc[0])
+    assert np.isnan(unavailable.partial_eligible_proxy_usd.iloc[0])
+    assert unavailable.covered_target_weight.iloc[0] == 0
     assert "split" in unavailable.reason.iloc[0]
+
+
+def test_income_proxy_keeps_valid_asset_evidence_without_claiming_a_complete_total():
+    dates = pd.bdate_range("2022-01-03", periods=3)
+    eligible = pd.DataFrame(
+        {
+            "Close": [100.0, 100.0, 100.0],
+            "Dividends": [0.0, 1.0, 0.0],
+            "Capital Gains": 0.0,
+            "Stock Splits": 0.0,
+        },
+        index=dates,
+    )
+    split = eligible.copy()
+    split.loc[dates[-1], "Stock Splits"] = 2
+    weights = pd.DataFrame({"A": [0.6], "B": [0.4]}, index=["test"])
+    summary, ledger = income_proxy(
+        {"A": eligible, "B": split},
+        weights,
+        str(dates[0].date()),
+        str(dates[-1].date()),
+        1000,
+    )
+    row = summary.iloc[0]
+    assert row.status == "unavailable"
+    assert np.isnan(row.distribution_proxy_usd)
+    assert row.partial_eligible_proxy_usd == pytest.approx(6.0)
+    assert row.covered_target_weight == pytest.approx(0.6)
+    assert row.covered_assets == "A"
+    assert ledger.ticker.tolist() == ["A"]
