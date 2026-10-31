@@ -70,10 +70,11 @@ def decision_evidence(bundle: DashboardBundle) -> tuple[dict, dict[str, pd.DataF
 
 def decision_banner(summary: dict) -> None:
     with st.container(border=True):
-        st.subheader("Committee view · proposed")
+        st.subheader("Team recommendation · proposed policy")
         st.warning(summary["decision"])
         st.caption(
-            "Human approval is pending. This overall decision is fixed across portfolio selections."
+            "Team position supplied on 31 October 2026. Independent review and client/committee "
+            "approval remain pending. This recommendation is fixed across portfolio selections."
         )
 
 

@@ -1,14 +1,14 @@
 # Committee evidence and spending methodology
 
-Implemented 26 October 2026. Research proposal only; human recommendation, scenario approval and client policy approval remain separate.
+Implemented 26 October 2026. On 31 October, Mahinsa supplied perspectives attributed to five team members and a common recommendation. That records the team's stated position, while individual calculation sign-offs, scenario approval and client policy approval remain separate.
 
 ## Evidence and decision
 
 The comparison reuses the verified Phase 09 bundle: same three target allocations, 3 January 2022 to 22 October 2026 costed performance, fixed-USD-10m next-session risk, dated forecasts and retrospective stress replays. No model is refitted or selected to make evaluation tests pass. All 90/95/99% forecasts are retained; the written report emphasises the brief's 95%/99% results.
 
-Proposed decision: **defer implementation under the current proposed mandate**. Retain minimum volatility as a conditional discussion candidate because its development variance objective aligns with preservation. This preference is proposed after viewing evaluation evidence, not an untouched validation result. It does not establish suitability. Every candidate breaches the proposed 15% drawdown review level in 2008 and 2022; every 1.5x hypothetical shock exceeds the separate 10% review level. Coverage/clustering failures, observed real growth below 3% in the shorter measured period, and missing actual spending information prevent unconditional acceptance.
+Team-provided decision: **reject immediate implementation of the three tested allocations under the current proposed policy**. Retain minimum volatility as a conditional discussion candidate because its development variance objective aligns with preservation. This preference was expressed after viewing evaluation evidence, not from an untouched selection rule. It does not establish suitability. Every candidate breaches the proposed 15% drawdown review level in 2008 and 2022; every 1.5x hypothetical shock exceeds the separate 10% review level. Coverage/clustering failures, observed real growth below 3% in the shorter measured period, and missing actual spending information prevent unconditional acceptance. The [team record](03-manual-decision-check.md) attributes the five perspectives and preserves pending review items.
 
-The recommendation does not raise risk limits to hide breaches, approve a revised portfolio, or convert research levels into client instructions. Committee responses include reconsidering objectives, researching a different design with fresh validation, or declining the mandate as posed.
+The recommendation does not reject the university's mandate, raise risk limits to hide breaches, approve a revised portfolio, or convert research levels into client instructions. The client and committee must clarify objectives and risk tolerance before considering a new design with fresh validation.
 
 ## Observed CPI overlay and period
 

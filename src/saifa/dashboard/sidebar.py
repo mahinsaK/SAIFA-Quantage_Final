@@ -98,6 +98,6 @@ def render_sidebar(bundle: DashboardBundle) -> DashboardSelection:
         st.caption(
             f"Snapshot: {bundle.manifest['snapshot_id']}\n\n"
             f"Risk as-of: {bundle.metadata['risk']['as_of']}\n\n"
-            "Proposed allocations · final decision pending"
+            "Team recommendation recorded · client approval pending"
         )
     return DashboardSelection(page, strategy, confidence, method, tuple(dates))

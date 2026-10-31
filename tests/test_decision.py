@@ -142,7 +142,7 @@ def test_decision_ui_follows_portfolio_and_shows_observed_cpi_growth(monkeypatch
     assert not app.exception
     assert app.metric[0].value == "2.54%"
     assert app.dataframe[0].value["Ending nominal wealth (USD)"].iloc[0] == 1200
-    assert "Defer implementation" in app.warning[0].value
+    assert "rejecting immediate implementation" in app.warning[0].value
 
 
 def test_document_page_count_and_readable_source(tmp_path):

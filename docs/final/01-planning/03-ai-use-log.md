@@ -12,6 +12,8 @@ This is an evolving record, not a claim of completed human validation.
 
 **31 October 2026 - income coverage display:** OpenAI Codex added covered-holdings proxy values, target-weight coverage and dated-ledger reconciliation for Research lab income rows whose complete totals are withheld for split-unit review. The app still labels complete totals unavailable, and no actual payment-date income or tax estimate is claimed. Human split-unit and income interpretation review remain pending.
 
+**31 October 2026 - team decision record:** Mahinsa supplied five named member perspectives and the team's recommendation to reject immediate implementation of the three tested allocations while retaining minimum volatility as a conditional research candidate. OpenAI Codex reconciled cited rounded figures with the frozen outputs, transcribed the positions into the Phase 10 decision worksheet and aligned app/report/memo/tear-sheet wording. AI assistance did not supply the team's judgment, individual signatures, hypothetical-scenario approval or client investment authority; independent numerical and document reviews remain open.
+
 | Date | Tool | Purpose | Material generated components | Automated validation | Human validation |
 |---|---|---|---|---|---|
 | 2026-10-23 | OpenAI Codex | Requirements analysis and draft policy | Checklist, proposed policy assumptions and planning README | Cross-check against provided brief; document link/ID checks | Pending team review; no client approval claimed |

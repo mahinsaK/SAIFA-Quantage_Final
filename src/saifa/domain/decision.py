@@ -25,10 +25,10 @@ CPI_LIMITATION = (
     "A shorter historical period cannot establish the proposed ten-year objective."
 )
 DECISION = (
-    "Defer implementation under the current proposed mandate. Retain minimum volatility as "
-    "a conditional research candidate for committee discussion, not an approved allocation. "
-    "Its lower development variance fits the preservation priority, but all three candidates "
-    "breach the proposed crisis drawdown review level and spending suitability is unresolved."
+    "We recommend rejecting immediate implementation of the three tested allocations under "
+    "our current proposed policy. Minimum volatility remains a conditional research candidate. "
+    "Further consideration requires clarified client needs, additional model validation and "
+    "an agreed response to the observed risk breaches."
 )
 CONDITIONS = (
     "Confirm actual spending amounts, dates, currency, taxes, fees and liquidity needs.",
@@ -42,7 +42,8 @@ CONDITIONS = (
     ),
     "Review failed coverage/clustering tests, sparse tail evidence and independent model validation.",
     (
-        "Team independently evaluates this AI-assisted recommendation, approves the scenario, "
-        "completes review records and obtains committee policy approval before implementation."
+        "Record independent checks of the team-provided recommendation, review and approve the "
+        "hypothetical scenario, complete reviewer records and obtain client/committee policy "
+        "approval before implementation."
     ),
 )

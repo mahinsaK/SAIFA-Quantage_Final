@@ -19,7 +19,7 @@ Folders follow the order in which the project was built. Within each phase, `01`
 
 The worksheets distinguish completed human checks from pending ones. Generated numerical reports remain under `output/` and can be recreated with the runners in the [project README](../../README.md).
 
-The [observed CPI real-growth addendum](10-investment-decision/04-observed-cpi-review.md) records the new frozen inflation input, historical 3% check and independent review still required after Phase 10.
+The [observed CPI real-growth addendum](10-investment-decision/04-observed-cpi-review.md) records the frozen inflation input, historical 3% check and independent review still required after Phase 10. The [Phase 10 team record](10-investment-decision/03-manual-decision-check.md) now contains the five member perspectives and stated recommendation; individual calculations, scenario approval and client authority remain separate.
 
 The separate UI comparison branch records its [audit and design approach](09-streamlit-app/04-ui-refresh-audit.md); it does not replace the manual app acceptance worksheet.
 

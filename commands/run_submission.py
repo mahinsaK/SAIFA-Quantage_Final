@@ -19,7 +19,9 @@ def main() -> int:
         print(f"Decision evidence: {evidence}")
         output = write_submission(ROOT, snapshot)
         print(f"Report, tear sheet and committee memo: {output}")
-        print("Human recommendation, spending assumptions and scenario approval remain pending.")
+        print(
+            "Team recommendation recorded; independent reviews, scenario and client approval remain pending."
+        )
         return 0
     except Exception as exc:  # noqa: BLE001 - CLI boundary
         print(f"Submission preparation failed: {exc}", file=sys.stderr)

@@ -77,7 +77,7 @@ Record a repository file/output and actual reviewer when marking an item complet
 | [ ] | S01 | Marginal VaR/ES contributions and sizing (p. 8) | Define marginal versus weighted/component contributions; show allocation implications. Standalone asset ES is not portfolio ES contribution. |
 | [ ] | S02 | Historical crisis return paths (p. 8) | Team plan: 2008, March 2020 and 2022. Exact dates, coverage, paths, cumulative loss and drawdown; distinguish replay from a genuine historical strategy backtest. |
 | [ ] | S03 | One team-designed hypothetical scenario (p. 8) | Economic narrative, joint ETF shocks, percent/USD impact; severity is not an asserted probability. |
-| [ ] | S04 | One-page plain-English committee recommendation (p. 8) | Accept as proposed / adjust risk limits / reject; allocation, evidence, trade-offs, uncertainty and review triggers. |
+| [ ] | S04 | One-page plain-English committee recommendation (p. 8) | Team-provided rejection of immediate implementation recorded 31 Oct; one-page memo generated with allocation, evidence, trade-offs, uncertainty and review triggers. Independent artifact acceptance still pending. |
 
 ### Interface, deliverables and accountability
 
@@ -97,7 +97,7 @@ Record a repository file/output and actual reviewer when marking an item complet
 | [ ] | O03 | 7-15-page report/investment memo (p. 6) | Methodology, data/cleaning, results, assumptions and limitations; values match frozen app outputs. |
 | [ ] | O04 | One-page executive tear sheet (p. 6) | Allocation, risks and decision readable in under five minutes. Team plan: supply separately from S04 to cover both requests explicitly. |
 | [ ] | O05 | AI disclosure and team understanding (pp. 8-9) | Tools, purposes, material generated components and actual human validation; team can explain decisions, assumptions and code. |
-| [ ] | O06 | Teams of five; final-five pitch (pp. 2, 6) | Roster confirmed. If selected for final five: 10-12-minute deck/pitch plus Q&A. Pitch date unconfirmed. |
+| [ ] | O06 | Teams of five; final-five pitch (pp. 2, 6) | Mahinsa supplied focus statements for Mahinsa, Lumith, Janith, Rayan and Sandanu; individual roster confirmation and pitch logistics remain open. If selected for final five: 10-12-minute deck/pitch plus Q&A. |
 
 ## Decisions still to validate
 
@@ -109,7 +109,7 @@ Record a repository file/output and actual reviewer when marking an item complet
 | Sample / windows | Development through 2018; validation 2019–2021; evaluation 2022–22 Oct 2026; rolling risk window 1,000 sessions | Existing evaluation has been viewed; retain retrospective caveat and avoid post-hoc selection. Stress coverage and final team interpretation remain open. |
 | Benchmarks | 40% SPY / 60% AGG comparator; SPY CAPM proxy | Explain suitability and mixed-asset proxy limitations |
 | Logistics | 31 Oct deadline | Exact time/timezone, submission route and pitch date |
-| Owners / reviewers | Unassigned | Record actual members and review outcomes |
+| Owners / reviewers | Five member focus areas supplied 31 Oct | Confirm individual attributions and assign independent calculation/document reviewers |
 
 ## Sequence and ownership
 
@@ -140,11 +140,11 @@ Rubric: decision-making 30%, technical correctness 25%, software 15%, innovation
 
 ## Phase 10 implementation update - 26 October 2026
 
-S04/O03/O04 now have AI-assisted draft artifacts generated from the same verified bundle as the app: a conditional committee recommendation, 7-15-page report and separate one-page executive tear sheet. See [methodology](../10-investment-decision/01-decision-methodology.md), [milestone](../10-investment-decision/02-decision-milestone.md) and [manual review](../10-investment-decision/03-manual-decision-check.md). These rows remain unchecked until actual team interpretation, document acceptance and final access checks.
+S04/O03/O04 have generated artifacts from the same verified bundle as the app: a one-page committee recommendation, 7-15-page report and separate one-page executive tear sheet. On 31 October Mahinsa supplied five named perspectives and the team's decision to reject immediate implementation of the three tested allocations, retaining minimum volatility for conditional research. See [methodology](../10-investment-decision/01-decision-methodology.md), [milestone](../10-investment-decision/02-decision-milestone.md) and the [team record with open checks](../10-investment-decision/03-manual-decision-check.md). The rows remain unchecked until independent document acceptance and final access checks; this is not client approval.
 
-M01/M02/M06 now have an explicit decision response, observed real-growth comparison and spending sensitivity. The current recommendation defers implementation, retaining minimum volatility as a conditional discussion candidate; all portfolios breach proposed crisis review levels. The original 3% real target is before spending; a separate FRED CPIAUCSL overlay shows 0.68% / 2.54% / 2.71% annual real growth from 2022-01-03 to 2026-09-30, all below 3% in that shorter period. The after-spending 3% test remains a separately labelled stricter hypothetical scenario. Observed inflation does not establish ten-year sustainability or actual client spending suitability. See the [new CPI review](../10-investment-decision/04-observed-cpi-review.md).
+M01/M02/M06 have an explicit decision response, observed real-growth comparison and spending sensitivity. The 31 October team recommendation rejects immediate implementation of these three tested allocations, retaining minimum volatility as a conditional discussion candidate; all portfolios breach proposed crisis review levels. The original 3% real target is before spending; a separate FRED CPIAUCSL overlay shows 0.68% / 2.54% / 2.71% annual real growth from 2022-01-03 to 2026-09-30, all below 3% in that shorter period. The after-spending 3% test remains a separately labelled stricter hypothetical scenario. Observed inflation does not establish ten-year sustainability or actual client spending suitability. See the [CPI review](../10-investment-decision/04-observed-cpi-review.md).
 
-Implementation evidence does not complete V05, O05 or the new CPI human worksheet. Scenario approval, client policy approval, team acceptance of the recommendation, spending/liquidity needs, independent CPI review, browser acceptance, repository access, final cutoff and submission delivery remain human actions. Earlier dated milestone notes describe their own phase, not the current cumulative implementation status.
+Implementation evidence does not complete V05, O05 or the CPI human worksheet. The team position is supplied, but individual sign-offs, scenario approval, client policy approval, spending/liquidity needs, independent CPI review, browser acceptance, repository access, final cutoff and submission delivery remain human actions. Earlier dated milestone notes describe their own phase, not the current cumulative implementation status.
 
 **30 October annual research extension:** [Phase 11](../11-annual-reoptimisation/01-adaptive-methodology.md) compares annual trailing-five-year refits with the original frozen candidates, with identical comparison dates, construction limits and transaction costs. Portfolio → Annual strategy shows separately funded validation/evaluation results, training audits and conditional limitations. This retrospective extension does not replace the required frozen risk/backtest/stress evidence, establish adaptive risk calibration, or complete any human approval.
 

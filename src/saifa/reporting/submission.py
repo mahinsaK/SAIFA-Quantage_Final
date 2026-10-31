@@ -152,7 +152,7 @@ class Document:
             canvas.line(48, 41, 547, 41)
             canvas.setFont("Helvetica", 7)
             canvas.setFillColor(INK)
-            canvas.drawString(48, 29, "SAIFA | Research proposal - human approval pending")
+            canvas.drawString(48, 29, "SAIFA | Team recommendation - client approval pending")
             canvas.drawRightString(547, 29, f"{doc.page}")
 
         SimpleDocTemplate(
@@ -200,10 +200,10 @@ def write_submission(root: Path, snapshot: Path) -> Path:
     report = Document("SAIFA investment committee research report", snapshot.name)
 
     report.page(
-        "A cautious mandate needs a conditional decision",
+        "A cautious mandate needs a clear decision",
         "Quant Edge 1.0 final | Investment report | " + context,
     )
-    report.p(decision["decision"], "Recommendation for committee consideration")
+    report.p(decision["decision"], "Team recommendation for committee consideration")
     report.table(
         ["Candidate", "Ending NAV", "Annual growth", "Worst drawdown"],
         [
@@ -229,10 +229,10 @@ def write_submission(root: Path, snapshot: Path) -> Path:
     )
     report.p(decision["inflation_limitation"], "Purchasing power and remaining limits")
     report.p(
-        "This draft is ready for independent team review, not unconditional implementation. "
-        "The committee must decide whether to change the objective, seek a different portfolio "
-        "design or reject the mandate as presently specified. Numerical limits must not be "
-        "relaxed simply because the observed outcomes breach them."
+        "The team's stated position concerns these three tested allocations, not rejection of "
+        "the university's investment mandate itself. Independent calculation checks and "
+        "client/committee approval remain open. Any revised objective or portfolio design "
+        "needs fresh validation; numerical limits must not be raised solely to pass observed tests."
     )
 
     report.page("Mandate and portfolio construction", context)
@@ -677,6 +677,14 @@ def write_submission(root: Path, snapshot: Path) -> Path:
 
     report.page("Decision, conditions and review triggers", context)
     report.p(decision["decision"])
+    report.p(
+        "Team perspectives supplied on 31 October 2026: Mahinsa favours minimum volatility "
+        "only for further preservation research; Lumith highlights clustered VaR exceptions; "
+        "Janith highlights crisis and joint-shock breaches; Rayan distinguishes observed "
+        "before-withdrawal real growth from unverified spending suitability; Sandanu rejects "
+        "immediate implementation pending client needs and a response to model failures. "
+        "These positions do not constitute individual calculation sign-offs or client approval."
+    )
     for i, condition in enumerate(decision["conditions"], 1):
         report.p(f"{i}. {condition}")
     report.table(
@@ -732,12 +740,13 @@ def write_submission(root: Path, snapshot: Path) -> Path:
         "whichever folder is newest."
     )
     report.p(
-        "OpenAI Codex assisted code, tests, spending assumptions, dashboard text, report "
-        "composition and this draft recommendation. Earlier material includes AI-assisted "
+        "OpenAI Codex assisted code, tests, spending assumptions, dashboard text and report "
+        "composition. The five named team perspectives and final recommendation were supplied "
+        "by the team through Mahinsa on 31 October 2026. Earlier material includes AI-assisted "
         "portfolio, risk, EVT, backtesting and stress implementation. This report is not a "
-        "claim that all material has received independent human approval. The team must "
-        "evaluate and substantiate the recommendation, explain the methods and record actual "
-        "reviews in the phase worksheets and AI-use log."
+        "claim that every calculation or scenario received independent human approval. Members "
+        "must substantiate the figures, explain the methods and record actual reviews in the "
+        "phase worksheets and AI-use log."
     )
     report.p(
         "Automated tests check examples, cash-flow identities, scaling, missing evidence, "
@@ -759,7 +768,7 @@ def write_submission(root: Path, snapshot: Path) -> Path:
     )
     report.p(
         "Final submission deadline supplied by the team: 31 October 2026. Exact cutoff "
-        "time, submission route, repository access and team roster still require confirmation. "
+        "time, submission route, repository access and individual roster confirmation remain open. "
         "The final-five presentation is separate from this report. Pending reviews are "
         "visible limitations, not completed sign-offs."
     )
@@ -781,7 +790,7 @@ def write_submission(root: Path, snapshot: Path) -> Path:
                 for t in UNIVERSE
                 if weights.loc["minimum_volatility", t] > 1e-8
             )
-            + ". All other eligible ETFs have zero target weight. Team evaluation and approval pending."
+            + ". All other eligible ETFs have zero target weight. Research candidate only; no implementation approval."
         )
         if filename.startswith("executive"):
             doc.table(
@@ -846,7 +855,7 @@ def write_submission(root: Path, snapshot: Path) -> Path:
                 "The higher realised return of maximum Sharpe does not override the mandate."
             )
             doc.p(
-                "Why defer: crisis review breaches, model coverage/clustering failures, observed "
+                "Why reject immediate implementation: crisis review breaches, model coverage/clustering failures, observed "
                 "real growth below 3% in the shorter measured period, and unknown client spending prevent an unconditional suitability "
                 "claim. Current daily ES below its separate trigger does not cancel crisis losses. "
                 "2008 uses historical returns; only the two optimised weights were fitted later."
@@ -854,8 +863,8 @@ def write_submission(root: Path, snapshot: Path) -> Path:
             for condition in decision["conditions"]:
                 doc.p(condition)
         doc.p(
-            "AI-assisted research proposal. The team must independently evaluate and defend it. "
-            "No scenario, investment policy or allocation approval is implied."
+            "Team recommendation supplied 31 October 2026; AI-assisted document preparation. "
+            "Independent checks, scenario review and client policy/allocation approval remain open."
         )
         pages[filename] = doc.save(output / filename)
         if pages[filename] != 1:

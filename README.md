@@ -74,7 +74,7 @@ The **Research lab** page has six visible research topics: allocations, stabilit
 
 The calculations use different horizons and accounting: portfolio performance is **monthly rebalanced after trading costs**; VaR/ES uses **one-session fixed target exposures**; crisis replays hold **fixed initial units without rebalancing, costs or withdrawals**. The two optimised allocations were fitted using data through 2018, so their 2008 replays are retrospective scenarios. The 40/60 baseline is preset.
 
-Some VaR backtests reject and all three portfolios exceed the **proposed** 15% crisis drawdown review level in 2008 and 2022. The committee recommendation is a research draft that defers implementation; it is not a client-approved allocation. The CPI comparison is observed **before withdrawals** through September 2026. Spending illustrations use separate, assumed inflation and payment rules.
+Some VaR backtests reject and all three portfolios exceed the **proposed** 15% crisis drawdown review level in 2008 and 2022. The team recommends **rejecting immediate implementation of these three tested allocations** while retaining minimum volatility for conditional research; this is not client approval or rejection of the university's mandate. The CPI comparison is observed **before withdrawals** through September 2026. Spending illustrations use separate, assumed inflation and payment rules. The [team decision record](docs/final/10-investment-decision/03-manual-decision-check.md) names the five perspectives and remaining checks.
 
 The annual experiment is retrospective because those historical periods were already viewed. It uses the same construction limits and trading costs, but changes both estimation history and update frequency. Existing risk, stress, spending and committee outputs still describe the original frozen candidates; they are not adaptive-strategy validation. See the [Phase 11 methodology and manual review](docs/final/11-annual-reoptimisation/01-adaptive-methodology.md).
 
@@ -91,7 +91,7 @@ The launcher creates these files under `output/pdf/<snapshot-id>/`:
 
 `data/LATEST` identifies the snapshot used by the app and report. The generated `output/` folder is **not tracked by Git**, so a new clone rebuilds it. Include the final PDFs in the actual submission package or upload them separately; repository source alone does not include those generated PDFs.
 
-Before submission, the team must verify the final numbers and PDFs, approve or revise the proposed stress scenario and recommendation, record actual human review, check judge access to the GitHub repository and confirm the submission route and cutoff time. The supplied deadline date is **31 October 2026**; its exact time and timezone have not been confirmed here.
+Before submission, the team must verify the final numbers and PDFs, approve or revise the proposed stress scenario, confirm the recorded recommendation and individual member attributions, record actual human review, check judge access to the GitHub repository and confirm the submission route and cutoff time. The supplied deadline date is **31 October 2026**; its exact time and timezone have not been confirmed here.
 
 ## Developer and reproduction commands
 

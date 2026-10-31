@@ -128,7 +128,7 @@ def build_decision(root: Path, snapshot: Path) -> Path:
             "snapshot_id": snapshot.name,
             "decision": DECISION,
             "conditional_candidate": "minimum_volatility",
-            "approval_status": "proposed_research_only_human_decision_pending",
+            "approval_status": "team_recommendation_recorded_client_approval_pending",
             "conditions": CONDITIONS,
             "inflation_limitation": CPI_LIMITATION,
             "observed_real_wealth": dict(
